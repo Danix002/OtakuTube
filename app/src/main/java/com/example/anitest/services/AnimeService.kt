@@ -14,7 +14,8 @@ import kotlinx.serialization.json.Json
 
 class AnimeService {
 
-    private val baseURLDANI = "http://192.168.1.5:3000"
+    private val baseURLDANIport = "http://192.168.1.5:3000"
+    private val baseURLDANIfix = "http://192.168.1.7:3000"
     private val baseURLALE = "http://172.20.10.3:3000"
     private val gson = Gson()
 
@@ -31,8 +32,9 @@ class AnimeService {
     }
 
     suspend fun getAnimeByGenre(page: Number, genre : String): List<Anime> {
-        val animeJson = Util.GET(httpClient, "$baseURLALE/genre/$genre/$page") ?: return emptyList()
-        // val animeJson = Util.GET(httpClient, "$baseURLDANI/genre/$genre/$page") ?: return emptyList()
+        // val animeJson = Util.GET(httpClient, "$baseURLALE/genre/$genre/$page") ?: return emptyList()
+        // val animeJson = Util.GET(httpClient, "$baseURLDANIport/genre/$genre/$page") ?: return emptyList()
+        val animeJson = Util.GET(httpClient, "$baseURLDANIfix/genre/$genre/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
         return gson.fromJson(animeJson.readText(), type)
     }

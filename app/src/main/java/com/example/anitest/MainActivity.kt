@@ -26,10 +26,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ANITESTTheme {
-
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    //getListOfAnime(viewModel, "action")
                     CategoryRow(viewModel, category = "action")
                 }
 
@@ -38,13 +36,6 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-/**
-fun getListOfAnime(viewModel : MyViewModel, genre: String) {
-    var actionAnimeList = viewModel.getAnimeByGenre(1, genre)
-    println(actionAnimeList)
-    println(actionAnimeList[0].name)
-}
- **/
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

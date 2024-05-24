@@ -3,8 +3,11 @@ package com.example.anitest.ui.componets
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,24 +23,28 @@ import com.example.anitest.model.Anime
 fun AnimeCard( anime: Anime) {
     Column (
         modifier = Modifier
+            .height(256.dp)
             .width(128.dp)
-            .background(Color.Red)
+            //.background(Color.Red)
     ) {
         Image(
             painter = rememberAsyncImagePainter(anime.img_url),
             contentDescription = "anime image",
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Yellow)
+                .height(230.dp)
+                //.background(Color.Yellow)
         )
         Text(
             text = anime.name,
-            color = Color.White,
+            color = Color.Black,
             fontSize = 16.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth().background(Color.Black)
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                //.background(Color.Black)
         )
     }
-
 }
