@@ -1,5 +1,7 @@
-package com.example.anitest.model
+package com.example.anitest.services
 
+import com.example.anitest.model.Anime
+import com.example.anitest.utils.Util
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.ktor.client.HttpClient
@@ -12,7 +14,8 @@ import kotlinx.serialization.json.Json
 
 class AnimeService {
 
-    private val baseURL = "http://192.168.1.5:3000"
+    private val baseURLDANI = "http://192.168.1.5:3000"
+    private val baseURLALE = "http://172.20.10.3:3000"
     private val gson = Gson()
 
     private val httpClient get() = HttpClient(Android) {
@@ -28,7 +31,8 @@ class AnimeService {
     }
 
     suspend fun getAnimeByGenre(page: Number, genre : String): List<Anime> {
-        val animeJson = Util.GET(httpClient, "$baseURL/genre/$genre/$page") ?: return emptyList()
+        val animeJson = Util.GET(httpClient, "$baseURLALE/genre/$genre/$page") ?: return emptyList()
+        // val animeJson = Util.GET(httpClient, "$baseURLDANI/genre/$genre/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
         return gson.fromJson(animeJson.readText(), type)
     }

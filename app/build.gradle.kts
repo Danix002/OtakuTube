@@ -48,6 +48,8 @@ android {
 
 dependencies {
 
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+
     implementation("io.ktor:ktor-client-core:1.6.4")
     implementation("io.ktor:ktor-client-android:1.6.4")
     implementation("io.ktor:ktor-client-json:1.6.4")

@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.anitest.ui.componets.CategoryRow
 import com.example.anitest.ui.theme.ANITESTTheme
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -25,23 +26,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ANITESTTheme {
+
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    getActionAnime(viewModel)
+                    //getListOfAnime(viewModel, "action")
+                    CategoryRow(viewModel, category = "action")
                 }
+
             }
         }
 
     }
 }
-
-@OptIn(DelicateCoroutinesApi::class)
-fun getActionAnime(viewModel : MyViewModel) {
-    GlobalScope.launch {
-        var actionAnimeList = viewModel.getAnimeByGenre(1, "action").toString()
-        println(actionAnimeList)
-    }
+/**
+fun getListOfAnime(viewModel : MyViewModel, genre: String) {
+    var actionAnimeList = viewModel.getAnimeByGenre(1, genre)
+    println(actionAnimeList)
+    println(actionAnimeList[0].name)
 }
+ **/
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

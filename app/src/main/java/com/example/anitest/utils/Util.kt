@@ -1,4 +1,4 @@
-package com.example.anitest.model
+package com.example.anitest.utils
 
 import io.ktor.client.HttpClient
 import android.content.ContentValues
