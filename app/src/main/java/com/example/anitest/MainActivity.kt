@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.anitest.navigation.Navigation
 import com.example.anitest.ui.componets.CategoryRow
 import com.example.anitest.ui.theme.ANITESTTheme
 import com.example.myapplication.MyViewModel
@@ -28,7 +29,8 @@ class MainActivity : ComponentActivity() {
             ANITESTTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    CategoryRow(viewModel, category = "action")
+                    //CategoryRow(viewModel, category = "action")
+                    Navigation(viewModel)
                 }
 
             }

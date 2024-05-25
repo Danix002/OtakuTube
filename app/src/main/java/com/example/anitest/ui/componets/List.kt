@@ -27,36 +27,29 @@ import com.example.myapplication.MyViewModel
 fun CategoryRow(viewModel: MyViewModel, category: String) {
     var animeList by remember { mutableStateOf(emptyList<Anime>()) }
     LaunchedEffect(category) {
-        animeList = viewModel.getAnimeByGenre(0, category)
+        animeList = viewModel.getAnimeByGenre(1, category)
     }
-
     Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .padding(8.dp)
+            .background(Color.Cyan)
+            .wrapContentHeight() // Si adatta all'altezza del contenuto
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        Text(
+            text = category,
+            color = Color.Black,
+            fontSize = 24.sp,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
-                .padding(8.dp)
-                .background(Color.Cyan)
+                .fillMaxWidth()
                 .wrapContentHeight() // Si adatta all'altezza del contenuto
         ) {
-            Text(
-                text = category,
-                color = Color.Black,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight() // Si adatta all'altezza del contenuto
-            ) {
-                items(animeList) { anime ->
-                    AnimeCard(anime)
-                }
+            items(animeList) { anime ->
+                AnimeCard(anime)
             }
         }
     }
