@@ -4,35 +4,26 @@ package com.example.myapplication
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.anitest.model.Anime
+import com.example.anitest.model.Genre
 import com.example.anitest.navigation.Screen
 import com.example.anitest.services.AnimeService
 import com.example.anitest.utils.NavigationItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MyViewModel : ViewModel() {
     private val animeService = AnimeService()
-    //private val _animeList = MutableStateFlow<List<Anime>>(emptyList())
-    //val animeList: StateFlow<List<Anime>> = _animeList
 
     var navigationItems = mutableStateOf(listOf(
         NavigationItem(
@@ -64,7 +55,9 @@ class MyViewModel : ViewModel() {
             unselectedIcon = Icons.Outlined.AccountCircle
         ),
     ))
+
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
+
     suspend fun getAnimeByGenre(page: Number, genre: String) : List<Anime> {
         val animeByGenre = MutableStateFlow<List<Anime>>(emptyList())
         withContext(Dispatchers.IO) {
@@ -77,4 +70,15 @@ class MyViewModel : ViewModel() {
         return animeByGenre.value
     }
 
+    suspend fun getGenres() : List<Genre> {
+        val genres = MutableStateFlow<List<Genre>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                genres.value = animeService.getGenres() ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return genres.value
+    }
 }

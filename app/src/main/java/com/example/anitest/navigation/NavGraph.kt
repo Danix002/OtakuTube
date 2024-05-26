@@ -15,7 +15,7 @@ fun SetupNavGraph(
     navController: NavHostController,
     viewModel: MyViewModel
 ) {
-    NavHost(navController,  startDestination = Screen.Home.route  ) {
+    NavHost(navController,  startDestination = Screen.Home.route) {
         composable(
             route = Screen.Home.route
         ) {
