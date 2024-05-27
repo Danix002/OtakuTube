@@ -2,9 +2,12 @@ package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -73,6 +76,36 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre) {
                     AnimeCard(anime)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CategoryRowSkeleton() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .wrapContentHeight()
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Gray.copy(alpha = 0.5f))
+                .padding(start = 8.dp)
+                .height(32.dp)
+                .width(100.dp)
+                .padding(vertical = 4.dp, horizontal = 10.dp)
+        )
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+                items(3){
+                    AnimeCardSkeleton()
+                }
         }
     }
 }

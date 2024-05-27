@@ -24,6 +24,17 @@ app.get('/genre/:genre/:page', async (req, res) => {
 	res.send(JSON.stringify(result, null, 4));
 });
 
+
+app.get('/genre', async (req, res) => {
+	const result = [
+		{ id: 'action', titolo: "Action"},
+		{ id: 'shounen', titolo: "Shounen"},
+		{ id: 'isekai', titolo: "Isekai"}
+	]
+	res.header('Content-Type', 'application/json');
+	res.send(JSON.stringify(result, null, 4));
+});
+
 app.get('/NewSeasons/:page', async (req, res) => {
 	const result = await scapper.newSeason(req.params.page);
 	res.header('Content-Type', 'application/json');
