@@ -46,6 +46,91 @@ async function byGenre(genre, page) {
 	return await anime_list;
 }
 
+/** MODIFIED */
+function genre() {
+	var genre_list = [
+		{ "titolo": "Action", "id": "action" },
+		{ "titolo": "Adult Cast", "id": "adult-cast" },
+		{ "titolo": "Adventure", "id": "adventure" },
+		{ "titolo": "Anthropomorphic", "id": "anthropomorphic" },
+		{ "titolo": "Avant Garde", "id": "avant-garde" },
+		{ "titolo": "Boys Love", "id": "shounen-ai" },
+		{ "titolo": "Cars", "id": "cars" },
+		{ "titolo": "CGDCT", "id": "cgdct" },
+		{ "titolo": "Childcare", "id": "childcare" },
+		{ "titolo": "Comedy", "id": "comedy" },
+		{ "titolo": "Comic", "id": "comic" },
+		{ "titolo": "Crime", "id": "crime" },
+		{ "titolo": "Crossdressing", "id": "crossdressing" },
+		{ "titolo": "Delinquents", "id": "delinquents" },
+		{ "titolo": "Dementia", "id": "dementia" },
+		{ "titolo": "Demons", "id": "demons" },
+		{ "titolo": "Detective", "id": "detective" },
+		{ "titolo": "Drama", "id": "drama" },
+		{ "titolo": "Dub", "id": "dub" },
+		{ "titolo": "Family", "id": "family" },
+		{ "titolo": "Fantasy", "id": "fantasy" },
+		{ "titolo": "Gag Humor", "id": "gag-humor" },
+		{ "titolo": "Game", "id": "game" },
+		{ "titolo": "Gender Bender", "id": "gender-bender" },
+		{ "titolo": "Gore", "id": "gore" },
+		{ "titolo": "Gourmet", "id": "gourmet" },
+		{ "titolo": "Harem", "id": "harem" },
+		{ "titolo": "High Stakes Game", "id": "high-stakes-game" },
+		{ "titolo": "Historical", "id": "historical" },
+		{ "titolo": "Horror", "id": "horror" },
+		{ "titolo": "Isekai", "id": "isekai" },
+		{ "titolo": "Iyashikei", "id": "iyashikei" },
+		{ "titolo": "Josei", "id": "josei" },
+		{ "titolo": "Kids", "id": "kids" },
+		{ "titolo": "Love Polygon", "id": "love-polygon" },
+		{ "titolo": "Magic", "id": "magic" },
+		{ "titolo": "Mahou Shoujo", "id": "mahou-shoujo" },
+		{ "titolo": "Martial Arts", "id": "martial-arts" },
+		{ "titolo": "Mecha", "id": "mecha" },
+		{ "titolo": "Medical", "id": "medical" },
+		{ "titolo": "Military", "id": "military" },
+		{ "titolo": "Music", "id": "music" },
+		{ "titolo": "Mystery", "id": "mystery" },
+		{ "titolo": "Mythology", "id": "mythology" },
+		{ "titolo": "Organized Crime", "id": "organized-crime" },
+		{ "titolo": "Parody", "id": "parody" },
+		{ "titolo": "Performing Arts", "id": "performing-arts" },
+		{ "titolo": "Pets", "id": "pets" },
+		{ "titolo": "Police", "id": "police" },
+		{ "titolo": "Psychological", "id": "psychological" },
+		{ "titolo": "Racing", "id": "racing" },
+		{ "titolo": "Reincarnation", "id": "reincarnation" },
+		{ "titolo": "Romance", "id": "romance" },
+		{ "titolo": "Romantic Subtext", "id": "romantic-subtext" },
+		{ "titolo": "Samurai", "id": "samurai" },
+		{ "titolo": "School", "id": "school" },
+		{ "titolo": "Sci-Fi", "id": "sci-fi" },
+		{ "titolo": "Seinen", "id": "seinen" },
+		{ "titolo": "Shoujo", "id": "shoujo" },
+		{ "titolo": "Shoujo Ai", "id": "shoujo-ai" },
+		{ "titolo": "Shounen", "id": "shounen" },
+		{ "titolo": "Showbiz", "id": "showbiz" },
+		{ "titolo": "Slice of Life", "id": "slice-of-life" },
+		{ "titolo": "Space", "id": "space" },
+		{ "titolo": "Sports", "id": "sports" },
+		{ "titolo": "Strategy Game", "id": "strategy-game" },
+		{ "titolo": "Super Power", "id": "super-power" },
+		{ "titolo": "Supernatural", "id": "supernatural" },
+		{ "titolo": "Survival", "id": "survival" },
+		{ "titolo": "Suspense", "id": "suspense" },
+		{ "titolo": "Team Sports", "id": "team-sports" },
+		{ "titolo": "Thriller", "id": "thriller" },
+		{ "titolo": "Time Travel", "id": "time-travel" },
+		{ "titolo": "Vampire", "id": "vampire" },
+		{ "titolo": "Video Game", "id": "video-game" },
+		{ "titolo": "Visual Arts", "id": "visual-arts" },
+		{ "titolo": "Work Life", "id": "work-life" },
+		{ "titolo": "Workplace", "id": "workplace" }
+	];
+	return genre_list;
+}
+
 async function popular(page) {
 	var anime_list = [];
 
@@ -149,6 +234,10 @@ async function getDownloadLink(episode_link) {
 module.exports = {
 	popular,
 	byGenre,
+
+	/** MODIFIED */
+	genre,
+
 	newSeason,
 	search,
 	anime,

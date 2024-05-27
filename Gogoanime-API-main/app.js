@@ -18,19 +18,15 @@ app.get('/Popular/:page', async (req, res) => {
 	res.send(JSON.stringify(result, null, 4));
 });
 
-app.get('/genre/:genre/:page', async (req, res) => {
-	const result = await scapper.byGenre(req.params.genre, req.params.page);
+/** MODIFIED */
+app.get('/genre', async (req, res) => {
+	const result = await scapper.genre();
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));
 });
 
-
-app.get('/genre', async (req, res) => {
-	const result = [
-		{ id: 'action', titolo: "Action"},
-		{ id: 'shounen', titolo: "Shounen"},
-		{ id: 'isekai', titolo: "Isekai"}
-	]
+app.get('/genre/:genre/:page', async (req, res) => {
+	const result = await scapper.byGenre(req.params.genre, req.params.page);
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));
 });
