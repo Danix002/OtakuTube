@@ -70,17 +70,17 @@ fun AnimeCard(anime: Anime) {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .padding(start = 8.dp)
         )
     }
 }
 
 @Composable
 fun AnimeBigCard(anime: Anime) {
-
     Column (
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(112, 82, 137).copy(alpha = 0.8f))
+            .background(Color(112, 82, 137).copy(alpha = 1f))
             .width(256.dp)
     ) {
         Image(

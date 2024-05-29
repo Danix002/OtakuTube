@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.example.anitest.model.Genre
+import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
 import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.CategoryRow
@@ -32,6 +33,9 @@ fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
         containerColor = Color(102, 90, 110),
         bottomBar = {
             BottomNavigation(viewModel , navController)
+        },
+        topBar = {
+            AppBar()
         }
 
     ) { contentPadding ->
