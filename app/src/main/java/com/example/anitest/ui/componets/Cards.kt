@@ -26,13 +26,14 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
-
+import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnimeCard(anime: Anime) {
+fun AnimeCard(anime: Anime, navController: NavHostController) {
     var openDialog = remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
 
@@ -54,7 +55,10 @@ fun AnimeCard(anime: Anime) {
                 .width(128.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .combinedClickable(
-                    onClick = {  },
+                    onClick = {
+                        /** LOAD ANIME INFORMATION*/
+                        navController.navigate("anime/${anime.name}")
+                    },
                     onLongClick = {
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                         openDialog.value = true

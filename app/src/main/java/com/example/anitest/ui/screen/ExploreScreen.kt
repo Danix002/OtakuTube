@@ -43,7 +43,7 @@ fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
                 Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                     if (isLosded) {
                         genresList.forEach{
-                            CategoryRow(viewModel, category = it)
+                            CategoryRow(viewModel, category = it, navController)
                         }
                     } else {
                         for (i in 1..10) {

@@ -8,6 +8,7 @@ import com.example.anitest.ui.screen.HomeScreen
 import com.example.anitest.ui.screen.LibScreen
 import com.example.anitest.ui.screen.ProfileScreen
 import com.example.anitest.ui.screen.ZappingScreen
+import com.example.anitest.ui.screen.sub.AnimeScreen
 import com.example.myapplication.MyViewModel
 
 @Composable
@@ -35,6 +36,10 @@ fun SetupNavGraph(
             route = Screen.Profile.route
         ) {
             ProfileScreen(viewModel, navController)
+        }
+        composable("anime/{name}") { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            AnimeScreen(viewModel, name)
         }
     }
 }

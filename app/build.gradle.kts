@@ -58,6 +58,9 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:1.6.4")
     implementation ("com.google.code.gson:gson:2.8.8")
 
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.0")

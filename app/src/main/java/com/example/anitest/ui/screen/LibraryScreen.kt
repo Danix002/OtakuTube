@@ -15,7 +15,7 @@ import com.example.myapplication.MyViewModel
 fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
     Scaffold (
         bottomBar = {
-            BottomNavigation(viewModel , navController )
+            BottomNavigation(viewModel , navController)
         }
     ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {

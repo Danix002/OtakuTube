@@ -24,7 +24,7 @@ fun AnimeLoaderButton( onClick : () -> Unit, loading : Boolean): Unit {
         modifier = Modifier.padding(start = 8.dp)
         ) {
             if (!loading) Text(text = "Other")
-            Icon(imageVector = if (!loading) Icons.Filled.KeyboardArrowRight else Icons.Default.Refresh, contentDescription = "" )
+            Icon(imageVector = if (!loading) Icons.Filled.KeyboardArrowRight else Icons.Default.Refresh, contentDescription = "")
     }
 }
 

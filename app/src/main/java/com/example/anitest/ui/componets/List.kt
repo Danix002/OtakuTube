@@ -27,13 +27,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.anitest.model.Anime
 import com.example.anitest.model.Genre
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CategoryRow(viewModel: MyViewModel, category: Genre) {
+fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostController) {
     var animeList by remember { mutableStateOf(emptyList<Anime>()) }
     val coroutineScope = rememberCoroutineScope()
     var isLoaded by remember { mutableStateOf(false) }
@@ -87,7 +88,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre) {
                 }
             }else {
                 itemsIndexed(animeList) { index, anime ->
-                    AnimeCard(anime)
+                    AnimeCard(anime, navController)
                     if ( (index == (animeList.size-1)) ) {
                         if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading)
                         else Text(
