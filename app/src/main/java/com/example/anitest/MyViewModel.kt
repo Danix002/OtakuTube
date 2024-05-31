@@ -78,6 +78,18 @@ class MyViewModel : ViewModel() {
         return animeByGenre.value
     }
 
+    suspend fun getAllAnime(): List<Anime> {
+        val allAnime = MutableStateFlow<List<Anime>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                allAnime.value = animeService.getAllAnime() ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return allAnime.value
+    }
+
     suspend fun getGenres(): List<Genre> {
         val genres = MutableStateFlow<List<Genre>>(emptyList())
         withContext(Dispatchers.IO) {

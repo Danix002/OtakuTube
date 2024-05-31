@@ -8,7 +8,7 @@ app.use(cors());
 
 app.get('/', (req, res) => {
 	res.send(
-		'👋 Hello world🌍, Welcome to 🦄 GogoAnime API 🧬 </br> Available routes : /Popular , /NewSeasons , /search/:query , /getAnime/:animeId , /getEpisode/:episodeId'
+		'👋 Hello world🌍, Welcome to 🦄 GogoAnime API 🧬 </br> Available routes : /Popular , /NewSeasons , /search/:query , /getAnime/:animeId , /getEpisode/:episodeId, ADDED BY DANIELA MAGRi AND ALESSANDRO SCICOLONE : /genre , /allanime'
 	);
 });
 
@@ -21,6 +21,13 @@ app.get('/Popular/:page', async (req, res) => {
 /** MODIFIED */
 app.get('/genre', async (req, res) => {
 	const result = await scapper.genre();
+	res.header('Content-Type', 'application/json');
+	res.send(JSON.stringify(result, null, 4));
+});
+
+/** MODIFIED */
+app.get('/allanime', async (req, res) => {
+	const result = await scapper.allanime();
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));
 });

@@ -23,7 +23,7 @@ fun AnimeScreen(viewModel: MyViewModel, name: String) {
             animeInfoState.value = animeInfo
         }
     }
-    println(animeInfoState.value)
+    //println(animeInfoState.value)
 
     Box {
         // SCREEN BODY

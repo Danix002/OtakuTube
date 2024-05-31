@@ -43,6 +43,14 @@ class AnimeService {
         return gson.fromJson(animeJson.readText(), type)
     }
 
+    suspend fun getAllAnime(): List<Anime> {
+        //val allAnimeJson = Util.GET(httpClient, "$baseURLALE/genre/allanime") ?: return emptyList()
+        //val allAnimeJson = Util.GET(httpClient, "$baseURLDANIport/allanime") ?: return emptyList()
+        val allAnimeJson = Util.GET(httpClient, "$baseURLDANIfix/allanime") ?: return emptyList()
+        val type = object : TypeToken<List<Anime>>() {}.type
+        return gson.fromJson(allAnimeJson.readText(), type)
+    }
+
     suspend fun getGenres(): List<Genre> {
         //val genresJson = Util.GET(httpClient, "$baseURLALE/genre") ?: return emptyList()
         //val genresJson = Util.GET(httpClient, "$baseURLDANIport/genre") ?: return emptyList()

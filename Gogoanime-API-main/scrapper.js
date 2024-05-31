@@ -150,6 +150,28 @@ async function popular(page) {
 	return await anime_list;
 }
 
+/** MODIFIED */
+async function allanime() {
+	var anime_list = [];
+	let page = 1;
+    while (page <= 98) {
+		console.log(`Fetching page ${page}`);
+		res = await axios.get(`${baseUrl}/anime-list.html?page=${page}`);
+		const body = await res.data;
+		const $ = cheerio.load(body);
+		$('div.main_body div.anime_list_body ul.listing li').each((index, element) => {
+			$element = $(element);
+            name = $element.find('a').text().trim();
+            link = $element.find('a').attr('href');
+            anime_name = { name, anime_id: link.slice(10) };
+			anime_list.push(anime_name);
+		});
+		page++;
+    }
+	console.log(anime_list)
+    return anime_list;
+}
+
 async function search(query) {
 	var anime_list = [];
 
@@ -237,6 +259,7 @@ module.exports = {
 
 	/** MODIFIED */
 	genre,
+	allanime,
 
 	newSeason,
 	search,
