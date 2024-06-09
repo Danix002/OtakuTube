@@ -49,84 +49,84 @@ async function byGenre(genre, page) {
 /** MODIFIED */
 function genre() {
 	var genre_list = [
-		{ "titolo": "Action", "id": "action" },
-		{ "titolo": "Adult Cast", "id": "adult-cast" },
-		{ "titolo": "Adventure", "id": "adventure" },
-		{ "titolo": "Anthropomorphic", "id": "anthropomorphic" },
-		{ "titolo": "Avant Garde", "id": "avant-garde" },
-		{ "titolo": "Boys Love", "id": "shounen-ai" },
-		{ "titolo": "Cars", "id": "cars" },
-		{ "titolo": "CGDCT", "id": "cgdct" },
-		{ "titolo": "Childcare", "id": "childcare" },
-		{ "titolo": "Comedy", "id": "comedy" },
-		{ "titolo": "Comic", "id": "comic" },
-		{ "titolo": "Crime", "id": "crime" },
-		{ "titolo": "Crossdressing", "id": "crossdressing" },
-		{ "titolo": "Delinquents", "id": "delinquents" },
-		{ "titolo": "Dementia", "id": "dementia" },
-		{ "titolo": "Demons", "id": "demons" },
-		{ "titolo": "Detective", "id": "detective" },
-		{ "titolo": "Drama", "id": "drama" },
-		{ "titolo": "Dub", "id": "dub" },
-		{ "titolo": "Family", "id": "family" },
-		{ "titolo": "Fantasy", "id": "fantasy" },
-		{ "titolo": "Gag Humor", "id": "gag-humor" },
-		{ "titolo": "Game", "id": "game" },
-		{ "titolo": "Gender Bender", "id": "gender-bender" },
-		{ "titolo": "Gore", "id": "gore" },
-		{ "titolo": "Gourmet", "id": "gourmet" },
-		{ "titolo": "Harem", "id": "harem" },
-		{ "titolo": "High Stakes Game", "id": "high-stakes-game" },
-		{ "titolo": "Historical", "id": "historical" },
-		{ "titolo": "Horror", "id": "horror" },
-		{ "titolo": "Isekai", "id": "isekai" },
-		{ "titolo": "Iyashikei", "id": "iyashikei" },
-		{ "titolo": "Josei", "id": "josei" },
-		{ "titolo": "Kids", "id": "kids" },
-		{ "titolo": "Love Polygon", "id": "love-polygon" },
-		{ "titolo": "Magic", "id": "magic" },
-		{ "titolo": "Mahou Shoujo", "id": "mahou-shoujo" },
-		{ "titolo": "Martial Arts", "id": "martial-arts" },
-		{ "titolo": "Mecha", "id": "mecha" },
-		{ "titolo": "Medical", "id": "medical" },
-		{ "titolo": "Military", "id": "military" },
-		{ "titolo": "Music", "id": "music" },
-		{ "titolo": "Mystery", "id": "mystery" },
-		{ "titolo": "Mythology", "id": "mythology" },
-		{ "titolo": "Organized Crime", "id": "organized-crime" },
-		{ "titolo": "Parody", "id": "parody" },
-		{ "titolo": "Performing Arts", "id": "performing-arts" },
-		{ "titolo": "Pets", "id": "pets" },
-		{ "titolo": "Police", "id": "police" },
-		{ "titolo": "Psychological", "id": "psychological" },
-		{ "titolo": "Racing", "id": "racing" },
-		{ "titolo": "Reincarnation", "id": "reincarnation" },
-		{ "titolo": "Romance", "id": "romance" },
-		{ "titolo": "Romantic Subtext", "id": "romantic-subtext" },
-		{ "titolo": "Samurai", "id": "samurai" },
-		{ "titolo": "School", "id": "school" },
-		{ "titolo": "Sci-Fi", "id": "sci-fi" },
-		{ "titolo": "Seinen", "id": "seinen" },
-		{ "titolo": "Shoujo", "id": "shoujo" },
-		{ "titolo": "Shoujo Ai", "id": "shoujo-ai" },
-		{ "titolo": "Shounen", "id": "shounen" },
-		{ "titolo": "Showbiz", "id": "showbiz" },
-		{ "titolo": "Slice of Life", "id": "slice-of-life" },
-		{ "titolo": "Space", "id": "space" },
-		{ "titolo": "Sports", "id": "sports" },
-		{ "titolo": "Strategy Game", "id": "strategy-game" },
-		{ "titolo": "Super Power", "id": "super-power" },
-		{ "titolo": "Supernatural", "id": "supernatural" },
-		{ "titolo": "Survival", "id": "survival" },
-		{ "titolo": "Suspense", "id": "suspense" },
-		{ "titolo": "Team Sports", "id": "team-sports" },
-		{ "titolo": "Thriller", "id": "thriller" },
-		{ "titolo": "Time Travel", "id": "time-travel" },
-		{ "titolo": "Vampire", "id": "vampire" },
-		{ "titolo": "Video Game", "id": "video-game" },
-		{ "titolo": "Visual Arts", "id": "visual-arts" },
-		{ "titolo": "Work Life", "id": "work-life" },
-		{ "titolo": "Workplace", "id": "workplace" }
+		{ titolo: 'Action', id: 'action' },
+		{ titolo: 'Adult Cast', id: 'adult-cast' },
+		{ titolo: 'Adventure', id: 'adventure' },
+		{ titolo: 'Anthropomorphic', id: 'anthropomorphic' },
+		{ titolo: 'Avant Garde', id: 'avant-garde' },
+		{ titolo: 'Boys Love', id: 'shounen-ai' },
+		{ titolo: 'Cars', id: 'cars' },
+		{ titolo: 'CGDCT', id: 'cgdct' },
+		{ titolo: 'Childcare', id: 'childcare' },
+		{ titolo: 'Comedy', id: 'comedy' },
+		{ titolo: 'Comic', id: 'comic' },
+		{ titolo: 'Crime', id: 'crime' },
+		{ titolo: 'Crossdressing', id: 'crossdressing' },
+		{ titolo: 'Delinquents', id: 'delinquents' },
+		{ titolo: 'Dementia', id: 'dementia' },
+		{ titolo: 'Demons', id: 'demons' },
+		{ titolo: 'Detective', id: 'detective' },
+		{ titolo: 'Drama', id: 'drama' },
+		{ titolo: 'Dub', id: 'dub' },
+		{ titolo: 'Family', id: 'family' },
+		{ titolo: 'Fantasy', id: 'fantasy' },
+		{ titolo: 'Gag Humor', id: 'gag-humor' },
+		{ titolo: 'Game', id: 'game' },
+		{ titolo: 'Gender Bender', id: 'gender-bender' },
+		{ titolo: 'Gore', id: 'gore' },
+		{ titolo: 'Gourmet', id: 'gourmet' },
+		{ titolo: 'Harem', id: 'harem' },
+		{ titolo: 'High Stakes Game', id: 'high-stakes-game' },
+		{ titolo: 'Historical', id: 'historical' },
+		{ titolo: 'Horror', id: 'horror' },
+		{ titolo: 'Isekai', id: 'isekai' },
+		{ titolo: 'Iyashikei', id: 'iyashikei' },
+		{ titolo: 'Josei', id: 'josei' },
+		{ titolo: 'Kids', id: 'kids' },
+		{ titolo: 'Love Polygon', id: 'love-polygon' },
+		{ titolo: 'Magic', id: 'magic' },
+		{ titolo: 'Mahou Shoujo', id: 'mahou-shoujo' },
+		{ titolo: 'Martial Arts', id: 'martial-arts' },
+		{ titolo: 'Mecha', id: 'mecha' },
+		{ titolo: 'Medical', id: 'medical' },
+		{ titolo: 'Military', id: 'military' },
+		{ titolo: 'Music', id: 'music' },
+		{ titolo: 'Mystery', id: 'mystery' },
+		{ titolo: 'Mythology', id: 'mythology' },
+		{ titolo: 'Organized Crime', id: 'organized-crime' },
+		{ titolo: 'Parody', id: 'parody' },
+		{ titolo: 'Performing Arts', id: 'performing-arts' },
+		{ titolo: 'Pets', id: 'pets' },
+		{ titolo: 'Police', id: 'police' },
+		{ titolo: 'Psychological', id: 'psychological' },
+		{ titolo: 'Racing', id: 'racing' },
+		{ titolo: 'Reincarnation', id: 'reincarnation' },
+		{ titolo: 'Romance', id: 'romance' },
+		{ titolo: 'Romantic Subtext', id: 'romantic-subtext' },
+		{ titolo: 'Samurai', id: 'samurai' },
+		{ titolo: 'School', id: 'school' },
+		{ titolo: 'Sci-Fi', id: 'sci-fi' },
+		{ titolo: 'Seinen', id: 'seinen' },
+		{ titolo: 'Shoujo', id: 'shoujo' },
+		{ titolo: 'Shoujo Ai', id: 'shoujo-ai' },
+		{ titolo: 'Shounen', id: 'shounen' },
+		{ titolo: 'Showbiz', id: 'showbiz' },
+		{ titolo: 'Slice of Life', id: 'slice-of-life' },
+		{ titolo: 'Space', id: 'space' },
+		{ titolo: 'Sports', id: 'sports' },
+		{ titolo: 'Strategy Game', id: 'strategy-game' },
+		{ titolo: 'Super Power', id: 'super-power' },
+		{ titolo: 'Supernatural', id: 'supernatural' },
+		{ titolo: 'Survival', id: 'survival' },
+		{ titolo: 'Suspense', id: 'suspense' },
+		{ titolo: 'Team Sports', id: 'team-sports' },
+		{ titolo: 'Thriller', id: 'thriller' },
+		{ titolo: 'Time Travel', id: 'time-travel' },
+		{ titolo: 'Vampire', id: 'vampire' },
+		{ titolo: 'Video Game', id: 'video-game' },
+		{ titolo: 'Visual Arts', id: 'visual-arts' },
+		{ titolo: 'Work Life', id: 'work-life' },
+		{ titolo: 'Workplace', id: 'workplace' },
 	];
 	return genre_list;
 }
@@ -151,25 +151,23 @@ async function popular(page) {
 }
 
 /** MODIFIED */
-async function allanime() {
+async function allanime(page) {
 	var anime_list = [];
-	let page = 1;
-    while (page <= 98) {
-		console.log(`Fetching page ${page}`);
-		res = await axios.get(`${baseUrl}/anime-list.html?page=${page}`);
-		const body = await res.data;
-		const $ = cheerio.load(body);
-		$('div.main_body div.anime_list_body ul.listing li').each((index, element) => {
-			$element = $(element);
-            name = $element.find('a').text().trim();
-            link = $element.find('a').attr('href');
-            anime_name = { name, anime_id: link.slice(10) };
-			anime_list.push(anime_name);
-		});
-		page++;
-    }
-	console.log(anime_list)
-    return anime_list;
+	//let page = 1;
+	//while (page <= 98) {
+	res = await axios.get(`${baseUrl}/anime-list.html?page=${page}`);
+	const body = await res.data;
+	const $ = cheerio.load(body);
+	$('div.main_body div.anime_list_body ul.listing li').each((index, element) => {
+		$element = $(element);
+		name = $element.find('a').text().trim();
+		link = $element.find('a').attr('href');
+		anime_name = { name, anime_id: link.slice(10) };
+		anime_list.push(anime_name);
+	});
+	//page++;
+	//}
+	return anime_list;
 }
 
 async function search(query) {
@@ -191,6 +189,7 @@ async function search(query) {
 	return await anime_list;
 }
 
+/** MODIFIED */
 async function anime(_anime_name) {
 	episode_array = [];
 
@@ -200,9 +199,27 @@ async function anime(_anime_name) {
 
 	img_url = $('div.anime_info_body_bg  img').attr('src');
 	anime_name = $('div.anime_info_body_bg  h1').text();
-	anime_about = $('div.main_body  div:nth-child(2) > div.anime_info_body_bg > p:nth-child(5)').text();
+	anime_about = $('div.anime_info_body_bg  div.description').text();
 
-	anime_about = $('div.main_body  div:nth-child(2) > div.anime_info_body_bg > p:nth-child(5)').text();
+	anime_details = $('div.anime_info_body_bg  p.type');
+
+	let anime_type, anime_genres, anime_release, anime_status, anime_othernames;
+
+	anime_details.each((index, element) => {
+		const text = $(element).text();
+
+		if (text.includes('Type:')) {
+			anime_type = text.replace('Type: ', '').trim();
+		} else if (text.includes('Genre:')) {
+			anime_genres = text.replace('Genre: ', '').trim().split(', ');
+		} else if (text.includes('Released:')) {
+			anime_release = text.replace('Released: ', '').trim();
+		} else if (text.includes('Status:')) {
+			anime_status = text.replace('Status: ', '').trim();
+		} else if (text.includes('Other name:')) {
+			anime_othernames = text.replace('Other name: ', '').trim().split(', ');
+		}
+	});
 
 	//add the new code here
 	el = $('#episode_page');
@@ -215,7 +232,17 @@ async function anime(_anime_name) {
 		episode_array.push(`${_anime_name}-episode-${i}`);
 	}
 
-	anime_result = { name: anime_name, img_url: img_url, about: anime_about, episode_id: episode_array };
+	anime_result = {
+		name: anime_name,
+		img_url: img_url,
+		about: anime_about,
+		episode_id: episode_array,
+		type: anime_type,
+		release: anime_release,
+		genres: anime_genres,
+		status: anime_status,
+		othername: anime_othernames,
+	};
 
 	return await anime_result;
 }

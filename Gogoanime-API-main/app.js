@@ -26,8 +26,8 @@ app.get('/genre', async (req, res) => {
 });
 
 /** MODIFIED */
-app.get('/allanime', async (req, res) => {
-	const result = await scapper.allanime();
+app.get('/allanime/:page', async (req, res) => {
+	const result = await scapper.allanime(req.params.page);
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));
 });
