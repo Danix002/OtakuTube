@@ -6,10 +6,10 @@ import retrofit2.http.Path
 
 interface AnimeInformationApi {
     @GET("anime/{name}")
-    fun getAnimeInformations(@Path("name") name: String): Call<List<AnimeInformation>>
+    fun getAnimeInformations(@Path("name") name: String): Call<List<AnimeTrailer>>
 }
 
-data class AnimeInformation(
+data class AnimeTrailer(
     val categories: List<Categories>,
     val createdAt: String,
     val dayViews: String,
@@ -35,5 +35,17 @@ data class AnimeInformation(
     val trailer: String,
     val weekViews: String,
     val year: String
+)
+
+data class AnimeInfo(
+    val name: String,
+    val img_url: String,
+    val about: String,
+    val episode_id: List<String>,
+    val type: String,
+    val release: String,
+    val genres: List<String>,
+    val status: String,
+    val othername: List<String>,
 )
 

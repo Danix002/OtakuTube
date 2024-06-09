@@ -13,7 +13,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
-import com.example.anitest.model.Anime
 import com.example.anitest.model.Genre
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
@@ -30,6 +29,7 @@ fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
         genresList = viewModel.getGenres()
         isLosded = true
     }
+
 
     Scaffold (
         containerColor = Color(102, 90, 110),

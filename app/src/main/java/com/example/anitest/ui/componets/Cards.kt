@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
-import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -40,6 +39,16 @@ fun AnimeCard(anime: Anime, navController: NavHostController) {
     Column (
         modifier = Modifier
             .width(128.dp)
+            .combinedClickable(
+                onClick = {
+                    /** LOAD ANIME INFORMATION*/
+                    navController.navigate("anime/${anime.name}_${anime.anime_id}")
+                },
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    openDialog.value = true
+                }
+            )
     ) {
         if (openDialog.value) {
             DialogWithImage(
@@ -54,16 +63,7 @@ fun AnimeCard(anime: Anime, navController: NavHostController) {
                 .height(180.dp)
                 .width(128.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .combinedClickable(
-                    onClick = {
-                        /** LOAD ANIME INFORMATION*/
-                        navController.navigate("anime/${anime.name}")
-                    },
-                    onLongClick = {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        openDialog.value = true
-                    }
-                )
+
         )
         Text(
             text = anime.name,

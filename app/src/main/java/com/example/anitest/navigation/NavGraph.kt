@@ -37,9 +37,10 @@ fun SetupNavGraph(
         ) {
             ProfileScreen(viewModel, navController)
         }
-        composable("anime/{name}") { backStackEntry ->
+        composable("anime/{name}_{id}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
-            AnimeScreen(viewModel, name)
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            AnimeScreen(viewModel, navController, name, id)
         }
     }
 }
