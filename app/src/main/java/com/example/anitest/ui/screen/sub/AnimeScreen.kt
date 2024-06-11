@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
 import com.example.anitest.ui.componets.BottomNavigation
@@ -27,13 +28,11 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     val animeInfo by viewModel.animeInfo.collectAsState()
 
     LaunchedEffect(Unit) {
-        // Collect the flow from getAnimeInformations and update the state
-        viewModel.getAnimeInfoTrailer(name)
-        // Call getAnime function to fetch the anime information
-        viewModel.getAnimeInfo(id)
+        viewModel.forgetAnimeInfo()
+        viewModel.forgetAnimeInfoTrailer()
+        viewModel.setAnimeInfoTrailer(name)
+        viewModel.setAnimeInfo(id)
     }
-
-
 
     Scaffold (
         containerColor = Color(102, 90, 110),
@@ -47,7 +46,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     ) { contentPadding ->
         BackgroundImage(contentPadding, content = {
             Column (modifier = Modifier.verticalScroll(rememberScrollState())){
-                animeInfo?.let { Text(text = it.about) }
+                animeInfo?.let { AnimeThumbnail(img = it.img_url, trailer = "https://www.youtube.com/watch?v=eI2ijvh5hhE") }
             }
         })
     }

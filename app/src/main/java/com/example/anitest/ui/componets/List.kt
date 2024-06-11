@@ -1,5 +1,6 @@
 package com.example.anitest.ui.componets
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,11 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,30 +33,31 @@ import androidx.navigation.NavHostController
 import com.example.anitest.model.Anime
 import com.example.anitest.model.Genre
 import com.example.myapplication.MyViewModel
-import kotlinx.coroutines.launch
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostController) {
+    val animeHashMap by viewModel.animeForGenres.collectAsState()
     var animeList by remember { mutableStateOf(emptyList<Anime>()) }
-    val coroutineScope = rememberCoroutineScope()
+
     var isLoaded by remember { mutableStateOf(false) }
     var page by remember { mutableIntStateOf(1) }
     var nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = category, key2 = isLoaded) {
+
+    LaunchedEffect(key1 = category) {
         if (!isLoaded) {
-            coroutineScope.launch {
-                animeList = viewModel.getAnimeByGenre(0, category.id)
-                isLoaded = true
-            }
+            viewModel.addAnimeByGenre(0, category.id)
+            animeList = animeHashMap.get(category.id)!!
+            isLoaded = true
         }
     }
+
     LaunchedEffect (page) {
-        if (page != 1) {
+        if (page > 0) {
             loading = true
-            val nextPage = viewModel.getAnimeByGenre(page, category.id)
-            animeList += nextPage
-            if (nextPage.isEmpty()) nothingElse = true
+            viewModel.addAnimeByGenre(page, category.id)
+            animeList = animeHashMap.get(category.id)!!
             loading = false
         }
     }

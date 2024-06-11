@@ -6,6 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,13 +24,11 @@ import com.example.myapplication.MyViewModel
 
 @Composable
 fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
-    var genresList by remember { mutableStateOf(emptyList<Genre>()) }
-    var isLosded by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        genresList = viewModel.getGenres()
-        isLosded = true
-    }
+    val genresList by viewModel.genres.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.setGenres()
+    }
 
     Scaffold (
         containerColor = Color(102, 90, 110),
@@ -43,7 +42,7 @@ fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
     ) { contentPadding ->
             BackgroundImage(contentPadding, content = {
                 Column (modifier = Modifier.verticalScroll(rememberScrollState())){
-                    if (isLosded) {
+                    if (genresList != null) {
                         genresList.forEach{
                             CategoryRow(viewModel, category = it, navController)
                         }

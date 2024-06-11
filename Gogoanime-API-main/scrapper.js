@@ -151,7 +151,7 @@ async function popular(page) {
 }
 
 /** MODIFIED */
-async function allanime(page) {
+async function allAnime(page) {
 	var anime_list = [];
 	//let page = 1;
 	//while (page <= 98) {
@@ -207,7 +207,6 @@ async function anime(_anime_name) {
 
 	anime_details.each((index, element) => {
 		const text = $(element).text();
-
 		if (text.includes('Type:')) {
 			anime_type = text.replace('Type: ', '').trim();
 		} else if (text.includes('Genre:')) {
@@ -221,11 +220,8 @@ async function anime(_anime_name) {
 		}
 	});
 
-	//add the new code here
 	el = $('#episode_page');
-
 	ep_start = 1;
-
 	ep_end = el.children().last().find('a').text().split('-')[1];
 
 	for (let i = ep_start; i <= ep_end; i++) {
@@ -286,7 +282,7 @@ module.exports = {
 
 	/** MODIFIED */
 	genre,
-	allanime,
+	allAnime,
 
 	newSeason,
 	search,

@@ -41,6 +41,13 @@ class MyViewModel : ViewModel() {
     private val _animeInfo = MutableStateFlow<AnimeInfo?>(null)
     val animeInfo: StateFlow<AnimeInfo?> get() = _animeInfo
 
+    private val _animeForGenres = MutableStateFlow<HashMap<String, List<Anime>>>(hashMapOf())
+    val animeForGenres: StateFlow<HashMap<String, List<Anime>>> get() = _animeForGenres
+
+    private val _genres = MutableStateFlow<List<Genre>>(emptyList())
+    val genres: StateFlow<List<Genre>> get() = _genres
+
+
     var navigationItems = mutableStateOf(
         listOf(
             NavigationItem(
@@ -76,7 +83,57 @@ class MyViewModel : ViewModel() {
 
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
 
-    suspend fun getAnimeByGenre(page: Number, genre: String): List<Anime> {
+
+    fun setAnimeInfo(id: String) {
+        viewModelScope.launch {
+            _animeInfo.value = getAnimeInfo(id)
+        }
+    }
+
+    fun forgetAnimeInfo(){
+        _animeInfo.value = null
+    }
+
+    fun setAnimeInfoTrailer(name: String) {
+        viewModelScope.launch {
+            _animeInfoTrailer.value = getAnimeInfoTrailer(name)
+        }
+
+    }
+
+    fun forgetAnimeInfoTrailer(){
+        _animeInfoTrailer.value = null
+    }
+
+    suspend fun addAnimeByGenre(page: Number, genre: String): Boolean{
+        var flagLoading = true
+        viewModelScope.launch {
+            if(_animeForGenres.value.containsKey(genre)) {
+                if(page == 0)
+                    _animeForGenres.value.set(genre, getAnimeByGenre(page, genre))
+                else {
+                    val currentAnimeListByGenre = _animeForGenres.value.get(genre)
+                    val newAnimeListByGenre = getAnimeByGenre(page, genre)
+                    _animeForGenres.value.set(genre, currentAnimeListByGenre!! + newAnimeListByGenre)
+                    flagLoading = (newAnimeListByGenre.size == 0)
+                }
+            }else
+                _animeForGenres.value.put(genre, getAnimeByGenre(page, genre))
+        }.join()
+        return flagLoading
+    }
+
+    fun setAllAnime() {
+
+    }
+
+    fun setGenres() {
+        viewModelScope.launch {
+            _genres.value = getGenres()
+        }
+    }
+
+    private suspend fun getAnimeByGenre(page: Number, genre: String): List<Anime> {
         val animeByGenre = MutableStateFlow<List<Anime>>(emptyList())
         withContext(Dispatchers.IO) {
             runCatching {
@@ -88,7 +145,7 @@ class MyViewModel : ViewModel() {
         return animeByGenre.value
     }
 
-    suspend fun getAllAnime(page : Number): List<Anime> {
+    private suspend fun getAllAnime(page : Number): List<Anime> {
         val allAnime = MutableStateFlow<List<Anime>>(emptyList())
         withContext(Dispatchers.IO) {
             runCatching {
@@ -100,13 +157,13 @@ class MyViewModel : ViewModel() {
         return allAnime.value
     }
 
-    private suspend fun getAnime(id : String): AnimeInfo {
+    private suspend fun getAnimeInfo(id : String): AnimeInfo {
         val animeInfo = MutableStateFlow<AnimeInfo>(
             AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
         )
         withContext(Dispatchers.IO) {
             runCatching {
-                animeInfo.value = animeService.getAnime(id) ?: AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
+                animeInfo.value = animeService.getAnimeInfo(id) ?: AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
             }.onFailure {
                 it.printStackTrace()
             }
@@ -114,7 +171,7 @@ class MyViewModel : ViewModel() {
         return animeInfo.value
     }
 
-    suspend fun getGenres(): List<Genre> {
+    private suspend fun getGenres(): List<Genre> {
         val genres = MutableStateFlow<List<Genre>>(emptyList())
         withContext(Dispatchers.IO) {
             runCatching {
@@ -125,20 +182,9 @@ class MyViewModel : ViewModel() {
         }
         return genres.value
     }
-    fun getAnimeInfo(id: String) {
-        viewModelScope.launch {
-            _animeInfo.value = getAnime(id)
-        }
-    }
-    fun getAnimeInfoTrailer(name: String) {
-        viewModelScope.launch {
-            _animeInfoTrailer.value = getAnimeInformations(name)
-        }
-
-    }
 
     val api = AnimeService.RetrofitClient.instance.create(AnimeInformationApi::class.java)
-    private fun getAnimeInformations(name: String): Flow<List<AnimeTrailer>> {
+    private fun getAnimeInfoTrailer(name: String): Flow<List<AnimeTrailer>> {
         val animeInfo = MutableStateFlow<List<AnimeTrailer>>(emptyList())
 
         api.getAnimeInformations(name).enqueue(object : Callback<List<AnimeTrailer>> {
