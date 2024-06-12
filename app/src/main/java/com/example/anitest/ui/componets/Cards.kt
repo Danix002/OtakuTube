@@ -92,7 +92,7 @@ fun AnimeBigCard(anime: Anime) {
             contentDescription = "anime image",
             modifier = Modifier
                 .height(360.dp)
-                .width(256.dp)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
                 .shadow(16.dp)
         )
