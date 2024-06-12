@@ -60,7 +60,7 @@ fun AnimeThumbnail(img: String, trailer: String) {
             Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch trailer")
         }
         if (showPlayer) {
-            YouTubePlayer(youtubeVideoId = trailer, lifecycleOwner = LocalLifecycleOwner.current)
+            YouTubePlayer(youTubeVideoId = trailer, lifecycleOwner = LocalLifecycleOwner.current)
         }
     }
 }
