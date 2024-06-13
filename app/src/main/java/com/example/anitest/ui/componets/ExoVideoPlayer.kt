@@ -19,11 +19,6 @@ import androidx.media3.ui.PlayerView
 fun VideoPlayer(url: String, context: Context) {
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
-
-
-
-
-
     DisposableEffect(key1 = url) {
         val mediaItem = MediaItem.fromUri(Uri.parse(url))
         exoPlayer.setMediaItem(mediaItem)

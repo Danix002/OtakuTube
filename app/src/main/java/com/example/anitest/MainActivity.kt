@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MyViewModel>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -47,7 +47,6 @@ fun AnimeTitles( /** name: String, titles: List<String> **/ ) {
             .padding(horizontal = 16.dp)
 
     ) {
-
         Text(
             text = name,
             color = Color.White,
@@ -88,6 +87,5 @@ fun AnimeTitles( /** name: String, titles: List<String> **/ ) {
                 }
             }
         }
-
     }
 }

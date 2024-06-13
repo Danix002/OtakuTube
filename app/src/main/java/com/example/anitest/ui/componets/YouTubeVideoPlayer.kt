@@ -23,7 +23,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFram
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 
-@Composable
+/*@Composable
 fun YouTubePlayer(
     youTubeVideoId: String,
     lifecycleOwner: LifecycleOwner
@@ -77,9 +77,9 @@ fun YouTubePlayer(
         )
     }
 
-}
+}*/
 
-/*@Composable
+@Composable
 fun YouTubePlayer(
     youTubeVideoId: String,
     lifecycleOwner: LifecycleOwner
@@ -99,5 +99,5 @@ fun YouTubePlayer(
             }
         }
     )
-}*/
+}
 

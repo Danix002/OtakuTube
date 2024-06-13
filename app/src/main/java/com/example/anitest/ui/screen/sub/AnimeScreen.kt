@@ -19,9 +19,7 @@ import com.example.anitest.ui.componets.BackgroundImage
 import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.test
 import com.example.myapplication.MyViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {

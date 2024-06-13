@@ -10,7 +10,6 @@ fun DialogWithImage(
     anime: Anime
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        // Draw a rectangle shape with rounded corners inside the dialog
         AnimeBigCard(anime)
     }
 }

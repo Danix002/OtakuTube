@@ -124,8 +124,6 @@ fun test(context: Context){
     println("######################")
     val activity = context as Activity
 
-
-
     EpisodeButton(name = "Doraemon",
         quality = "1080P", index = 1, isDubbed = true,
             {
@@ -147,18 +145,14 @@ fun test(context: Context){
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         }){
-            Surface( // or Surface
+            Surface(
                 modifier = Modifier
                     .background(Color.Black)
                     .fillMaxSize()
                     .padding(4.dp)
             ) {
-                // content
                 VideoPlayer( context = context, url = "https://gredirect.info/download.php?url=aHR0cHM6LyAawehyfcghysfdsDGDYdgdsfsdfwstdgdsgtert9URASDGHUSRFSJGYfdsffsderFStewthsfSFtrftesdfyMnE1eDk5ZDNhLmFuZjU5OC5jb20vdXNlcjEzNDIvZDM1MzdmMDliZWZmYWU4MDNlMzg4YjkxNDMzYjFjMzYvRVAuMS52MC4xNjM5MjkxODAzLjcyMHAubXA0P3Rva2VuPVFrek81WDRCcEhUSUs1U0NNU0hsekEmZXhwaXJlcz0xNzE4Mjk2NjU1JmlkPTk4MTIy")
             }
-
-
-
         }
     }
 }
