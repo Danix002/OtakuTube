@@ -16,6 +16,7 @@ import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
 import com.example.anitest.ui.componets.BottomNavigation
+import com.example.anitest.ui.componets.test
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -47,10 +48,10 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                 if(animeInfo != null) {
                     AnimeThumbnail(img = animeInfo!!.img_url, trailer = "eI2ijvh5hhE")
-
                 } else {
                  // T O D O
                 }
+            test()
             }
 
         })

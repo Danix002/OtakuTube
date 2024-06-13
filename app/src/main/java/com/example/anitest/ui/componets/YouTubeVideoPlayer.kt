@@ -3,6 +3,7 @@ package com.example.anitest.ui.componets
 import android.view.View
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,56 +22,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Ful
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
-/*@Composable
-fun YouTubePlayer(
-    youtubeVideoId: String,
-    lifecycleOwner: LifecycleOwner
-) {
-    var isFullScreen by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
-
-    val youTubePlayerView = remember {
-        YouTubePlayerView(context).apply {
-            enableAutomaticInitialization = false
-        }
-    }
-
-    DisposableEffect(lifecycleOwner) {
-        val listener = object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.loadVideo(youtubeVideoId, 0f)
-            }
-        }
-
-        val fullScreenListener = object : FullscreenListener {
-            override fun onEnterFullscreen(fullscreenView: View, exitFullscreen: () -> Unit) {
-                isFullScreen = true
-            }
-
-            override fun onExitFullscreen() {
-                isFullScreen = false
-            }
-        }
-
-        youTubePlayerView.initialize(listener)
-        youTubePlayerView.addFullscreenListener(fullScreenListener)
-        lifecycleOwner.lifecycle.addObserver(youTubePlayerView)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(youTubePlayerView)
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(10.dp)),
-            factory = { youTubePlayerView }
-        )
-    }
-}*/
 
 @Composable
 fun YouTubePlayer(
@@ -103,8 +54,7 @@ fun YouTubePlayer(
                     isFullScreen = true
                     visibility = View.GONE
                     fullscreenViewContainer?.visibility  = View.VISIBLE
-                    fullscreenViewContainer?.addView(fullscreenView)
-                    println(fullscreenView.isEnabled)
+                    //fullscreenViewContainer?.addView(fullscreenView)
                 }
 
                 override fun onExitFullscreen() {
@@ -128,4 +78,26 @@ fun YouTubePlayer(
     }
 
 }
+
+/*@Composable
+fun YouTubePlayer(
+    youTubeVideoId: String,
+    lifecycleOwner: LifecycleOwner
+){
+    AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp)),
+        factory = {
+            YouTubePlayerView(context = it).apply{
+                lifecycleOwner.lifecycle.addObserver (this)
+                addYouTubePlayerListener(object: AbstractYouTubePlayerListener() {
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.loadVideo(youTubeVideoId, 0f)
+                    }
+                })
+            }
+        }
+    )
+}*/
 
