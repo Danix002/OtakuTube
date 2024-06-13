@@ -1,5 +1,6 @@
 package com.example.anitest.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,7 +15,8 @@ import com.example.myapplication.MyViewModel
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    viewModel: MyViewModel
+    viewModel: MyViewModel,
+    context: Context
 ) {
     NavHost(navController,  startDestination = Screen.Home.route) {
         composable(
@@ -40,7 +42,7 @@ fun SetupNavGraph(
         composable("anime/{name}_{id}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val id = backStackEntry.arguments?.getString("id") ?: ""
-            AnimeScreen(viewModel, navController, name, id)
+            AnimeScreen(viewModel, navController, name, id, context)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.anitest.ui.screen.sub
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,7 +24,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String) {
+fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
 
@@ -51,7 +52,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                 } else {
                  // T O D O
                 }
-            test()
+            test(context)
             }
 
         })

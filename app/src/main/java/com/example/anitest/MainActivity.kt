@@ -4,17 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import com.example.anitest.navigation.Navigation
 import com.example.anitest.ui.theme.ANITESTTheme
 import com.example.myapplication.MyViewModel
@@ -23,6 +20,7 @@ import com.example.myapplication.MyViewModel
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MyViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +34,7 @@ class MainActivity : ComponentActivity() {
                             shape = MaterialTheme.shapes.medium
                         )
                 ) {
-                    Navigation(viewModel)
+                    Navigation(viewModel, LocalContext.current)
                 }
             }
         }
