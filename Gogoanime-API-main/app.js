@@ -8,7 +8,7 @@ app.use(cors());
 
 app.get('/', (req, res) => {
 	res.send(
-		'👋 Hello world🌍, Welcome to 🦄 GogoAnime API 🧬 </br> Available routes : /Popular , /NewSeasons , /search/:query , /getAnime/:animeId , /getEpisode/:episodeId, ADDED BY DANIELA MAGRi AND ALESSANDRO SCICOLONE : /genre , /allanime'
+		'👋 Hello world🌍, Welcome to 🦄 GogoAnime API 🧬 </br> Available routes : /Popular , /NewSeasons , /search/:query , /getAnime/:animeId , /getEpisode/:episodeId, ADDED BY DANIELA MAGRi AND ALESSANDRO SCICOLONE : /genre , /allAnime', '/getEpisodes/:listOfEpisodeId'
 	);
 });
 
@@ -58,6 +58,13 @@ app.get('/getAnime/:query', async (req, res) => {
 
 app.get('/getEpisode/:query', async (req, res) => {
 	const result = await scapper.watchAnime(req.params.query);
+	res.header('Content-Type', 'application/json');
+	res.send(JSON.stringify(result, null, 4));
+});
+
+/** MODIFIED */
+app.get('/getEpisodes/:query', async (req, res) => {
+	const result = await scapper.listOfEpisodes(req.params.query);
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));
 });

@@ -255,6 +255,23 @@ async function watchAnime(episode_id) {
 	return await ep;
 }
 
+/** MODIFIED */
+async function listOfEpisodes(list_episode_id) {
+	list_episode_id_array = list_episode_id.split('@');
+	const promises = list_episode_id_array.map(async (value, index) => {
+        const res = await axios.get(`${baseUrl}/${value}`);
+        const body = await res.data;
+        const $ = cheerio.load(body);
+        const episode_link = $('li.dowloads > a').attr('href');
+		ep = await getDownloadLink(episode_link);
+        return { index, ep };
+    });
+
+    const episodeLinks = await Promise.all(promises);
+
+    return episodeLinks;
+}
+
 async function getDownloadLink(episode_link) {
 	const browser = await puppeteer.launch({ headless: true });
 	const page = await browser.newPage();
@@ -283,6 +300,7 @@ module.exports = {
 	/** MODIFIED */
 	genre,
 	allAnime,
+	listOfEpisodes,
 
 	newSeason,
 	search,
