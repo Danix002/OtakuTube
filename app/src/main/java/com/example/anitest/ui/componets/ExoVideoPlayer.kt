@@ -5,6 +5,11 @@ import android.net.Uri
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
@@ -16,15 +21,18 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
 @Composable
-fun VideoPlayer(url: String, context: Context) {
+fun VideoPlayer(urls: List<String>, index : Int, context: Context, onBack: () -> Unit) {
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
-    DisposableEffect(key1 = url) {
-        val mediaItem = MediaItem.fromUri(Uri.parse(url))
-        exoPlayer.setMediaItem(mediaItem)
+    println("URLS: $urls")
+    DisposableEffect(key1 = urls) {
+        val mediaItems = urls.map { url ->
+            MediaItem.fromUri(Uri.parse(url))
+        }
+        mediaItems.forEach { exoPlayer.addMediaItem(it) }
+        exoPlayer.seekTo(index, 0)
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
-
         onDispose {
             exoPlayer.release()
         }
@@ -44,4 +52,14 @@ fun VideoPlayer(url: String, context: Context) {
             .fillMaxSize()
             .background(Color.Black)
     )
+    IconButton(
+        colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.Transparent),
+        onClick = {
+            onBack()
+        }
+    ) {
+        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "", tint = Color.White )
+    }
 }
+
+

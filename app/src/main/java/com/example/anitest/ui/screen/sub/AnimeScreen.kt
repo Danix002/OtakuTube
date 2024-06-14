@@ -17,7 +17,7 @@ import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
 import com.example.anitest.ui.componets.BottomNavigation
-import com.example.anitest.ui.componets.test
+import com.example.anitest.ui.componets.EpisodesDialog
 import com.example.myapplication.MyViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -25,12 +25,17 @@ import com.example.myapplication.MyViewModel
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
+    val episodes by viewModel.episodes.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.forgetAnimeInfo()
         viewModel.forgetAnimeInfoTrailer()
         viewModel.setAnimeInfoTrailer(name)
-        viewModel.setAnimeInfo(id)
+        var episodeIds = viewModel.setAnimeInfo(id)
+        println("########")
+        println(episodeIds)
+        if (episodeIds.isEmpty()) episodeIds = animeInfo?.let { listOf(it.name.split(" ", ignoreCase = false, ).joinToString("-")) }!!
+        viewModel.setEpisodes(episodeIds)
     }
 
     Scaffold (
@@ -50,7 +55,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                 } else {
                  // T O D O
                 }
-            test(context)
+                EpisodesDialog(context, viewModel, episodes)
             }
 
         })

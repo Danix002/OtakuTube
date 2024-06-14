@@ -17,6 +17,7 @@ import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeInfo
 import com.example.anitest.model.AnimeInformationApi
 import com.example.anitest.model.AnimeTrailer
+import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
 import com.example.anitest.navigation.Screen
 import com.example.anitest.services.AnimeService
@@ -47,6 +48,11 @@ class MyViewModel : ViewModel() {
     private val _genres = MutableStateFlow<List<Genre>>(emptyList())
     val genres: StateFlow<List<Genre>> get() = _genres
 
+    private val _currentEP = MutableStateFlow<Int>(0)
+    val currentEP: StateFlow<Int> get() = _currentEP
+
+    private val _episodes = MutableStateFlow<List<Episode>>(emptyList())
+    val episodes: StateFlow<List<Episode>> get() = _episodes
 
     var navigationItems = mutableStateOf(
         listOf(
@@ -84,9 +90,22 @@ class MyViewModel : ViewModel() {
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
 
 
-    fun setAnimeInfo(id: String) {
+    suspend fun setAnimeInfo(id: String): List<String> {
         viewModelScope.launch {
             _animeInfo.value = getAnimeInfo(id)
+        }.join()
+        return _animeInfo.value?.episode_id ?: emptyList()
+    }
+
+    fun setCurrentEP(link: Int) {
+            _currentEP.value = link
+    }
+
+    fun setEpisodes(episodes: List<String>) {
+        println("Set Episodes")
+        viewModelScope.launch {
+            _episodes.value = getEpisodes(episodes)
+            println(_episodes.value)
         }
     }
 
@@ -143,6 +162,18 @@ class MyViewModel : ViewModel() {
             }
         }
         return animeByGenre.value
+    }
+
+    private suspend fun getEpisodes( episodes: List<String> ): List<Episode> {
+        val animeEpisodes = MutableStateFlow<List<Episode>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                animeEpisodes.value = animeService.getEpisodes(episodes) ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return animeEpisodes.value
     }
 
     private suspend fun getAllAnime(page : Number): List<Anime> {

@@ -264,7 +264,7 @@ async function listOfEpisodes(list_episode_id) {
         const $ = cheerio.load(body);
         const episode_link = $('li.dowloads > a').attr('href');
 		ep = await getDownloadLink(episode_link);
-        return { index, ep };
+        return ep;
     });
 
     const episodeLinks = await Promise.all(promises);
@@ -277,10 +277,12 @@ async function getDownloadLink(episode_link) {
 	const page = await browser.newPage();
 	await page.setUserAgent(userAgent.random().toString());
 	await page.goto(episode_link, { waitUntil: 'networkidle0' });
+	console.log(page);
 	const links = await page.evaluate(() => {
 		let ep_links = [];
 		//fetch all links
 		const ep = document.querySelector('.mirror_link');
+		
 		ep.querySelectorAll('a').forEach((link) => {
 			ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
 		});

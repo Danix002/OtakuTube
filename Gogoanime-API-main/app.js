@@ -64,6 +64,7 @@ app.get('/getEpisode/:query', async (req, res) => {
 
 /** MODIFIED */
 app.get('/getEpisodes/:query', async (req, res) => {
+	console.log(req.params.query);
 	const result = await scapper.listOfEpisodes(req.params.query);
 	res.header('Content-Type', 'application/json');
 	res.send(JSON.stringify(result, null, 4));

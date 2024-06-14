@@ -2,6 +2,7 @@ package com.example.anitest.services
 
 import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeInfo
+import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
 import com.example.anitest.utils.Util
 import com.google.gson.Gson
@@ -37,40 +38,37 @@ class AnimeService {
     }
 
     suspend fun getAnimeByGenre(page: Number, genre : String): List<Anime> {
-        //val animeJson = Util.GET(httpClient, "$baseURLALE/genre/$genre/$page") ?: return emptyList()
-        //val animeJson = Util.GET(httpClient, "$baseURLDANIport/genre/$genre/$page") ?: return emptyList()
-        //val animeJson = Util.GET(httpClient, "$baseURLDANIfix/genre/$genre/$page") ?: return emptyList()
         val animeJson = Util.GET(httpClient, "$URL/genre/$genre/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
         return gson.fromJson(animeJson.readText(), type)
     }
 
     suspend fun getAllAnime(page : Number): List<Anime> {
-        //val allAnimeJson = Util.GET(httpClient, "$baseURLALE/genre/allAnime/$page") ?: return emptyList()
-        //val allAnimeJson = Util.GET(httpClient, "$baseURLDANIport/allAnime/$page") ?: return emptyList()
-        //val allAnimeJson = Util.GET(httpClient, "$baseURLDANIfix/allAnime/$page") ?: return emptyList()
         val allAnimeJson = Util.GET(httpClient, "$URL/allAnime/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
         return gson.fromJson(allAnimeJson.readText(), type)
     }
 
     suspend fun getAnimeInfo(id : String): AnimeInfo {
-        //val animeInfoJson = Util.GET(httpClient, "$baseURLALE/getAnime/$id") ?: return AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
-        //val animeInfoJson = Util.GET(httpClient, "$baseURLDANIport/getAnime/$id") ?: return AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
-        //val animeInfoJson = Util.GET(httpClient, "$baseURLDANIfix/getAnime/$id") ?: return AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
         val animeInfoJson = Util.GET(httpClient, "$URL/getAnime/$id") ?: return AnimeInfo("","","", emptyList(), "", "", emptyList(), "", emptyList() )
         val type = object : TypeToken<AnimeInfo>() {}.type
         return gson.fromJson(animeInfoJson.readText(), type)
     }
 
     suspend fun getGenres(): List<Genre> {
-        //val genresJson = Util.GET(httpClient, "$baseURLALE/genre") ?: return emptyList()
-        //val genresJson = Util.GET(httpClient, "$baseURLDANIport/genre") ?: return emptyList()
-        //val genresJson = Util.GET(httpClient, "$baseURLDANIfix/genre") ?: return emptyList()
         val genresJson = Util.GET(httpClient, "$URL/genre") ?: return emptyList()
         val type = object : TypeToken<List<Genre>>() {}.type
         return gson.fromJson(genresJson.readText(), type)
     }
+
+    suspend fun getEpisodes(episodes : List<String>): List<Episode> {
+        val genresJson = Util.GET(httpClient, "$URL/getEpisodes/${episodes.joinToString(separator = "@")}") ?: return emptyList()
+        println(genresJson.readText())
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson<List<String>?>(genresJson.readText(), type).map { Episode(0, it) }
+    }
+
+
 
 
 
@@ -78,13 +76,11 @@ class AnimeService {
         private val baseURLDANIport = "http://192.168.1.5:5000"
         private val baseURLDANIfix = "http://192.168.1.3:5000"
         private val baseURLALE = "http://172.20.10.3:5000"
-
         private val URLPYTHON = baseURLALE
+
         val instance: Retrofit by lazy {
             Retrofit.Builder()
                 .baseUrl(URLPYTHON)
-                //.baseUrl(baseURLDANIport)
-                //.baseUrl(baseURLALE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
