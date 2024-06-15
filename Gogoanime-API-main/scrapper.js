@@ -282,24 +282,27 @@ async function getDownloadLink(episode_link) {
 	const page = await browser.newPage();
 	await page.setUserAgent(userAgent.random().toString());
 	await page.goto(episode_link, { waitUntil: 'networkidle0' });
-	console.log(page);
+	
+	let flag = false
 	const links = await page.evaluate(() => {
 		let ep_links = [];
 		
-		const ep = document.querySelector('.content-dowload');
-		console.log("Ep:" + ep)
+		const ep = document.querySelector('div');
+		
+		
+		flag = ep == null
 		let firstChild = ep.firstElementChild
 		
-		firstChild.querySelectorAll('a').forEach((link) => {
-			ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
-		});
+		//firstChild.querySelectorAll('a').forEach((link) => {
+		//	ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
+		//});
 
 		return ep_links;
 	});
 
 	await browser.close();
-
-	return links;
+	console.log(flag ? "NULL" : "NOT NULL");
+	return links; 
 }
 
 module.exports = {

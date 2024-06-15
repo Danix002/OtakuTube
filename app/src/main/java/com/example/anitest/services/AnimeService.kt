@@ -23,7 +23,7 @@ class AnimeService {
     private val baseURLDANIfix = "http://192.168.1.8:3000"
     private val baseURLALE = "http://172.20.10.3:3000"
     private val gson = Gson()
-    private val URL = baseURLDANIfix
+    private val URL = baseURLALE
 
     private val httpClient get() = HttpClient(Android) {
         install(JsonFeature) {

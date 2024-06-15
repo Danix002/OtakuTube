@@ -34,9 +34,10 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
 
         var episodeIds = viewModel.setAnimeInfo(id)
 
-        if (episodeIds.isEmpty()) episodeIds = animeInfo?.let { listOf(it.name.split(" ", ignoreCase = false, ).joinToString("-")) }!!
+        if (episodeIds.isEmpty()) episodeIds = animeInfo?.let {
+            listOf(it.name.split(" ", ignoreCase = false, ).joinToString("-")) }!!
             viewModel.setEpisodes(episodeIds)
-    }
+        }
 
     Scaffold (
         containerColor = Color(102, 90, 110),
@@ -52,10 +53,11 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                 if(animeInfo != null) {
                     AnimeThumbnail(img = animeInfo!!.img_url, trailer = "eI2ijvh5hhE")
+                    EpisodesDialog(context, viewModel, episodes)
                 } else {
                  // T O D O
                 }
-                EpisodesDialog(context, viewModel, episodes)
+
             }
 
         })
