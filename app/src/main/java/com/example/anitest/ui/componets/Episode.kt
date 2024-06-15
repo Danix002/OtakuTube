@@ -113,11 +113,9 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
     val activity = context as Activity
     val currentEP by viewModel.currentEP.collectAsState()
 
-
-
-    episodes.forEachIndexed() { index, link ->
+    episodes.forEachIndexed() { index, ep ->
         EpisodeButton(
-            quality = "1080p", index = index + 1, isDubbed = true,
+            quality = ep.ep[0].name , index = ep.index + 1, isDubbed = true,
             {
                 viewModel.setCurrentEP(index)
                 activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -132,24 +130,24 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                 usePlatformDefaultWidth = false
             ),
             onDismissRequest = {
-            showPlayer = false
-            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                showPlayer = false
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        }){
-            Box (
-                modifier = Modifier
-                    .background(Color.Black)
-                    .fillMaxSize()
-            ) {
-                VideoPlayer(
-                    onBack = {
-                        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    },
-                    context = context,
-                    index = currentEP,
-                    urls = episodes.map { episode -> episode.link  } )
+            }){
+                Box (
+                    modifier = Modifier
+                        .background(Color.Black)
+                        .fillMaxSize()
+                ) {
+                    VideoPlayer(
+                        onBack = {
+                            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        },
+                        context = context,
+                        index = currentEP,
+                        urls = episodes.map { episode -> episode.ep[0].link } )
 
+                }
             }
-        }
     }
 }

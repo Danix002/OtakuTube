@@ -23,7 +23,7 @@ class AnimeService {
     private val baseURLDANIfix = "http://192.168.1.8:3000"
     private val baseURLALE = "http://172.20.10.3:3000"
     private val gson = Gson()
-    private val URL = baseURLALE
+    private val URL = baseURLDANIfix
 
     private val httpClient get() = HttpClient(Android) {
         install(JsonFeature) {
@@ -62,21 +62,19 @@ class AnimeService {
     }
 
     suspend fun getEpisodes(episodes : List<String>): List<Episode> {
-        val genresJson = Util.GET(httpClient, "$URL/getEpisodes/${episodes.joinToString(separator = "@")}") ?: return emptyList()
-        println(genresJson.readText())
-        val type = object : TypeToken<List<String>>() {}.type
-        return gson.fromJson<List<String>?>(genresJson.readText(), type).map { Episode(0, it) }
+        val requestEpisodesString = episodes.joinToString(separator = "@")
+        println(requestEpisodesString)
+        val episodesJson = Util.GET(httpClient, "$URL/getEpisodes/${requestEpisodesString}") ?: return emptyList()
+        println(episodesJson.readText())
+        val type = object : TypeToken<List<Episode>>() {}.type
+        return gson.fromJson(episodesJson.readText(), type)
     }
-
-
-
-
 
     object RetrofitClient {
         private val baseURLDANIport = "http://192.168.1.5:5000"
-        private val baseURLDANIfix = "http://192.168.1.3:5000"
+        private val baseURLDANIfix = "http://192.168.1.8:5000"
         private val baseURLALE = "http://172.20.10.3:5000"
-        private val URLPYTHON = baseURLALE
+        private val URLPYTHON = baseURLDANIfix
 
         val instance: Retrofit by lazy {
             Retrofit.Builder()

@@ -31,11 +31,11 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
         viewModel.forgetAnimeInfo()
         viewModel.forgetAnimeInfoTrailer()
         viewModel.setAnimeInfoTrailer(name)
+
         var episodeIds = viewModel.setAnimeInfo(id)
-        println("########")
-        println(episodeIds)
+
         if (episodeIds.isEmpty()) episodeIds = animeInfo?.let { listOf(it.name.split(" ", ignoreCase = false, ).joinToString("-")) }!!
-        viewModel.setEpisodes(episodeIds)
+            viewModel.setEpisodes(episodeIds)
     }
 
     Scaffold (

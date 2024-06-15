@@ -258,14 +258,18 @@ async function watchAnime(episode_id) {
 /** MODIFIED */
 async function listOfEpisodes(list_episode_id) {
 	list_episode_id_array = list_episode_id.split('@');
+
 	const promises = list_episode_id_array.map(async (value, index) => {
         const res = await axios.get(`${baseUrl}/${value}`);
         const body = await res.data;
         const $ = cheerio.load(body);
+
         const episode_link = $('li.dowloads > a').attr('href');
 		ep = await getDownloadLink(episode_link);
-        return ep;
+
+        return { index, ep };
     });
+
 
     const episodeLinks = await Promise.all(promises);
 

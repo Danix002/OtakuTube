@@ -98,11 +98,10 @@ class MyViewModel : ViewModel() {
     }
 
     fun setCurrentEP(link: Int) {
-            _currentEP.value = link
+        _currentEP.value = link
     }
 
     fun setEpisodes(episodes: List<String>) {
-        println("Set Episodes")
         viewModelScope.launch {
             _episodes.value = getEpisodes(episodes)
             println(_episodes.value)
