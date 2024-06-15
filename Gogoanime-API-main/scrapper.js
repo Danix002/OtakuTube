@@ -276,6 +276,7 @@ async function listOfEpisodes(list_episode_id) {
     return episodeLinks;
 }
 
+/** MODIFIED */
 async function getDownloadLink(episode_link) {
 	const browser = await puppeteer.launch({ headless: true });
 	const page = await browser.newPage();
@@ -284,10 +285,12 @@ async function getDownloadLink(episode_link) {
 	console.log(page);
 	const links = await page.evaluate(() => {
 		let ep_links = [];
-		//fetch all links
-		const ep = document.querySelector('.mirror_link');
 		
-		ep.querySelectorAll('a').forEach((link) => {
+		const ep = document.querySelector('.content-dowload');
+		console.log("Ep:" + ep)
+		let firstChild = ep.firstElementChild
+		
+		firstChild.querySelectorAll('a').forEach((link) => {
 			ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
 		});
 
