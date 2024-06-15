@@ -245,18 +245,6 @@ async function anime(_anime_name) {
 
 /** MODIFIED */
 async function watchAnime(episode_id) {
-	/*res = await axios.get(`${baseUrl}/${episode_id}`);
-	const body = await res.data;
-	$ = cheerio.load(body);
-
-	episode_link = $('li.dowloads > a').attr('href');
-
-	ep = await getDownloadLink(episode_link);
-	index = 0
-
-	watchAnime_result = { index, ep }
-
-	return await watchAnime_result;*/
 	try {
         res = await axios.get(`${baseUrl}/${episode_id}`);
         const body = res.data;
