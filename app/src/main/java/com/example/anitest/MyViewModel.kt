@@ -51,8 +51,8 @@ class MyViewModel : ViewModel() {
     private val _currentEP = MutableStateFlow<Int>(0)
     val currentEP: StateFlow<Int> get() = _currentEP
 
-    private val _episodes = MutableStateFlow<List<Episode>>(emptyList())
-    val episodes: StateFlow<List<Episode>> get() = _episodes
+    private val _episodes = MutableStateFlow<List<Episode>?>(emptyList())
+    val episodes: StateFlow<List<Episode>?> get() = _episodes
 
     var navigationItems = mutableStateOf(
         listOf(
@@ -108,6 +108,10 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    fun forgetEpisodes(){
+        _episodes.value = null
+    }
+
     fun forgetAnimeInfo(){
         _animeInfo.value = null
     }
@@ -141,10 +145,6 @@ class MyViewModel : ViewModel() {
         return flagLoading
     }
 
-    fun setAllAnime() {
-
-    }
-
     fun setGenres() {
         viewModelScope.launch {
             _genres.value = getGenres()
@@ -163,7 +163,7 @@ class MyViewModel : ViewModel() {
         return animeByGenre.value
     }
 
-    private suspend fun getEpisodes( episodes: List<String> ): List<Episode> {
+    private suspend fun getEpisodes(episodes: List<String>): List<Episode> {
         val animeEpisodes = MutableStateFlow<List<Episode>>(emptyList())
         withContext(Dispatchers.IO) {
             runCatching {

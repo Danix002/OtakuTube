@@ -243,16 +243,40 @@ async function anime(_anime_name) {
 	return await anime_result;
 }
 
+/** MODIFIED */
 async function watchAnime(episode_id) {
-	res = await axios.get(`${baseUrl}/${episode_id}`);
+	/*res = await axios.get(`${baseUrl}/${episode_id}`);
 	const body = await res.data;
 	$ = cheerio.load(body);
 
 	episode_link = $('li.dowloads > a').attr('href');
 
 	ep = await getDownloadLink(episode_link);
+	index = 0
 
-	return await ep;
+	watchAnime_result = { index, ep }
+
+	return await watchAnime_result;*/
+	try {
+        res = await axios.get(`${baseUrl}/${episode_id}`);
+        const body = res.data;
+        $ = cheerio.load(body);
+
+        episode_link = $('li.dowloads > a').attr('href');
+
+        if (episode_link !== undefined) {
+            ep = await getDownloadLink(episode_link);
+            index = 0; 
+            watchAnime_result = { index, ep };
+            return watchAnime_result;
+        } else {
+            console.error('episode_link is undefined');
+            return {index: 0, name: ["", "", ""], link: ["", "", ""] }; 
+        }
+    } catch (error) {
+        console.error('Error in watchAnime:', error);
+        return {index: 0, name: ["", "", ""], link: ["", "", ""] }; 
+    }
 }
 
 /** MODIFIED */
@@ -283,25 +307,27 @@ async function getDownloadLink(episode_link) {
 	await page.setUserAgent(userAgent.random().toString());
 	await page.goto(episode_link, { waitUntil: 'networkidle0' });
 	
-	let flag = false
+	try {
+		await page.waitForSelector('.mirror_link', { timeout: 1000 });
+	} catch (error) {
+		console.error('Element not found:', error);
+		await browser.close();
+		return [{ name: ["", "", ""], link: ["", "", ""] }];
+	}
+
 	const links = await page.evaluate(() => {
 		let ep_links = [];
+
+		const ep = document.querySelector('.mirror_link');
 		
-		const ep = document.querySelector('div');
-		
-		
-		flag = ep == null
-		let firstChild = ep.firstElementChild
-		
-		//firstChild.querySelectorAll('a').forEach((link) => {
-		//	ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
-		//});
+		ep.querySelectorAll('a').forEach((link) => {
+			ep_links.push({ name: link.innerText.split('D ')[1].replace(/[()]/g, ''), link: link.href });
+		});
 
 		return ep_links;
 	});
 
 	await browser.close();
-	console.log(flag ? "NULL" : "NOT NULL");
 	return links; 
 }
 

@@ -12,6 +12,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.features.HttpRedirect
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readText
 import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
@@ -20,10 +21,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 class AnimeService {
 
     private val baseURLDANIport = "http://192.168.1.5:3000"
-    private val baseURLDANIfix = "http://192.168.1.8:3000"
+    private val baseURLDANIfix = "http://192.168.1.2:3000"
     private val baseURLALE = "http://172.20.10.3:3000"
     private val gson = Gson()
-    private val URL = baseURLALE
+    private val URL = baseURLDANIfix
 
     private val httpClient get() = HttpClient(Android) {
         install(JsonFeature) {
@@ -62,17 +63,22 @@ class AnimeService {
     }
 
     suspend fun getEpisodes(episodes : List<String>): List<Episode> {
-        val requestEpisodesString = episodes.joinToString(separator = "@")
-        println(requestEpisodesString)
-        val episodesJson = Util.GET(httpClient, "$URL/getEpisodes/${requestEpisodesString}") ?: return emptyList()
-        println(episodesJson.readText())
+        var requestEpisodesString = episodes[0]
+        val episodesJson: HttpResponse?
+        if(episodes.size > 1) {
+            requestEpisodesString = episodes.joinToString(separator = "@")
+            episodesJson = Util.GET(httpClient, "$URL/getEpisodes/${requestEpisodesString}") ?: return emptyList()
+        }else{
+            println(requestEpisodesString)
+            episodesJson = Util.GET(httpClient, "$URL/getEpisode/${requestEpisodesString}") ?: return emptyList()
+        }
         val type = object : TypeToken<List<Episode>>() {}.type
         return gson.fromJson(episodesJson.readText(), type)
     }
 
     object RetrofitClient {
         private val baseURLDANIport = "http://192.168.1.5:5000"
-        private val baseURLDANIfix = "http://192.168.1.8:5000"
+        private val baseURLDANIfix = "http://192.168.1.2:5000"
         private val baseURLALE = "http://172.20.10.3:5000"
         private val URLPYTHON = baseURLDANIfix
 

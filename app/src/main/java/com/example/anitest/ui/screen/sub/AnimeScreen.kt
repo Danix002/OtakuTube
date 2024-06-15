@@ -10,9 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import com.example.anitest.model.Anime
 import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackgroundImage
@@ -29,14 +33,14 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
 
     LaunchedEffect(Unit) {
         viewModel.forgetAnimeInfo()
+        viewModel.forgetEpisodes()
         viewModel.forgetAnimeInfoTrailer()
+
         viewModel.setAnimeInfoTrailer(name)
-
-        var episodeIds = viewModel.setAnimeInfo(id)
-
-        if (episodeIds.isEmpty()) episodeIds = animeInfo?.let {
-            listOf(it.name.split(" ", ignoreCase = false, ).joinToString("-")) }!!
-            viewModel.setEpisodes(episodeIds)
+        var episodesId = viewModel.setAnimeInfo(id)
+        if (episodesId.isEmpty()) episodesId = animeInfo?.let {
+            listOf(it.name.toLowerCase().replace(Regex("[^a-z0-9]+"), "-").replace(Regex("-+"), "-").trim('-')) }!!
+            viewModel.setEpisodes(episodesId)
         }
 
     Scaffold (
@@ -53,7 +57,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                 if(animeInfo != null) {
                     AnimeThumbnail(img = animeInfo!!.img_url, trailer = "eI2ijvh5hhE")
-                    EpisodesDialog(context, viewModel, episodes)
+                    episodes?.let { EpisodesDialog(context, viewModel, it, id.contains("dub")) }
                 } else {
                  // T O D O
                 }

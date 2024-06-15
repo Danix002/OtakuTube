@@ -108,14 +108,14 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean){
     var showPlayer by remember { mutableStateOf(false) }
     val activity = context as Activity
     val currentEP by viewModel.currentEP.collectAsState()
 
     episodes.forEachIndexed() { index, ep ->
         EpisodeButton(
-            quality = ep.ep[0].name , index = ep.index + 1, isDubbed = true,
+            quality = ep.ep[(ep.ep.size) - 1].name , index = ep.index + 1, isDubbed = isDubbed,
             {
                 viewModel.setCurrentEP(index)
                 activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -132,12 +132,11 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
             onDismissRequest = {
                 showPlayer = false
                 activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
             }){
                 Box (
                     modifier = Modifier
-                        .background(Color.Black)
                         .fillMaxSize()
+                        .background(Color.Black)
                 ) {
                     VideoPlayer(
                         onBack = {
@@ -145,8 +144,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                         },
                         context = context,
                         index = currentEP,
-                        urls = episodes.map { episode -> episode.ep[0].link } )
-
+                        urls = episodes.map { episode -> episode.ep[(episode.ep.size) - 1].link } )
                 }
             }
     }
