@@ -1,11 +1,8 @@
 package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -19,9 +16,7 @@ fun YouTubePlayer(
     lifecycleOwner: LifecycleOwner
 ){
     AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp)),
+        modifier = Modifier.fillMaxWidth(),
         factory = {
             YouTubePlayerView(context = it).apply{
                 lifecycleOwner.lifecycle.addObserver (this)

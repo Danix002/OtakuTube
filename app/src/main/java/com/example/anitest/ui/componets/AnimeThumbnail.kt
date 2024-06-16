@@ -38,13 +38,13 @@ fun AnimeThumbnail(img: String, trailer: String) {
 
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(212.dp)
+        .height(239.dp)
         .background(Color.Black)
     ) {
         Image(
             painter = rememberAsyncImagePainter(img),
             contentDescription = "anime image",
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
         if(trailer != "") {

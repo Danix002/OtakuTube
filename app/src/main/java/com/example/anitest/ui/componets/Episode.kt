@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -131,13 +132,24 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     itemsIndexed(episodes) { index, ep ->
                         if(index == 0){
-                            IconButton(modifier = Modifier.fillMaxWidth())(
-                                colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.Transparent),
-                                onClick = { onDismiss() }
-                            ) {
-                                Row{
-                                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "", tint = Color(112, 82, 137))
-                                    Text(text = "Episodes", color = Color(112, 82, 137))
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Row {
+                                    IconButton(
+                                        colors = IconButtonDefaults.filledIconButtonColors(
+                                            containerColor = Color.Transparent
+                                        ),
+                                        onClick = { onDismiss() }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.ArrowBack,
+                                            contentDescription = "",
+                                            tint = Color(112, 82, 137)
+                                        )
+                                    }
+                                    Text(text = "Episodes",
+                                        color = Color(112, 82, 137),
+                                        modifier = Modifier.align(alignment = Alignment.CenterVertically)
+                                    )
                                 }
                             }
                         }
