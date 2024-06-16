@@ -1,14 +1,5 @@
 package com.example.anitest.model
 
-import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-
-interface AnimeInformationApi {
-    @GET("anime/{name}")
-    fun getAnimeInformations(@Path("name") name: String): Call<List<AnimeTrailer>>
-}
-
 data class AnimeTrailer(
     val categories: List<Categories>,
     val createdAt: String,

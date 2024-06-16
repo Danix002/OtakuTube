@@ -15,12 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +54,7 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(3.dp))
+            .padding(2.dp)
             .background(principalColor)
             .padding(start = 8.dp)
             .padding(bottom = 10.dp, end = 4.dp, top = 10.dp)
@@ -108,20 +113,49 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean, open: Boolean, onDismiss: () -> Unit){
     var showPlayer by remember { mutableStateOf(false) }
     val activity = context as Activity
     val currentEP by viewModel.currentEP.collectAsState()
 
-    episodes.forEachIndexed() { index, ep ->
-        EpisodeButton(
-            quality = ep.ep[(ep.ep.size) - 1].name , index = ep.index + 1, isDubbed = isDubbed,
-            {
-                viewModel.setCurrentEP(index)
-                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            },
-            {}
-        )
+    if(open) {
+        Dialog(
+            properties = DialogProperties(
+            usePlatformDefaultWidth = false
+            ),
+            onDismissRequest = { onDismiss() }
+        ){
+            Box(modifier = Modifier
+                .background(Color(242, 218, 255))
+                .fillMaxSize()) {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    itemsIndexed(episodes) { index, ep ->
+                        if(index == 0){
+                            IconButton(modifier = Modifier.fillMaxWidth())(
+                                colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.Transparent),
+                                onClick = { onDismiss() }
+                            ) {
+                                Row{
+                                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "", tint = Color(112, 82, 137))
+                                    Text(text = "Episodes", color = Color(112, 82, 137))
+                                }
+                            }
+                        }
+                        EpisodeButton(
+                            quality = ep.ep[(ep.ep.size) - 1].name,
+                            index = ep.index + 1,
+                            isDubbed = isDubbed,
+                            {
+                                viewModel.setCurrentEP(index)
+                                activity.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                            },
+                            {}
+                        )
+                    }
+                }
+            }
+        }
     }
 
     if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){

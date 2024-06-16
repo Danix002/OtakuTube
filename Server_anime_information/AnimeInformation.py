@@ -10,6 +10,7 @@ def get_anime(name):
     try:
         data = aw.find(name)
         if data:
+            print(data)
             return jsonify(data)
         else:
             abort(404, description = "Anime not found")

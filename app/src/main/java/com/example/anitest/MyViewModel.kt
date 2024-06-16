@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeInfo
-import com.example.anitest.model.AnimeInformationApi
 import com.example.anitest.model.AnimeTrailer
 import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
@@ -23,21 +22,17 @@ import com.example.anitest.navigation.Screen
 import com.example.anitest.services.AnimeService
 import com.example.anitest.utils.NavigationItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MyViewModel : ViewModel() {
     private val animeService = AnimeService()
 
-    private val _animeInfoTrailer = MutableStateFlow<Flow<List<AnimeTrailer>>?>(null)
-    val animeInfoTrailer: StateFlow<Flow<List<AnimeTrailer>>?> get() = _animeInfoTrailer
+    private val _animeInfoTrailer = MutableStateFlow<List<AnimeTrailer>?>(null)
+    val animeInfoTrailer: StateFlow<List<AnimeTrailer>?> get() = _animeInfoTrailer
 
     private val _animeInfo = MutableStateFlow<AnimeInfo?>(null)
     val animeInfo: StateFlow<AnimeInfo?> get() = _animeInfo
@@ -104,7 +99,6 @@ class MyViewModel : ViewModel() {
     fun setEpisodes(episodes: List<String>) {
         viewModelScope.launch {
             _episodes.value = getEpisodes(episodes)
-            println(_episodes.value)
         }
     }
 
@@ -114,17 +108,6 @@ class MyViewModel : ViewModel() {
 
     fun forgetAnimeInfo(){
         _animeInfo.value = null
-    }
-
-    fun setAnimeInfoTrailer(name: String) {
-        viewModelScope.launch {
-            _animeInfoTrailer.value = getAnimeInfoTrailer(name)
-        }
-
-    }
-
-    fun forgetAnimeInfoTrailer(){
-        _animeInfoTrailer.value = null
     }
 
     suspend fun addAnimeByGenre(page: Number, genre: String): Boolean{
@@ -149,6 +132,16 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             _genres.value = getGenres()
         }
+    }
+
+    fun setAnimeInfoTrailer(name: String) {
+        viewModelScope.launch {
+            _animeInfoTrailer.value = getAnimeInfoTrailer(name)
+        }
+    }
+
+    fun forgetAnimeInfoTrailer() {
+        _animeInfoTrailer.value = null
     }
 
     private suspend fun getAnimeByGenre(page: Number, genre: String): List<Anime> {
@@ -213,25 +206,17 @@ class MyViewModel : ViewModel() {
         return genres.value
     }
 
-    val api = AnimeService.RetrofitClient.instance.create(AnimeInformationApi::class.java)
-    private fun getAnimeInfoTrailer(name: String): Flow<List<AnimeTrailer>> {
-        val animeInfo = MutableStateFlow<List<AnimeTrailer>>(emptyList())
-
-        api.getAnimeInformations(name).enqueue(object : Callback<List<AnimeTrailer>> {
-            override fun onResponse(
-                call: Call<List<AnimeTrailer>>,
-                response: Response<List<AnimeTrailer>>
-            ) {
-                if (response.isSuccessful) {
-                    animeInfo.value = response.body() ?: emptyList()
-                }
+    private suspend fun getAnimeInfoTrailer(name: String): List<AnimeTrailer> {
+        val animeTrailers = MutableStateFlow<List<AnimeTrailer>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                animeTrailers.value = animeService.getAnimeTrailer(name) ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
             }
+        }
 
-            override fun onFailure(call: Call<List<AnimeTrailer>>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
-        return animeInfo
+        return animeTrailers.value
     }
 
 }

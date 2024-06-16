@@ -259,11 +259,11 @@ async function watchAnime(episode_id) {
             return watchAnime_result;
         } else {
             console.error('episode_link is undefined');
-            return {index: 0, name: ["", "", ""], link: ["", "", ""] }; 
+            return {index: -1, name: ["", "", ""], link: ["", "", ""] }; 
         }
     } catch (error) {
         console.error('Error in watchAnime:', error);
-        return {index: 0, name: ["", "", ""], link: ["", "", ""] }; 
+        return {index: -1, name: ["", "", ""], link: ["", "", ""] }; 
     }
 }
 

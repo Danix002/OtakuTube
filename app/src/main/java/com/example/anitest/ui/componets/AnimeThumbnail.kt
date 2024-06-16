@@ -47,20 +47,28 @@ fun AnimeThumbnail(img: String, trailer: String) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-        Button(
-            colors = ButtonDefaults.buttonColors(containerColor = Color(129, 81, 86), contentColor = Color.White),
-            onClick = { showPlayer = true },
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .align(Alignment.BottomEnd)
-                .padding(bottom = 4.dp, end = 4.dp)
-                .shadow(16.dp)
-        ) {
-            Text(text = "Trailer")
-            Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch trailer")
-        }
-        if (showPlayer) {
-            YouTubePlayer(youTubeVideoId = trailer, lifecycleOwner = LocalLifecycleOwner.current)
+        if(trailer != "") {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(129, 81, 86),
+                    contentColor = Color.White
+                ),
+                onClick = { showPlayer = true },
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 4.dp, end = 4.dp)
+                    .shadow(16.dp)
+            ) {
+                Text(text = "Trailer")
+                Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch trailer")
+            }
+            if (showPlayer) {
+                YouTubePlayer(
+                    youTubeVideoId = trailer,
+                    lifecycleOwner = LocalLifecycleOwner.current
+                )
+            }
         }
     }
 }
