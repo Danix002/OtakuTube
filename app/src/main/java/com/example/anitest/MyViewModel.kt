@@ -54,6 +54,9 @@ class MyViewModel : ViewModel() {
     private val _isEpisodesButtonOpen = MutableLiveData(false)
     val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
 
+    private val _isEpisodesScreenLoaded = MutableLiveData(false)
+    val isEpisodesScreenLoaded: LiveData<Boolean> get() = _isEpisodesScreenLoaded
+
     var navigationItems = mutableStateOf(
         listOf(
             NavigationItem(
@@ -95,6 +98,18 @@ class MyViewModel : ViewModel() {
 
     fun closeEpisodes() {
         _isEpisodesButtonOpen.value = false
+    }
+
+    fun isLoadedScreen() {
+        _isEpisodesScreenLoaded.value = true
+    }
+
+    fun isNotLoadedScreen() {
+        _isEpisodesScreenLoaded.value = false
+    }
+
+    fun isLoadedEpisodesScreen(): Boolean? {
+        return _isEpisodesScreenLoaded.value
     }
 
     suspend fun setAnimeInfo(id: String): List<String> {

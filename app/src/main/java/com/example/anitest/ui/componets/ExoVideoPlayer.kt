@@ -25,12 +25,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.example.myapplication.MyViewModel
 
 @Composable
-fun VideoPlayer(urls: List<String>, index : Int, context: Context, onBack: () -> Unit) {
+fun VideoPlayer(urls: List<String>, index : Int, context: Context, onBack: () -> Unit, viewModel: MyViewModel) {
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
-    println("URLS: $urls")
     DisposableEffect(key1 = urls) {
         val mediaItems = urls.map { url ->
             MediaItem.fromUri(Uri.parse(url))
@@ -58,6 +58,7 @@ fun VideoPlayer(urls: List<String>, index : Int, context: Context, onBack: () ->
             .fillMaxSize()
             .background(Color.Black)
     )
+
     IconButton(
         colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.Transparent),
         onClick = {
