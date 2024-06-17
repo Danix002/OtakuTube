@@ -49,7 +49,7 @@ def get_anime_list_of_anime_not_in_animeworld(letter):
 
 if __name__ == '__main__':
     # Indirizzo IP e porta su cui eseguire il server Flask
-    ip_address = '172.20.10.3'  # Inserisci qui l'indirizzo IP desiderato
+    ip_address = '192.168.1.2'  # Inserisci qui l'indirizzo IP desiderato
     port = 5000
 
     # Esegui il server Flask specificando l'indirizzo IP e la porta

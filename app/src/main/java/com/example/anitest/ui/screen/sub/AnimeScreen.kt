@@ -55,7 +55,6 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                     )
                 }!!
             viewModel.setEpisodes(episodesId)
-
         }
     }
 

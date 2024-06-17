@@ -13,16 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModelProvider
 import com.example.anitest.navigation.Navigation
 import com.example.anitest.ui.theme.ANITESTTheme
 import com.example.myapplication.MyViewModel
@@ -52,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     shape = MaterialTheme.shapes.medium
                 )
         ) {
+            Navigation(viewModel, LocalContext.current)
             if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
                 val window = this@MainActivity.window
                 window.statusBarColor = Color.Transparent.toArgb()
@@ -64,8 +59,8 @@ class MainActivity : ComponentActivity() {
                                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         )
+                Box(modifier = Modifier.fillMaxSize().background(Color.Black))
             }
-            Navigation(viewModel, LocalContext.current)
         }
     }
 }

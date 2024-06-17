@@ -193,8 +193,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                         },
                         context = context,
                         index = currentEP,
-                        urls = episodes.map { episode -> episode.ep[(episode.ep.size) - 1].link },
-                        viewModel = viewModel
+                        urls = episodes.map { episode -> episode.ep[(episode.ep.size) - 1].link }
                     )
                 }
             }
