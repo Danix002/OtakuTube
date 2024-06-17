@@ -11,6 +11,8 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anitest.model.Anime
@@ -49,6 +51,9 @@ class MyViewModel : ViewModel() {
     private val _episodes = MutableStateFlow<List<Episode>?>(emptyList())
     val episodes: StateFlow<List<Episode>?> get() = _episodes
 
+    private val _isEpisodesButtonOpen = MutableLiveData(false)
+    val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
+
     var navigationItems = mutableStateOf(
         listOf(
             NavigationItem(
@@ -84,6 +89,13 @@ class MyViewModel : ViewModel() {
 
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
 
+    fun openEpisodes() {
+        _isEpisodesButtonOpen.value = true
+    }
+
+    fun closeEpisodes() {
+        _isEpisodesButtonOpen.value = false
+    }
 
     suspend fun setAnimeInfo(id: String): List<String> {
         viewModelScope.launch {

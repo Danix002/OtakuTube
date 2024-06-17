@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -114,17 +115,18 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean, open: Boolean, onDismiss: () -> Unit){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean, onDismiss: () -> Unit){
     var showPlayer by remember { mutableStateOf(false) }
+    val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity
     val currentEP by viewModel.currentEP.collectAsState()
 
-    if(open) {
+    if(isEpisodesButtonOpen == true) {
         Dialog(
             properties = DialogProperties(
             usePlatformDefaultWidth = false
             ),
-            onDismissRequest = { onDismiss() }
+            onDismissRequest = { viewModel.closeEpisodes() }
         ){
             Box(modifier = Modifier
                 .background(Color(242, 218, 255))
@@ -138,7 +140,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                                         colors = IconButtonDefaults.filledIconButtonColors(
                                             containerColor = Color.Transparent
                                         ),
-                                        onClick = { onDismiss() }
+                                        onClick = { viewModel.closeEpisodes() }
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.ArrowBack,
@@ -187,6 +189,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                     VideoPlayer(
                         onBack = {
                             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            viewModel.openEpisodes()
                         },
                         context = context,
                         index = currentEP,

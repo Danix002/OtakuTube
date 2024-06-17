@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,7 +38,6 @@ import com.example.myapplication.MyViewModel
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
-    var open by remember { mutableStateOf(false) }
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
     val episodes by viewModel.episodes.collectAsState()
@@ -63,28 +63,50 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
         topBar = {
             AppBar()
         }
-
     ) { contentPadding ->
         BackgroundImage(contentPadding, content = {
             Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                 if(animeInfo != null && animeInfoTrailer != null) {
                     AnimeThumbnail(
-                        img = if(animeInfoTrailer!!.isNotEmpty()){animeInfoTrailer!![0].image}else{animeInfo!!.img_url},
-                        trailer = if(animeInfoTrailer!!.isNotEmpty()){animeInfoTrailer!![0].trailer.split("/").last()}else{""}
+                        img = if (animeInfoTrailer!!.isNotEmpty()) {
+                            animeInfoTrailer!![0].image
+                        } else {
+                            animeInfo!!.img_url
+                        },
+                        trailer = if (animeInfoTrailer!!.isNotEmpty()) {
+                            animeInfoTrailer!![0].trailer.split("/").last()
+                        } else {
+                            ""
+                        },
+                        viewModel = viewModel,
                     )
-                    Button(colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(112, 82, 137),
-                        contentColor = Color.White
-                    ),
-                        onClick = { open = true },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(16.dp)
-                    ) {
-                        Text(text = "Episodes")
-                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch episodes")
+                    if (animeInfo!!.status != "Upcoming") {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(112, 82, 137),
+                                contentColor = Color.White
+                            ),
+                            onClick = { viewModel.openEpisodes() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .shadow(16.dp)
+                        ) {
+                            Text(text = "Episodes")
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                contentDescription = "Watch episodes"
+                            )
+                        }
+                        episodes?.let {
+                            EpisodesDialog(
+                                context,
+                                viewModel,
+                                it,
+                                id.contains("dub"),
+                                onDismiss = { }
+                            )
+                        }
                     }
-                    episodes?.let { EpisodesDialog(context, viewModel, it, id.contains("dub"), open, onDismiss = { open = false }) }
                 }
             }
         })

@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.example.myapplication.MyViewModel
 
 @Composable
 fun AnimeThumbnailSkeleton() {
@@ -33,7 +34,7 @@ fun AnimeThumbnailSkeleton() {
 }
 
 @Composable
-fun AnimeThumbnail(img: String, trailer: String) {
+fun AnimeThumbnail(img: String, trailer: String, viewModel: MyViewModel) {
     var showPlayer by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
@@ -66,7 +67,8 @@ fun AnimeThumbnail(img: String, trailer: String) {
             if (showPlayer) {
                 YouTubePlayer(
                     youTubeVideoId = trailer,
-                    lifecycleOwner = LocalLifecycleOwner.current
+                    lifecycleOwner = LocalLifecycleOwner.current,
+                    viewModel = viewModel
                 )
             }
         }

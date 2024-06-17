@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
@@ -130,5 +131,15 @@ fun AnimeCardSkeleton() {
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.Gray.copy(alpha = 0.5f))
         )
+    }
+}
+
+@Composable
+fun DialogWithImage(
+    onDismissRequest: () -> Unit,
+    anime: Anime
+) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        AnimeBigCard(anime)
     }
 }

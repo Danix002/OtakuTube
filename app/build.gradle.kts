@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("androidx.lifecycle:lifecycle-common-jvm:2.8.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
