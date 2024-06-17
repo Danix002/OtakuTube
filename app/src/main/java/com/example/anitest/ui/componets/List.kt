@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -91,7 +90,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                 }
             }else {
                 itemsIndexed(animeList) { index, anime ->
-                    AnimeCard(anime, navController)
+                    AnimeCard(anime, navController, viewModel)
                     if ( (index == (animeList.size-1)) ) {
                         if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading)
                         else Text(

@@ -30,10 +30,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
+import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnimeCard(anime: Anime, navController: NavHostController) {
+fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewModel) {
     var openDialog = remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
 
@@ -43,6 +44,7 @@ fun AnimeCard(anime: Anime, navController: NavHostController) {
             .combinedClickable(
                 onClick = {
                     /** LOAD ANIME INFORMATION*/
+                    viewModel.setIsLoadedAnimeScreen(false)
                     navController.navigate("anime/${anime.name}_${anime.anime_id}")
                 },
                 onLongClick = {
