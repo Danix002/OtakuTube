@@ -115,7 +115,7 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean, onDismiss: () -> Unit){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean){
     var showPlayer by remember { mutableStateOf(false) }
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity

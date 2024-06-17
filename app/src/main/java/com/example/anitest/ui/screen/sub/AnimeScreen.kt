@@ -102,8 +102,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                                 context,
                                 viewModel,
                                 it,
-                                id.contains("dub"),
-                                onDismiss = { }
+                                id.contains("dub")
                             )
                         }
                     }
