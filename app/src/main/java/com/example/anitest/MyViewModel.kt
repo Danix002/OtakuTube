@@ -140,12 +140,10 @@ class MyViewModel : ViewModel() {
         _animeSearch.value = emptyList()
     }
 
-    fun setAnimeSearch(id: String){
-        println(id)
+    suspend fun setAnimeSearch(id: String){
         viewModelScope.launch {
             _animeSearch.value = getAnimeSearch(id)
-            println(_animeSearch.value)
-        }
+        }.join()
     }
 
     suspend fun addAnimeByGenre(page: Number, genre: String): Boolean{

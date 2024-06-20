@@ -1,6 +1,7 @@
 package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -34,7 +38,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.anitest.model.Anime
+import com.example.myapplication.MyViewModel
 
 @Composable
 fun AnimeTitles(name: String, titles: List<String>) {
@@ -213,6 +219,24 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
 }
 
 @Composable
-fun Sagas(animeSagas: List<Anime>){
-
+fun Sagas(animeSagas: List<Anime>, isLoaded: Boolean, viewModel: MyViewModel, navController: NavHostController, id: String){
+    LazyRow(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(10.dp)
+    ) {
+        if(!isLoaded) {
+            items(3){
+                AnimeCardSkeleton()
+            }
+        }else {
+            itemsIndexed(animeSagas) { _, anime ->
+                if(anime.anime_id != id)
+                    AnimeCard(anime, navController, viewModel)
+            }
+        }
+    }
 }

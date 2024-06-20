@@ -2,9 +2,12 @@ package com.example.anitest.ui.screen.sub
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -17,10 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AnimeTitles
@@ -29,6 +37,7 @@ import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.BoxAnimeInformations
 import com.example.anitest.ui.componets.EpisodesDialog
+import com.example.anitest.ui.componets.Sagas
 import com.example.myapplication.MyViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -39,6 +48,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     val animeSearch by viewModel.animeSearch.collectAsState()
     val episodes by viewModel.episodes.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
+    var recommendedIsLoaded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {
@@ -61,7 +71,8 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                 episodesId = emptyList()
             }
             viewModel.setEpisodes(episodesId)
-            viewModel.setAnimeSearch(searchId.toString().trim('[', ']'))
+            viewModel.setAnimeSearch(searchId.toString().split("-")[0].trim('[', ']'))
+            recommendedIsLoaded = true
         }
     }
 
@@ -84,7 +95,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                         } else {
                             animeInfo!!.img_url
                         },
-                        trailer = if (animeInfoTrailer!!.isNotEmpty()) {
+                        trailer = if (animeInfoTrailer!!.isNotEmpty() && animeInfoTrailer!![0].trailer != null) {
                             animeInfoTrailer!![0].trailer.split("/").last()
                         } else {
                             ""
@@ -122,6 +133,17 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                     titles = titles.filter { it.isNotBlank() }
                     AnimeTitles(animeInfo!!.name, titles)
                     BoxAnimeInformations(animeInfo!!.about, animeInfo!!.type, animeInfo!!.release, animeInfo!!.genres, animeInfo!!.status)
+                    Text(
+                        text = "Recommended",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color.Gray.copy(alpha = 0.3f))
+                            .padding(vertical = 4.dp, horizontal = 10.dp)
+                    )
+                    Sagas(animeSearch, recommendedIsLoaded, viewModel, navController, id)
                 }
             }
         })
