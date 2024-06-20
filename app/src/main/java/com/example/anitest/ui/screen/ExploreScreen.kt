@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.example.anitest.model.Genre
 import com.example.anitest.ui.componets.AppBar
-import com.example.anitest.ui.componets.BackgroundImage
+import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.CategoryRow
 import com.example.anitest.ui.componets.CategoryRowSkeleton
@@ -40,7 +40,7 @@ fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
         }
 
     ) { contentPadding ->
-            BackgroundImage(contentPadding, content = {
+            BackGroundImage(contentPadding, content = {
                 Column (modifier = Modifier.verticalScroll(rememberScrollState())){
                     if (genresList != null) {
                         genresList.forEach{

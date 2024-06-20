@@ -2,6 +2,7 @@ package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -24,68 +27,192 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.anitest.model.Anime
 
-
-@Preview
 @Composable
-fun AnimeTitles( /** name: String, titles: List<String> **/ ) {
+fun AnimeTitles(name: String, titles: List<String>) {
     var expandedTitles by remember {
         mutableStateOf(false)
     }
-    val name =  "Shinjeki no Kyojin"
-    val titles = listOf<String>("進撃の巨人", "Attack on Titan",  "OtherName")
-    
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black.copy(alpha = 0.9f))
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color(112, 82, 137).copy(alpha = 0.5f))
 
     ) {
-        Text(
-            text = name,
-            color = Color.White,
-            fontSize = 20.sp
-        )
+        Box(modifier = Modifier.width(190.dp)) {
+            Text(
+                text = name,
+                color = Color.White,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(start = 8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
         Spacer(modifier = Modifier
             .width(25.dp)
             .padding(start = 12.dp, end = 12.dp)
             .background(Color.Red)
             .height(20.dp)
         )
-        Text(
-            text = titles[0],
-            color = Color.White,
-            fontSize = 20.sp
-        )
+        Box(modifier = Modifier.width(190.dp)) {
+            Text(
+                text = titles[titles.size - 1],
+                color = Color.White,
+                fontSize = 14.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
         Spacer(
             Modifier
                 .weight(1f)
-                .background(Color.Green))
-        Box(){
+        )
+        Box (modifier = Modifier.width(30.dp), contentAlignment = Alignment.CenterEnd){
             IconButton( onClick = { expandedTitles = expandedTitles.not() }) {
-                Icon(tint = Color.White, imageVector = Icons.Filled.MoreVert, contentDescription = "" )
+                Icon(tint = Color.White, imageVector = Icons.Filled.MoreVert, contentDescription = "")
             }
             DropdownMenu(
                 modifier = Modifier
                     .padding(top = 2.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Black)
+                    .background(Color.Gray.copy(alpha = 0.5f))
                     .padding(horizontal = 16.dp),
                 expanded = expandedTitles,
                 onDismissRequest = { expandedTitles = false }) {
-                titles.subList(1, titles.size).forEach {
-                    Text( modifier = Modifier
+                titles.forEach {
+                    Text(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp, bottom = 8.dp) , text = it, color = Color.White)
+                        .padding(top = 2.dp, bottom = 2.dp) , text = it, color = Color.White
+                    )
+                }
+                Text(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, bottom = 2.dp) , text = name, color = Color.White
+                )
+            }
+        }
+    }
+}
 
+@Composable
+fun BoxAnimeInformations(about: String, type: String, release: String, genres: List<String>, status: String){
+    var expandedInfo by remember {
+        mutableStateOf(false)
+    }
+
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+        .clip(RoundedCornerShape(6.dp))
+        .background(Color(242, 218, 255))
+    ) {
+        Column (modifier = Modifier.padding(4.dp)) {
+            Text(
+                text = buildAnnotatedString {
+                    append("Plot: ")
+                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    append(about)
+                },
+                color = Color.Black,
+                fontSize = 14.sp,
+                maxLines = if (expandedInfo) Int.MAX_VALUE else 3,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(
+                Modifier.height(5.dp)
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append("Type: ")
+                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    append(type)
+                },
+                color = Color.Black,
+                fontSize = 14.sp
+            )
+            Spacer(
+                Modifier.height(5.dp)
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append("Release: ")
+                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    append(release)
+                },
+                color = Color.Black,
+                fontSize = 14.sp
+            )
+            Spacer(
+                Modifier.height(5.dp)
+            )
+            Row {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Genres: ")
+                        addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    },
+                    color = Color.Black,
+                    fontSize = 14.sp
+                )
+                genres.forEach {
+                    Box(modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(129, 81, 86))
+                    ) {
+                        Text(
+                            text = "$it ",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(1.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    Spacer(
+                        Modifier.width(2.dp)
+                    )
+                }
+            }
+            Spacer(
+                Modifier.height(5.dp)
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append("Status: ")
+                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    append(status)
+                },
+                color = Color.Black,
+                fontSize = 14.sp
+            )
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp), contentAlignment = Alignment.Center) {
+                IconButton(
+                    modifier = Modifier.align(Alignment.Center),
+                    onClick = { expandedInfo = expandedInfo.not() }) {
+                    Icon(
+                        tint = Color.Black,
+                        imageVector = if (expandedInfo) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                        contentDescription = ""
+                    )
                 }
             }
         }
     }
+}
+
+@Composable
+fun Sagas(animeSagas: List<Anime>){
+
 }

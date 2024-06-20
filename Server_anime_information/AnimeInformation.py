@@ -44,12 +44,26 @@ def get_anime_list_of_anime_not_in_animeworld(letter):
         json.dump(anime_not_in_animeworld, output_file)
 
     return jsonify(anime_not_in_animeworld)
+
+
+@app.route('/search_anime/<string:query>', methods=['GET'])
+def search_anime(query):
+    file_path = "lista_anime_in_Gogoanime_.json"  
+    result = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        anime_list = json.load(file)
+        for anime in anime_list:
+            name = anime["name"]
+            if(name.lower().startswith(query.lower())):
+                anime_id = anime["anime_id"]
+                result.append({"name": name, "anime_id": anime_id})
+    return jsonify(result)
     
 
 
 if __name__ == '__main__':
     # Indirizzo IP e porta su cui eseguire il server Flask
-    ip_address = '192.168.1.2'  # Inserisci qui l'indirizzo IP desiderato
+    ip_address = '192.168.1.6'  # Inserisci qui l'indirizzo IP desiderato
     port = 5000
 
     # Esegui il server Flask specificando l'indirizzo IP e la porta

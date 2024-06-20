@@ -8,5 +8,5 @@ import com.example.myapplication.MyViewModel
 @Composable
 fun Navigation(viewModel: MyViewModel, context: Context) {
     val navController = rememberNavController()
-    SetupNavGraph(navController = navController, viewModel, context )
+    SetupNavGraph(navController = navController, viewModel, context)
 }

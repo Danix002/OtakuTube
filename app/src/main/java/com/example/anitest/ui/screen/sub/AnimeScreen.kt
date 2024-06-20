@@ -23,9 +23,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.anitest.ui.componets.AnimeThumbnail
+import com.example.anitest.ui.componets.AnimeTitles
 import com.example.anitest.ui.componets.AppBar
-import com.example.anitest.ui.componets.BackgroundImage
+import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
+import com.example.anitest.ui.componets.BoxAnimeInformations
 import com.example.anitest.ui.componets.EpisodesDialog
 import com.example.myapplication.MyViewModel
 
@@ -34,12 +36,14 @@ import com.example.myapplication.MyViewModel
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
+    val animeSearch by viewModel.animeSearch.collectAsState()
     val episodes by viewModel.episodes.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {
             viewModel.setIsLoadedAnimeScreen(flag = true)
+            viewModel.forgetAnimeSearch()
             viewModel.forgetAnimeInfo()
             viewModel.forgetEpisodes()
             viewModel.forgetAnimeInfoTrailer()
@@ -47,14 +51,17 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             viewModel.setAnimeInfoTrailer(name)
 
             var episodesId = viewModel.setAnimeInfo(id)
-            if (episodesId.isEmpty())
-                episodesId = animeInfo?.let {
-                    listOf(
-                        it.name.toLowerCase().replace(Regex("[^a-z0-9]+"), "-")
-                            .replace(Regex("-+"), "-").trim('-')
-                    )
-                }!!
+            val searchId = animeInfo?.let {
+                listOf(
+                    it.name.toLowerCase().replace(Regex("[^a-z0-9]+"), "-")
+                        .replace(Regex("-+"), "-").trim('-')
+                )
+            }!!
+            if (episodesId.isEmpty()) {
+                episodesId = emptyList()
+            }
             viewModel.setEpisodes(episodesId)
+            viewModel.setAnimeSearch(searchId.toString().trim('[', ']'))
         }
     }
 
@@ -68,7 +75,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             AppBar()
         }
     ) { contentPadding ->
-        BackgroundImage(contentPadding, content = {
+        BackGroundImage(contentPadding, content = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 if (animeInfo != null && animeInfoTrailer != null) {
                     AnimeThumbnail(
@@ -110,6 +117,11 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             )
                         }
                     }
+                    val delimiters = "[,;:.-]+".toRegex()
+                    var titles = animeInfo!!.othername[0].trim('[', ']').split(delimiters)
+                    titles = titles.filter { it.isNotBlank() }
+                    AnimeTitles(animeInfo!!.name, titles)
+                    BoxAnimeInformations(animeInfo!!.about, animeInfo!!.type, animeInfo!!.release, animeInfo!!.genres, animeInfo!!.status)
                 }
             }
         })

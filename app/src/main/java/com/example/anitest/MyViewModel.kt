@@ -45,6 +45,9 @@ class MyViewModel : ViewModel() {
     private val _genres = MutableStateFlow<List<Genre>>(emptyList())
     val genres: StateFlow<List<Genre>> get() = _genres
 
+    private val _animeSearch = MutableStateFlow<List<Anime>>(emptyList())
+    val animeSearch: StateFlow<List<Anime>> get() = _animeSearch
+
     private val _currentEP = MutableStateFlow<Int>(0)
     val currentEP: StateFlow<Int> get() = _currentEP
 
@@ -133,6 +136,18 @@ class MyViewModel : ViewModel() {
         _animeInfo.value = null
     }
 
+    fun forgetAnimeSearch(){
+        _animeSearch.value = emptyList()
+    }
+
+    fun setAnimeSearch(id: String){
+        println(id)
+        viewModelScope.launch {
+            _animeSearch.value = getAnimeSearch(id)
+            println(_animeSearch.value)
+        }
+    }
+
     suspend fun addAnimeByGenre(page: Number, genre: String): Boolean{
         var flagLoading = true
         viewModelScope.launch {
@@ -189,6 +204,18 @@ class MyViewModel : ViewModel() {
             }
         }
         return animeEpisodes.value
+    }
+
+    private suspend fun getAnimeSearch(id: String): List<Anime> {
+        val animeSearch = MutableStateFlow<List<Anime>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                animeSearch.value = animeService.getAnimeSearch(id) ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return animeSearch.value
     }
 
     private suspend fun getAllAnime(page : Number): List<Anime> {

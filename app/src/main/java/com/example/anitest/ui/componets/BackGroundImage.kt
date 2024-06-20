@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.anitest.R
 
 @Composable
-fun BackgroundImage( contentPadding: PaddingValues, content : @Composable () -> Unit) {
+fun BackGroundImage(contentPadding: PaddingValues, content : @Composable () -> Unit) {
     val matrix = ColorMatrix()
     matrix.setToSaturation(0.7F)
     Box(modifier = Modifier.padding(contentPadding)) {

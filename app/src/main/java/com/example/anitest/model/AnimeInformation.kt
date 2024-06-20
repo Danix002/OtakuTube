@@ -37,6 +37,6 @@ data class AnimeInfo(
     val release: String,
     val genres: List<String>,
     val status: String,
-    val othername: List<String>,
+    val othername: List<String>
 )
 

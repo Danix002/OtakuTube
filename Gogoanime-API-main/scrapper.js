@@ -171,6 +171,7 @@ async function allAnime(page) {
 }
 
 async function search(query) {
+	console.log("Arrivata richiesta di search per: " + query);
 	var anime_list = [];
 
 	res = await axios.get(`${baseUrl}/search.html?keyword=${query}`);
@@ -296,7 +297,7 @@ async function getDownloadLink(episode_link) {
 	await page.goto(episode_link, { waitUntil: 'networkidle0' });
 	
 	try {
-		await page.waitForSelector('.mirror_link', { timeout: 1000 });
+		await page.waitForSelector('.mirror_link', { timeout: 30000 });
 	} catch (error) {
 		console.error('Element not found:', error);
 		await browser.close();
