@@ -19,13 +19,11 @@ import com.example.myapplication.MyViewModel
 fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
     NavigationBar (
         containerColor = Color.Transparent,
-        contentColor = Color.Transparent,
-
+        contentColor = Color.Transparent
     ){
         viewModel.navigationItems.value.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = viewModel.selectedNavItem.value == item.route,
-
                 onClick = {
                     if (viewModel.selectedNavItem.value != item.route) {
                         viewModel.selectedNavItem.value = item.route

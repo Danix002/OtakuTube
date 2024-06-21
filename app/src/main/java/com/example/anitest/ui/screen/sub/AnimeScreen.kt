@@ -83,7 +83,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             BottomNavigation(viewModel, navController)
         },
         topBar = {
-            AppBar()
+            AppBar(viewModel, navController)
         }
     ) { contentPadding ->
         BackGroundImage(contentPadding, content = {
