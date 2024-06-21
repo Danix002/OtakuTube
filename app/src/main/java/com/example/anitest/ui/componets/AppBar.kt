@@ -55,6 +55,7 @@ import com.example.myapplication.MyViewModel
 fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
     var searchString : String by remember { mutableStateOf("") }
     var searchFlag by remember { mutableStateOf(false) }
+    var backNavFlag by remember { mutableStateOf(false) }
     var searchLoaded by remember { mutableStateOf(false) }
     val animeSearch by viewModel.animeSearch.collectAsState()
 
@@ -75,7 +76,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             navigationIcon = {
                 Box {
                     IconButton(
-                        onClick = { navController.navigateUp() },
+                        onClick = { navController.navigateUp(); backNavFlag = true },
                         modifier = Modifier
                             .fillMaxHeight()
                             .align(Alignment.Center)
@@ -100,10 +101,11 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                         keyboardActions = KeyboardActions(onSearch = {
                             focusManager.clearFocus()
                             searchFlag = true
+                            backNavFlag = false
                         }),
                         singleLine = true,
                         leadingIcon = {
-                            IconButton(onClick = { searchFlag = true }) {
+                            IconButton(onClick = { searchFlag = true; backNavFlag = false }) {
                                 Icon(
                                     imageVector = Icons.Filled.Search,
                                     contentDescription = ""
@@ -130,7 +132,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent.copy(alpha = 0f))
         )
-        if (searchLoaded) {
+        if (searchLoaded && !backNavFlag) {
             AnimeSearchLoader(animeSearch = animeSearch, viewModel = viewModel, navController = navController)
         }
     }
