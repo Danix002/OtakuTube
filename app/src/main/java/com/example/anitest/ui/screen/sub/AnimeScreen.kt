@@ -48,7 +48,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     val animeSearch by viewModel.animeSearch.collectAsState()
     val episodes by viewModel.episodes.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
-    var recommendedIsLoaded by remember { mutableStateOf(false) }
+    var recommendedIsLoaded by remember { mutableStateOf(isLoaded) }
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {

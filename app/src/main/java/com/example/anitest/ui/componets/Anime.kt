@@ -54,8 +54,8 @@ fun AnimeButton(name: String, onAnimeInformations: ()-> Unit) {
 fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navController: NavHostController){
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .height(700.dp)
+            .fillMaxWidth()
+            .height(765.dp)
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             itemsIndexed(animeSearch) { index, anime ->

@@ -75,7 +75,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             navigationIcon = {
                 Box {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.navigateUp() },
                         modifier = Modifier
                             .fillMaxHeight()
                             .align(Alignment.Center)
