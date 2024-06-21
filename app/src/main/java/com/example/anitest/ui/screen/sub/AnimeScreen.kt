@@ -39,6 +39,7 @@ import com.example.anitest.ui.componets.BoxAnimeInformations
 import com.example.anitest.ui.componets.EpisodesDialog
 import com.example.anitest.ui.componets.Sagas
 import com.example.myapplication.MyViewModel
+import java.util.regex.Pattern
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -96,7 +97,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             animeInfo!!.img_url
                         },
                         trailer = if (animeInfoTrailer!!.isNotEmpty() && animeInfoTrailer!![0].trailer != null) {
-                            animeInfoTrailer!![0].trailer.split("/").last()
+                            extractId(animeInfoTrailer!![0].trailer)
                         } else {
                             ""
                         },
@@ -128,9 +129,14 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             )
                         }
                     }
-                    val delimiters = "[,;:.-]+".toRegex()
-                    var titles = animeInfo!!.othername[0].trim('[', ']').split(delimiters)
-                    titles = titles.filter { it.isNotBlank() }
+                    val delimiters = "[,;:.-]+|\\s{3,}".toRegex()
+                    var titles: List<String> = listOf("")
+                    if(animeInfo!!.othername != null) {
+                        titles = animeInfo!!.othername[0]
+                            .trim('[', ']')
+                            .split(delimiters)
+                            .filter { it.isNotBlank() }
+                    }
                     AnimeTitles(animeInfo!!.name, titles)
                     BoxAnimeInformations(animeInfo!!.about, animeInfo!!.type, animeInfo!!.release, animeInfo!!.genres, animeInfo!!.status)
                     Text(
@@ -150,3 +156,15 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     }
 }
 
+fun extractId(url: String) : String{
+    val pattern = "(?<=watch\\?v=|/videos/|embed/|youtu.be/|/v/|/e/|watch\\?feature=player_embedded&v=|embed\\%2F|v=|%2Fvideos%2F|%2Fv%2F)[^#\\&\\?]*"
+
+    val compiledPattern = Pattern.compile(pattern)
+    val matcher = compiledPattern.matcher(url)
+
+    return if (matcher.find()) {
+        matcher.group()
+    } else {
+        ""
+    }
+}

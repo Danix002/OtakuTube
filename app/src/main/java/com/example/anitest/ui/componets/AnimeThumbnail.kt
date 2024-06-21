@@ -39,7 +39,7 @@ fun AnimeThumbnail(img: String, trailer: String, viewModel: MyViewModel) {
 
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(239.dp)
+        .height(238.dp)
         .background(Color.Black)
     ) {
         Image(

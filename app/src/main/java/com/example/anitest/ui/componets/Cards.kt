@@ -43,7 +43,6 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
             .width(128.dp)
             .combinedClickable(
                 onClick = {
-                    /** LOAD ANIME INFORMATION*/
                     viewModel.setIsLoadedAnimeScreen(false)
                     navController.navigate("anime/${anime.name}_${anime.anime_id}")
                 },

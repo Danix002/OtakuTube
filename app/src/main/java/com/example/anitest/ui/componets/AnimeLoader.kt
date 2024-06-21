@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun AnimeLoaderButton( onClick : () -> Unit, loading : Boolean): Unit {
+fun AnimeLoaderButton(onClick : () -> Unit, loading : Boolean): Unit {
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = Color(102, 90, 110), contentColor = Color.White),
         onClick = {

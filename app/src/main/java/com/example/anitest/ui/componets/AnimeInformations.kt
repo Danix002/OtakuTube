@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -97,10 +99,13 @@ fun AnimeTitles(name: String, titles: List<String>) {
                 expanded = expandedTitles,
                 onDismissRequest = { expandedTitles = false }) {
                 titles.forEach {
-                    Text(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp, bottom = 2.dp) , text = it, color = Color.White
-                    )
+                    if(it != "") {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp, bottom = 2.dp), text = it, color = Color.White
+                        )
+                    }
                 }
                 Text(modifier = Modifier
                     .fillMaxWidth()
@@ -111,6 +116,7 @@ fun AnimeTitles(name: String, titles: List<String>) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BoxAnimeInformations(about: String, type: String, release: String, genres: List<String>, status: String){
     var expandedInfo by remember {
@@ -162,7 +168,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
             Spacer(
                 Modifier.height(5.dp)
             )
-            Row {
+            FlowRow{
                 Text(
                     text = buildAnnotatedString {
                         append("Genres: ")
@@ -173,8 +179,9 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                 )
                 genres.forEach {
                     Box(modifier = Modifier
+                        .padding(2.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(129, 81, 86))
+                        .background(Color(129, 81, 86)),
                     ) {
                         Text(
                             text = "$it ",

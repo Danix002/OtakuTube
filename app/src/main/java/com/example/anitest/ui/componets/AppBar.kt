@@ -76,7 +76,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             navigationIcon = {
                 Box {
                     IconButton(
-                        onClick = { navController.navigateUp(); backNavFlag = true },
+                        onClick = { navController.navigateUp(); backNavFlag = true; viewModel.forgetAnimeSearch(); viewModel.setIsLoadedAnimeScreen(flag = false); viewModel.closeSearch() },
                         modifier = Modifier
                             .fillMaxHeight()
                             .align(Alignment.Center)
@@ -102,10 +102,11 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                             focusManager.clearFocus()
                             searchFlag = true
                             backNavFlag = false
+                            viewModel.setIsLoadedAnimeScreen(flag = false)
                         }),
                         singleLine = true,
                         leadingIcon = {
-                            IconButton(onClick = { searchFlag = true; backNavFlag = false }) {
+                            IconButton(onClick = { searchFlag = true; backNavFlag = false; viewModel.setIsLoadedAnimeScreen(flag = false) }) {
                                 Icon(
                                     imageVector = Icons.Filled.Search,
                                     contentDescription = ""
@@ -133,6 +134,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent.copy(alpha = 0f))
         )
         if (searchLoaded && !backNavFlag) {
+            viewModel.openSearch()
             AnimeSearchLoader(animeSearch = animeSearch, viewModel = viewModel, navController = navController)
         }
     }

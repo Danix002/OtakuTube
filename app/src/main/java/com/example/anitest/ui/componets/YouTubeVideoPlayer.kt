@@ -24,6 +24,8 @@ fun YouTubePlayer(
     viewModel: MyViewModel
 ) {
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
+    val isSearchScreenOpen by viewModel.isSearchScreenOpen.observeAsState()
+
     var youTubePlayerInstance by remember { mutableStateOf<YouTubePlayer?>(null) }
 
     AndroidView(
@@ -43,6 +45,12 @@ fun YouTubePlayer(
 
     LaunchedEffect(isEpisodesButtonOpen) {
         if (isEpisodesButtonOpen == true) {
+            youTubePlayerInstance?.pause()
+        }
+    }
+
+    LaunchedEffect(isSearchScreenOpen) {
+        if (isSearchScreenOpen == true) {
             youTubePlayerInstance?.pause()
         }
     }

@@ -59,7 +59,7 @@ fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navContr
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             itemsIndexed(animeSearch) { index, anime ->
-                AnimeButton(anime.name, onAnimeInformations = {})
+                AnimeButton(anime.name, onAnimeInformations = {navController.navigate("anime/${anime.name}_${anime.anime_id}"); viewModel.closeSearch()})
             }
         }
     }
