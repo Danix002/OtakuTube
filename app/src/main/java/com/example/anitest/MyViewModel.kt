@@ -117,6 +117,13 @@ class MyViewModel : ViewModel() {
         _isSearchScreenOpen.value = false
     }
 
+    fun getFlagSearch(): Boolean {
+        if(_isSearchScreenOpen.value != null)
+            return _isSearchScreenOpen.value!!
+        else
+            return false
+    }
+
     fun setIsLoadedAnimeScreen( flag : Boolean ) {
         _isAnimeScreenLoaded.value = flag
     }
@@ -182,16 +189,9 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             if(page == 0) {
                 _popularAnime.value = getPopularAnime(page)
-                _popularAnime.value.forEach {
-                    it.description = getAnimeInfo(it.anime_id).about
-                }
-            }
-            else {
+            }else {
                 val currentPopularAnimeList = _popularAnime.value
                 val newPopularAnimeList = getPopularAnime(page)
-                newPopularAnimeList.forEach{
-                    it.description = getAnimeInfo(it.anime_id).about
-                }
                 _popularAnime.value = currentPopularAnimeList + newPopularAnimeList
             }
         }.join()

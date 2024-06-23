@@ -41,7 +41,7 @@ fun ZappingScreen(viewModel: MyViewModel, navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Popular",
                     color = Color.White,

@@ -46,34 +46,21 @@ import java.util.regex.Pattern
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
-    val animeSearch by viewModel.animeSearch.collectAsState()
     val episodes by viewModel.episodes.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
-    var recommendedIsLoaded by remember { mutableStateOf(isLoaded) }
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {
             viewModel.setIsLoadedAnimeScreen(flag = true)
-            viewModel.forgetAnimeSearch()
             viewModel.forgetAnimeInfo()
             viewModel.forgetEpisodes()
             viewModel.forgetAnimeInfoTrailer()
 
             viewModel.setAnimeInfoTrailer(name)
 
-            var episodesId = viewModel.setAnimeInfo(id)
-            val searchId = animeInfo?.let {
-                listOf(
-                    it.name.toLowerCase().replace(Regex("[^a-z0-9]+"), "-")
-                        .replace(Regex("-+"), "-").trim('-')
-                )
-            }!!
-            if (episodesId.isEmpty()) {
-                episodesId = emptyList()
-            }
+            val episodesId = viewModel.setAnimeInfo(id)
+
             viewModel.setEpisodes(episodesId)
-            viewModel.setAnimeSearch(searchId.toString().split("-")[0].trim('[', ']'))
-            recommendedIsLoaded = true
         }
     }
 
@@ -135,6 +122,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                         titles = animeInfo!!.othername[0]
                             .trim('[', ']')
                             .split(delimiters)
+                            .map { it.trim() }
                             .filter { it.isNotBlank() }
                     }
                     AnimeTitles(animeInfo!!.name, titles)
@@ -149,7 +137,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             .background(Color.Gray.copy(alpha = 0.3f))
                             .padding(vertical = 4.dp, horizontal = 10.dp)
                     )
-                    Sagas(animeSearch, recommendedIsLoaded, viewModel, navController, id)
+                    Sagas(viewModel, navController, id)
                 }
             }
         })

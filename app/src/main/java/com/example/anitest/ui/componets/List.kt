@@ -1,6 +1,12 @@
 package com.example.anitest.ui.componets
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,9 +14,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -21,8 +30,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,10 +48,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -157,10 +172,11 @@ fun CategoryRowSkeleton() {
 fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     val popular by viewModel.popularAnime.collectAsState()
     var pageAnime by remember { mutableIntStateOf(1) }
-    var selectedAnime by remember { mutableIntStateOf(0) }
     val nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var isLoaded by remember { mutableStateOf(false) }
+    var selectedAnime by remember { mutableIntStateOf(0) }
+    var expandedInfo by remember { mutableStateOf(false) }
 
     LaunchedEffect (Unit) {
         if(!isLoaded) {
@@ -178,6 +194,13 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     }
 
     val pagerState = rememberPagerState(pageCount = { popular.size })
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            selectedAnime = page
+        }
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     if(!isLoaded) {
@@ -188,9 +211,8 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(470.dp)
-                    .padding(16.dp)
+                    .padding(8.dp)
             ) {
-                selectedAnime = page
                 AnimePopularCard(
                     anime = popular[page],
                     navController = navController,
@@ -231,28 +253,55 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
             Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
         }
     }
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = MaterialTheme.shapes.medium
+            .animateContentSize(),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(Color(242, 218, 255))
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Description",
-                color = Color.Black,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = if(isLoaded){popular[selectedAnime].description}else{""},
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis,
-                color = Color.Black,
-                style = MaterialTheme.typography.bodyMedium
-            )
+        if(isLoaded) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp), contentAlignment = Alignment.Center) {
+                    IconButton(
+                        modifier = Modifier.align(Alignment.Center),
+                        onClick = { expandedInfo = expandedInfo.not() }
+                    ) {
+                        Icon(
+                            tint = Color.Black,
+                            imageVector = if (expandedInfo) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowDropUp,
+                            contentDescription = ""
+                        )
+                    }
+                }
+                Text(
+                    text = "Description",
+                    color = Color.Black,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = popular[selectedAnime].description,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.Black,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                /*AnimatedVisibility(
+                    visible = expandedInfo,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                    ) {
+
+                }*/
+            }
         }
     }
 }

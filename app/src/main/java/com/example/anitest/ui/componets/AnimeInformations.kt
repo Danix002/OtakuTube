@@ -25,7 +25,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -226,7 +229,20 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
 }
 
 @Composable
-fun Sagas(animeSagas: List<Anime>, isLoaded: Boolean, viewModel: MyViewModel, navController: NavHostController, id: String){
+fun Sagas(viewModel: MyViewModel, navController: NavHostController, id: String){
+    val animeSearch by viewModel.animeSearch.collectAsState()
+    var isLoaded by remember { mutableStateOf(false) }
+    val flagSearch by viewModel.isSearchScreenOpen.observeAsState()
+
+    LaunchedEffect(flagSearch) {
+        isLoaded = false
+        if(!viewModel.getFlagSearch()) {
+            viewModel.forgetAnimeSearch()
+            viewModel.setAnimeSearch(id.split("-")[0])
+            isLoaded = true
+        }
+    }
+
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -240,7 +256,7 @@ fun Sagas(animeSagas: List<Anime>, isLoaded: Boolean, viewModel: MyViewModel, na
                 AnimeCardSkeleton()
             }
         }else {
-            itemsIndexed(animeSagas) { _, anime ->
+            itemsIndexed(animeSearch) { _, anime ->
                 if(anime.anime_id != id)
                     AnimeCard(anime, navController, viewModel)
             }

@@ -131,23 +131,45 @@ function genre() {
 	return genre_list;
 }
 
+/** MODIFIED */
 async function popular(page) {
 	var anime_list = [];
 
-	res = await axios.get(`${baseUrl}/popular.html?page=${page}`);
-	const body = await res.data;
-	const $ = cheerio.load(body);
+	try {
+        const res = await axios.get(`${baseUrl}/popular.html?page=${page}`);
+        const body = res.data;
+        const $ = cheerio.load(body);
 
-	$('div.main_body div.last_episodes ul.items li').each((index, element) => {
-		$elements = $(element);
-		name = $elements.find('p').find('a');
-		img = $elements.find('div').find('a').find('img').attr('src');
-		link = $elements.find('div').find('a').attr('href');
-		anime_name = { name: name.html(), img_url: img, anime_id: link.slice(10) };
-		anime_list.push(anime_name);
-	});
+        const items = $('div.main_body div.last_episodes ul.items li').toArray();
 
-	return await anime_list;
+        for (let element of items) {
+            const $elements = $(element);
+            const name = $elements.find('p a').text();
+            const img = $elements.find('div a img').attr('src');
+            const link = $elements.find('div a').attr('href');
+
+            try {
+                const anime_about_res = await axios.get(`${baseUrl}/${link}`);
+                const body_anime = anime_about_res.data;
+                const $_ = cheerio.load(body_anime);
+                const anime_about = $_('div.anime_info_body_bg div.description').text();
+
+                const anime_name = {
+                    name: name,
+                    img_url: img,
+                    anime_id: link.slice(10),
+                    description: anime_about
+                };
+                anime_list.push(anime_name);
+            } catch (error) {
+                console.error(`Errore nel caricamento delle informazioni aggiuntive per ${link}:`, error);
+            }
+        }
+    } catch (error) {
+        console.error(`Errore nel caricamento della pagina ${page}:`, error);
+    }
+
+    return anime_list;
 }
 
 /** MODIFIED */

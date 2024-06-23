@@ -63,6 +63,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
 
     LaunchedEffect(searchFlag) {
         if(searchFlag) {
+            viewModel.forgetAnimeSearch()
             viewModel.setAnimeSearch(searchString)
             searchFlag = false
             searchLoaded = true
@@ -76,7 +77,15 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             navigationIcon = {
                 Box {
                     IconButton(
-                        onClick = { navController.navigateUp(); backNavFlag = true; viewModel.forgetAnimeSearch(); viewModel.setIsLoadedAnimeScreen(flag = false); viewModel.closeSearch() },
+                        onClick = {
+                            if(!viewModel.getFlagSearch()){
+                                viewModel.setIsLoadedAnimeScreen(flag = false)
+                                navController.navigateUp()
+                            }else{
+                                viewModel.closeSearch()
+                            }
+                            viewModel.forgetAnimeSearch()
+                            backNavFlag = true },
                         modifier = Modifier
                             .fillMaxHeight()
                             .align(Alignment.Center)
@@ -136,6 +145,8 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
         if (searchLoaded && !backNavFlag) {
             viewModel.openSearch()
             AnimeSearchLoader(animeSearch = animeSearch, viewModel = viewModel, navController = navController)
+        }else{
+            viewModel.closeSearch()
         }
     }
 }
