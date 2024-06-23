@@ -180,11 +180,18 @@ class MyViewModel : ViewModel() {
 
     suspend fun addPopularAnime(page: Number){
         viewModelScope.launch {
-            if(page == 0)
+            if(page == 0) {
                 _popularAnime.value = getPopularAnime(page)
+                _popularAnime.value.forEach {
+                    it.description = getAnimeInfo(it.anime_id).about
+                }
+            }
             else {
                 val currentPopularAnimeList = _popularAnime.value
                 val newPopularAnimeList = getPopularAnime(page)
+                newPopularAnimeList.forEach{
+                    it.description = getAnimeInfo(it.anime_id).about
+                }
                 _popularAnime.value = currentPopularAnimeList + newPopularAnimeList
             }
         }.join()

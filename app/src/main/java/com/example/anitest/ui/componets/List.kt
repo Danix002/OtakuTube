@@ -156,8 +156,8 @@ fun CategoryRowSkeleton() {
 @Composable
 fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     val popular by viewModel.popularAnime.collectAsState()
-    val animeInfo by viewModel.animeInfo.collectAsState()
     var pageAnime by remember { mutableIntStateOf(1) }
+    var selectedAnime by remember { mutableIntStateOf(0) }
     val nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var isLoaded by remember { mutableStateOf(false) }
@@ -190,10 +190,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                     .height(470.dp)
                     .padding(16.dp)
             ) {
-                viewModel.forgetAnimeInfo()
-                coroutineScope.launch {
-                    viewModel.setAnimeInfo(popular[page].anime_id)
-                }
+                selectedAnime = page
                 AnimePopularCard(
                     anime = popular[page],
                     navController = navController,
@@ -250,8 +247,8 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if(animeInfo!=null){animeInfo!!.about}else{""},
-                maxLines = 3,
+                text = if(isLoaded){popular[selectedAnime].description}else{""},
+                maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
                 color = Color.Black,
                 style = MaterialTheme.typography.bodyMedium
