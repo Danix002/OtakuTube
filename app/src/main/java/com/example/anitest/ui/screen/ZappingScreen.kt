@@ -1,26 +1,59 @@
 package com.example.anitest.ui.screen
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.anitest.navigation.Screen
+import com.example.anitest.ui.componets.AppBar
+import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
+import com.example.anitest.ui.componets.PopularAnimeRow
 import com.example.myapplication.MyViewModel
 
 @Composable
 fun ZappingScreen(viewModel: MyViewModel, navController: NavHostController) {
     Scaffold (
+        containerColor = Color(102, 90, 110),
         bottomBar = {
-            BottomNavigation(viewModel , navController )
+            BottomNavigation(viewModel , navController)
+        },
+        topBar = {
+            AppBar(viewModel, navController)
         }
     ) { contentPadding ->
-        Box(modifier = Modifier.padding(contentPadding)) {
-            // SCREEN BODY
-            Text(text = Screen.Zapping.route)
-        }
+        BackGroundImage(contentPadding, content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Popular",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 22.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                PopularAnimeRow(viewModel, navController)
+            }
+        })
     }
 }

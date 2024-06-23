@@ -42,6 +42,9 @@ class MyViewModel : ViewModel() {
     private val _animeForGenres = MutableStateFlow<HashMap<String, List<Anime>>>(hashMapOf())
     val animeForGenres: StateFlow<HashMap<String, List<Anime>>> get() = _animeForGenres
 
+    private val _popularAnime = MutableStateFlow<List<Anime>>(emptyList())
+    val popularAnime: StateFlow<List<Anime>> get() = _popularAnime
+
     private val _genres = MutableStateFlow<List<Genre>>(emptyList())
     val genres: StateFlow<List<Genre>> get() = _genres
 
@@ -175,6 +178,18 @@ class MyViewModel : ViewModel() {
         return flagLoading
     }
 
+    suspend fun addPopularAnime(page: Number){
+        viewModelScope.launch {
+            if(page == 0)
+                _popularAnime.value = getPopularAnime(page)
+            else {
+                val currentPopularAnimeList = _popularAnime.value
+                val newPopularAnimeList = getPopularAnime(page)
+                _popularAnime.value = currentPopularAnimeList + newPopularAnimeList
+            }
+        }.join()
+    }
+
     fun setGenres() {
         viewModelScope.launch {
             _genres.value = getGenres()
@@ -237,6 +252,18 @@ class MyViewModel : ViewModel() {
             }
         }
         return allAnime.value
+    }
+
+    private suspend fun getPopularAnime(page : Number): List<Anime> {
+        val popularAnime = MutableStateFlow<List<Anime>>(emptyList())
+        withContext(Dispatchers.IO) {
+            runCatching {
+                popularAnime.value = animeService.getPopularAnime(page) ?: emptyList()
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return popularAnime.value
     }
 
     private suspend fun getAnimeInfo(id : String): AnimeInfo {

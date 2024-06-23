@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -38,6 +39,24 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MyActivityContent() {
         val configuration = resources.configuration
+        val window = this@MainActivity.window
+        SideEffect {
+            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                window.statusBarColor = Color.Transparent.toArgb()
+                window.navigationBarColor = Color.Transparent.toArgb()
+                window.decorView.systemUiVisibility = (
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        )
+            } else {
+                window.statusBarColor = Color(102, 90, 110).toArgb()
+                window.navigationBarColor = Color(102, 90, 110).toArgb()
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            }
+        }
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -48,17 +67,6 @@ class MainActivity : ComponentActivity() {
         ) {
             Navigation(viewModel, LocalContext.current)
             if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
-                val window = this@MainActivity.window
-                window.statusBarColor = Color.Transparent.toArgb()
-                window.navigationBarColor = Color.Transparent.toArgb()
-                window.decorView.systemUiVisibility = (
-                        window.decorView.systemUiVisibility
-                                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                or View.SYSTEM_UI_FLAG_FULLSCREEN
-                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        )
                 Box(modifier = Modifier.fillMaxSize().background(Color.Black))
             }
         }

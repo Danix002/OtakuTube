@@ -20,7 +20,7 @@ import kotlinx.serialization.json.Json
 class AnimeService {
 
     private val baseURLDANIport = "http://192.168.1.5"
-    private val baseURLDANIfix = "http://192.168.1.6"
+    private val baseURLDANIfix = "http://192.168.1.7"
     private val baseURLALE = "http://172.20.10.3"
     private val gson = Gson()
     private val URLNPM = "$baseURLDANIfix:3000"
@@ -48,6 +48,12 @@ class AnimeService {
         val allAnimeJson = Util.GET(httpClient, "$URLNPM/allAnime/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
         return gson.fromJson(allAnimeJson.readText(), type)
+    }
+
+    suspend fun getPopularAnime(page : Number): List<Anime> {
+        val popularAnimeJson = Util.GET(httpClient, "$URLNPM/Popular/$page") ?: return emptyList()
+        val type = object : TypeToken<List<Anime>>() {}.type
+        return gson.fromJson(popularAnimeJson.readText(), type)
     }
 
     suspend fun getAnimeInfo(id : String): AnimeInfo {
