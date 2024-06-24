@@ -39,11 +39,12 @@ import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewModel) {
+fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewModel, fill: Boolean) {
     var openDialog = remember { mutableStateOf(false) }
     val haptics = LocalHapticFeedback.current
 
     Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(128.dp)
             .combinedClickable(
@@ -63,20 +64,33 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
                 anime = anime
             )
         }
-        Image(
-            painter = rememberAsyncImagePainter(anime.img_url),
-            contentDescription = "anime image",
-            modifier = Modifier
-                .height(180.dp)
-                .width(128.dp)
-                .clip(RoundedCornerShape(8.dp))
+        if (fill) {
+            Image(
+                painter = rememberAsyncImagePainter(anime.img_url),
+                contentDescription = "anime image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
 
-        )
+            )
+        } else {
+            Image(
+                painter = rememberAsyncImagePainter(anime.img_url),
+                contentDescription = "anime image",
+                modifier = Modifier
+                    .height(180.dp)
+                    .width(128.dp)
+                    .clip(RoundedCornerShape(8.dp))
+
+            )
+        }
+
         Text(
             text = anime.name,
             color = Color.White,
             fontSize = 16.sp,
             maxLines = 1,
+            textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .fillMaxWidth()
@@ -186,6 +200,7 @@ fun AnimePopularCardSkeleton() {
 @Composable
 fun AnimeCardSkeleton() {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .height(200.dp)
             .width(128.dp),

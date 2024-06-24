@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -120,6 +121,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity
     val currentEP by viewModel.currentEP.collectAsState()
+    val uriHandler = LocalUriHandler.current
 
     if(isEpisodesButtonOpen == true) {
         Dialog(
@@ -160,11 +162,14 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                             index = ep.index + 1,
                             isDubbed = isDubbed,
                             {
+                                println(ep.ep[(ep.ep.size) - 1].link)
                                 viewModel.setCurrentEP(index)
                                 activity.requestedOrientation =
                                     ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                             },
-                            {}
+                            {
+                                uriHandler.openUri(ep.ep[(ep.ep.size) - 1].link)
+                            }
                         )
                     }
                 }

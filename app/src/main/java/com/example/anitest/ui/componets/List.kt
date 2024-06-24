@@ -121,7 +121,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                 }
             }else {
                 itemsIndexed(animeList) { index, anime ->
-                    AnimeCard(anime, navController, viewModel)
+                    AnimeCard(anime, navController, viewModel, false)
                     if ( (index == (animeList.size-1)) ) {
                         if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading)
                         else Text(
@@ -285,6 +285,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
+                    modifier = Modifier.height(32.dp),
                     text = popular[selectedAnime].description,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis,

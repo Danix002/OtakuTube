@@ -63,10 +63,12 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
 
     LaunchedEffect(searchFlag) {
         if(searchFlag) {
+
             viewModel.forgetAnimeSearch()
             viewModel.setAnimeSearch(searchString)
             searchFlag = false
             searchLoaded = true
+
         }
     }
 
@@ -92,7 +94,8 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "back button"
+                            contentDescription = "back button",
+                            tint = Color.White
                         )
                     }
                 }
@@ -118,7 +121,8 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                             IconButton(onClick = { searchFlag = true; backNavFlag = false; viewModel.setIsLoadedAnimeScreen(flag = false) }) {
                                 Icon(
                                     imageVector = Icons.Filled.Search,
-                                    contentDescription = ""
+                                    contentDescription = "",
+                                    tint = Color.White
                                 )
                             }
                         },
@@ -127,7 +131,8 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                         placeholder = {
                             Text(
                                 text = "Search anime...",
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
+                                color = Color.White
                             )
                         },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
@@ -145,7 +150,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
         if (searchLoaded && !backNavFlag) {
             viewModel.openSearch()
             AnimeSearchLoader(animeSearch = animeSearch, viewModel = viewModel, navController = navController)
-        }else{
+        } else {
             viewModel.closeSearch()
         }
     }

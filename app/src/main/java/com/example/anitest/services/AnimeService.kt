@@ -23,8 +23,8 @@ class AnimeService {
     private val baseURLDANIfix = "http://192.168.1.7"
     private val baseURLALE = "http://172.20.10.3"
     private val gson = Gson()
-    private val URLNPM = "$baseURLDANIfix:3000"
-    private val URLPYTHON = "$baseURLDANIfix:5000"
+    private val URLNPM = "$baseURLALE:3000"
+    private val URLPYTHON = "$baseURLALE:5000"
 
     private val httpClient get() = HttpClient(Android) {
         install(JsonFeature) {

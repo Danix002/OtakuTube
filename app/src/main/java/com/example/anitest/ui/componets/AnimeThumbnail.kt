@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,18 +38,24 @@ fun AnimeThumbnailSkeleton() {
 fun AnimeThumbnail(img: String, trailer: String, viewModel: MyViewModel) {
     var showPlayer by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+
         .fillMaxWidth()
         .height(238.dp)
         .background(Color.Black)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(img),
-            contentDescription = "anime image",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
+        if (!showPlayer) {
+            Image(
+                painter = rememberAsyncImagePainter(img),
+                contentDescription = "anime image",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
         if(trailer != "") {
+            if (!showPlayer) {
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(129, 81, 86),
@@ -63,13 +70,27 @@ fun AnimeThumbnail(img: String, trailer: String, viewModel: MyViewModel) {
             ) {
                 Text(text = "Trailer")
                 Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch trailer")
-            }
+            }}
             if (showPlayer) {
                 YouTubePlayer(
                     youTubeVideoId = trailer,
                     lifecycleOwner = LocalLifecycleOwner.current,
                     viewModel = viewModel
                 )
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(129, 81, 86),
+                        contentColor = Color.White
+                    ),
+                    onClick = { showPlayer = false },
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .align(Alignment.TopEnd)
+                        .padding(bottom = 4.dp, end = 4.dp)
+                        .shadow(16.dp)
+                ) {
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "Watch trailer")
+                }
             }
         }
     }

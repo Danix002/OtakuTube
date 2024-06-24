@@ -135,20 +135,6 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
         Column (modifier = Modifier.padding(4.dp)) {
             Text(
                 text = buildAnnotatedString {
-                    append("Plot: ")
-                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
-                    append(about)
-                },
-                color = Color.Black,
-                fontSize = 14.sp,
-                maxLines = if (expandedInfo) Int.MAX_VALUE else 3,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(
-                Modifier.height(5.dp)
-            )
-            Text(
-                text = buildAnnotatedString {
                     append("Type: ")
                     addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     append(type)
@@ -211,6 +197,20 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                 color = Color.Black,
                 fontSize = 14.sp
             )
+            Spacer(
+                Modifier.height(5.dp)
+            )
+            Text(
+                text = buildAnnotatedString {
+                    append("Plot: ")
+                    addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
+                    append(about)
+                },
+                color = Color.Black,
+                fontSize = 14.sp,
+                maxLines = if (expandedInfo) Int.MAX_VALUE else 3,
+                overflow = TextOverflow.Ellipsis
+            )
             Box(modifier = Modifier
                 .fillMaxWidth()
                 .height(30.dp), contentAlignment = Alignment.Center) {
@@ -258,7 +258,7 @@ fun Sagas(viewModel: MyViewModel, navController: NavHostController, id: String){
         }else {
             itemsIndexed(animeSearch) { _, anime ->
                 if(anime.anime_id != id)
-                    AnimeCard(anime, navController, viewModel)
+                    AnimeCard(anime, navController, viewModel, false)
             }
         }
     }

@@ -2,7 +2,9 @@ package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -19,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -55,12 +61,68 @@ fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navContr
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(765.dp)
+            .fillMaxHeight()
     ) {
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            itemsIndexed(animeSearch) { index, anime ->
-                AnimeButton(anime.name, onAnimeInformations = {navController.navigate("anime/${anime.name}_${anime.anime_id}"); viewModel.closeSearch()})
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(bottom = 72.dp, top = 4.dp)
+                .padding(horizontal = 4.dp),
+            columns = GridCells.Adaptive(132.dp),
+            horizontalArrangement = Arrangement.Center,
+            content = {
+                if (animeSearch.size > 0) {
+                    itemsIndexed(animeSearch) { index, anime ->
+                        AnimeCard(anime = anime, navController = navController , viewModel = viewModel, fill = false )
+                    }
+                } else {
+                    items(1) {
+                        Text(text = "Nessun anime trovato")
+                    }
+
+                }
+
             }
-        }
+        )
+
+    }
+}
+
+
+@Composable
+fun AnimeSearchLoaderSkeleton(){
+    val  list = listOf(1,1,1,1,1,1,1,1,1)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(bottom = 72.dp, top = 4.dp)
+                .padding(horizontal = 4.dp),
+            columns = GridCells.Adaptive(132.dp),
+            horizontalArrangement = Arrangement.Center,
+            content = {
+                itemsIndexed(list) { index, anime ->
+                    Box (
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Box (
+                            modifier = Modifier
+                                .height(200.dp)
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .padding(horizontal = 4.dp)
+                                .background(Color.Gray.copy(alpha = 0.5f))
+                        ) {
+
+                        }
+                    }
+
+                }
+            }
+        )
+
     }
 }
