@@ -57,6 +57,8 @@ class AnimeService {
         val type = object : TypeToken<Episode>() {}.type
         return gson.fromJson(episodeJson.readText(), type)
     }
+
+
     suspend fun getSimplePopularAnime(page : Number): List<Anime> {
         val popularAnimeJson = Util.GET(httpClient, "$URLNPM/PopularNoDescription/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
@@ -81,11 +83,7 @@ class AnimeService {
         return gson.fromJson(searchJson.readText(), type)
     }
 
-    suspend fun getEpisode(episodeId: String): Episode? {
-        val episodeJson = Util.GET(httpClient, "$URLNPM/getEpisode/$episodeId") ?: return null
-        val type = object : TypeToken<Episode>() {}.type
-        return gson.fromJson(episodeJson.readText(), type)
-    }
+
 
     suspend fun getEpisodes(episodes : List<String>): List<Episode> {
         var requestEpisodesString = episodes[0]

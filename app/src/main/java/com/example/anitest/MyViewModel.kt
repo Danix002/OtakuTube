@@ -100,10 +100,6 @@ class MyViewModel : ViewModel() {
     )
 
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
-
-    private val _isEpisodesButtonOpen = MutableLiveData(false)
-    val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
-
     private val _currentEpisode = MutableStateFlow<Episode?>(null)
     val currentEpisode: StateFlow<Episode?> get() = _currentEpisode
 
@@ -183,10 +179,6 @@ class MyViewModel : ViewModel() {
             return _isSearchScreenOpen.value!!
         else
             return false
-    }
-
-    fun setIsLoadedAnimeScreen( flag : Boolean ) {
-        _isAnimeScreenLoaded.value = flag
     }
 
     fun isLoadedAnimeScreen(): Boolean {
