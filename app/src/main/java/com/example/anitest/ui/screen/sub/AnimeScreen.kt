@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,6 +38,7 @@ import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.BoxAnimeInformations
 import com.example.anitest.ui.componets.EpisodesDialog
+import com.example.anitest.ui.componets.EpisodesLoader
 import com.example.anitest.ui.componets.Sagas
 import com.example.myapplication.MyViewModel
 import java.util.regex.Pattern
@@ -46,24 +48,21 @@ import java.util.regex.Pattern
 fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: String, id: String, context: Context) {
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
-    val episodes by viewModel.episodes.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
+    var episodesId by remember { mutableStateOf (emptyList<String>()) }
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {
             viewModel.setIsLoadedAnimeScreen(flag = true)
+
             viewModel.forgetAnimeInfo()
-            viewModel.forgetEpisodes()
             viewModel.forgetAnimeInfoTrailer()
 
             viewModel.setAnimeInfoTrailer(name)
 
-            val episodesId = viewModel.setAnimeInfo(id)
-
-            viewModel.setEpisodes(episodesId)
+            episodesId = viewModel.setAnimeInfo(id)
         }
     }
-
 
     Scaffold(
         containerColor = Color(102, 90, 110),
@@ -107,14 +106,12 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                                 contentDescription = "Watch episodes"
                             )
                         }
-                        episodes?.let {
-                            EpisodesDialog(
-                                context,
-                                viewModel,
-                                it,
-                                id.contains("dub")
-                            )
-                        }
+                        EpisodesLoader(
+                            context,
+                            viewModel,
+                            episodesId,
+                            id.contains("dub")
+                        )
                     }
                     val delimiters = "[,;:.-]+|\\s{3,}".toRegex()
                     var titles: List<String> = listOf("")

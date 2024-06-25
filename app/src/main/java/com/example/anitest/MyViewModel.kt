@@ -57,6 +57,9 @@ class MyViewModel : ViewModel() {
     private val _episodes = MutableStateFlow<List<Episode>?>(emptyList())
     val episodes: StateFlow<List<Episode>?> get() = _episodes
 
+    private val _currentEpisode = MutableStateFlow<Episode?>(null)
+    val currentEpisode: StateFlow<Episode?> get() = _currentEpisode
+
     private val _isSearchScreenOpen = MutableLiveData(false)
     val isSearchScreenOpen: LiveData<Boolean> get() = _isSearchScreenOpen
 
@@ -65,6 +68,9 @@ class MyViewModel : ViewModel() {
 
     private val _isAnimeScreenLoaded = MutableStateFlow(false)
     val isAnimeScreenLoaded: StateFlow<Boolean> get() = _isAnimeScreenLoaded
+
+    private val _isEpisodeLoaded = MutableStateFlow(false)
+    val isEpisodeLoaded: StateFlow<Boolean> get() = _isEpisodeLoaded
 
     var navigationItems = mutableStateOf(
         listOf(
@@ -124,12 +130,23 @@ class MyViewModel : ViewModel() {
             return false
     }
 
-    fun setIsLoadedAnimeScreen( flag : Boolean ) {
+    fun setIsLoadedAnimeScreen(flag : Boolean) {
         _isAnimeScreenLoaded.value = flag
+        if(!flag){
+            setIsLoadedEpisode(flag)
+        }
     }
 
     fun isLoadedAnimeScreen(): Boolean {
         return _isAnimeScreenLoaded.value
+    }
+
+    fun setIsLoadedEpisode(flag : Boolean) {
+        _isEpisodeLoaded.value = flag
+    }
+
+    fun isLoadedEpisode(): Boolean {
+        return _isEpisodeLoaded.value
     }
 
     suspend fun setAnimeInfo(id: String): List<String> {
@@ -146,6 +163,21 @@ class MyViewModel : ViewModel() {
     fun setEpisodes(episodes: List<String>) {
         viewModelScope.launch {
             _episodes.value = getEpisodes(episodes)
+        }
+    }
+
+    fun addEpisodes(episode: Episode) {
+        if(_episodes.value != null)
+            _episodes.value = (_episodes.value?.plus(episode))?.sortedBy { it.index }
+        else {
+            val episodes = listOf(episode)
+            _episodes.value = episodes
+        }
+    }
+
+    fun setEpisode(episodeId: String) {
+        viewModelScope.launch {
+            _currentEpisode.value = getEpisode(episodeId)
         }
     }
 
@@ -235,6 +267,18 @@ class MyViewModel : ViewModel() {
             }
         }
         return animeEpisodes.value
+    }
+
+    private suspend fun getEpisode(episodeId: String): Episode? {
+        val animeEpisode = MutableStateFlow<Episode?>(null)
+        withContext(Dispatchers.IO) {
+            runCatching {
+                animeEpisode.value = animeService.getEpisode(episodeId)
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return animeEpisode.value
     }
 
     private suspend fun getAnimeSearch(id: String): List<Anime> {

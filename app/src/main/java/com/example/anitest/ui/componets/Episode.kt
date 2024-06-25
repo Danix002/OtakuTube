@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -202,5 +203,27 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                     )
                 }
             }
+    }
+}
+
+@Composable
+fun EpisodesLoader(context: Context, viewModel: MyViewModel, episodesId: List<String>, isDubbed: Boolean) {
+    val episodes by viewModel.episodes.collectAsState()
+    val isLoaded by viewModel.isEpisodeLoaded.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if(!isLoaded) {
+            viewModel.setIsLoadedEpisode(flag = true)
+            viewModel.forgetEpisodes()
+            viewModel.setEpisodes(episodesId.take(2))
+        }
+    }
+    episodes?.let {
+        EpisodesDialog(
+            context,
+            viewModel,
+            it,
+            isDubbed
+        )
     }
 }
