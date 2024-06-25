@@ -70,17 +70,9 @@ fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navContr
             columns = GridCells.Adaptive(132.dp),
             horizontalArrangement = Arrangement.Center,
             content = {
-                if (animeSearch.size > 0) {
-                    itemsIndexed(animeSearch) { index, anime ->
-                        AnimeCard(anime = anime, navController = navController , viewModel = viewModel, fill = false )
-                    }
-                } else {
-                    items(1) {
-                        Text(text = "Nessun anime trovato")
-                    }
-
+                itemsIndexed(animeSearch) { index, anime ->
+                    AnimeCard(anime = anime, navController = navController , viewModel = viewModel, fill = false)
                 }
-
             }
         )
 
@@ -90,13 +82,12 @@ fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navContr
 
 @Composable
 fun AnimeSearchLoaderSkeleton(){
-    val  list = listOf(1,1,1,1,1,1,1,1,1)
+    val list = listOf(1,1,1,1,1,1,1,1,1,1,1,1)
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-
         LazyVerticalGrid(
             modifier = Modifier
                 .padding(bottom = 72.dp, top = 4.dp)
@@ -104,25 +95,14 @@ fun AnimeSearchLoaderSkeleton(){
             columns = GridCells.Adaptive(132.dp),
             horizontalArrangement = Arrangement.Center,
             content = {
-                itemsIndexed(list) { index, anime ->
+                itemsIndexed(list) { _, _ ->
                     Box (
                         modifier = Modifier.padding(4.dp)
                     ) {
-                        Box (
-                            modifier = Modifier
-                                .height(200.dp)
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .padding(horizontal = 4.dp)
-                                .background(Color.Gray.copy(alpha = 0.5f))
-                        ) {
-
-                        }
+                        AnimeCardSkeleton()
                     }
-
                 }
             }
         )
-
     }
 }

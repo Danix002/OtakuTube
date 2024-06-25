@@ -19,12 +19,9 @@ import kotlinx.serialization.json.Json
 
 class AnimeService {
 
-    private val baseURLDANIport = "http://192.168.1.5"
-    private val baseURLDANIfix = "http://192.168.1.7"
-    private val baseURLALE = "http://172.20.10.3"
     private val gson = Gson()
     private val URLNPM = "https://server-1-otakutube.onrender.com"
-    private val URLPYTHON = "$baseURLALE:5000"
+    private val URLPYTHON = "https://server-2-otakutube.onrender.com"
 
     private val httpClient get() = HttpClient(Android) {
         install(JsonFeature) {
