@@ -62,7 +62,11 @@ import androidx.navigation.NavHostController
 import com.example.anitest.model.Anime
 import com.example.anitest.model.Genre
 import com.example.myapplication.MyViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -79,9 +83,21 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
         if (!isLoaded) {
             viewModel.addAnimeByGenre(0, category.id)
             animeList = animeHashMap.get(category.id)!!
-            isLoaded = true
+            CoroutineScope(Dispatchers.Default).launch {
+                while (animeList.isEmpty()) {
+                    isLoaded = false
+                    delay(30000)
+                    viewModel.addAnimeByGenre(0, category.id)
+                    animeList = animeHashMap.get(category.id)!!
+                }
+                isLoaded = true
+            }
         }
+        isLoaded = true
+
+
     }
+
 
     LaunchedEffect (page) {
         if (page > 0) {
@@ -123,7 +139,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                 itemsIndexed(animeList) { index, anime ->
                     AnimeCard(anime, navController, viewModel, false)
                     if ( (index == (animeList.size-1)) ) {
-                        if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading)
+                        if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading, true)
                         else Text(
                             text = "No other anime :(",
                             modifier = Modifier.padding(start = 16.dp),
@@ -210,7 +226,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(470.dp)
+                    .height(512.dp)
                     .padding(8.dp)
             ) {
                 AnimePopularCard(
@@ -218,10 +234,11 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                     navController = navController,
                     viewModel = viewModel
                 )
+
                 if ((page == (popular.size - 1))) {
                     if (!nothingElse)
-                        Box(modifier = Modifier.align(Alignment.TopEnd)) {
-                            AnimeLoaderButton(onClick = { pageAnime++ }, loading)
+                        Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                            AnimeLoaderButton(onClick = { pageAnime++ }, loading, false)
                         }
                     else Text(
                         text = "No other anime :(",
@@ -231,6 +248,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 }
             }
         }
+
     }
 
     Row(
@@ -242,7 +260,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 pagerState.animateScrollToPage(pagerState.currentPage - 1)
             }
         }) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Previous")
+            Icon( tint = Color.White, imageVector = Icons.Default.ArrowBack, contentDescription = "Previous")
         }
         Spacer(modifier = Modifier.width(16.dp))
         IconButton(onClick = {
@@ -250,59 +268,8 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             }
         }) {
-            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
+            Icon( tint = Color.White, imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
         }
     }
-    Spacer(modifier = Modifier.height(8.dp))
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
-        shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(Color(242, 218, 255))
-    ) {
-        if(isLoaded) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp), contentAlignment = Alignment.Center) {
-                    IconButton(
-                        modifier = Modifier.align(Alignment.Center),
-                        onClick = { expandedInfo = expandedInfo.not() }
-                    ) {
-                        Icon(
-                            tint = Color.Black,
-                            imageVector = if (expandedInfo) Icons.Filled.ArrowDropDown else Icons.Filled.ArrowDropUp,
-                            contentDescription = ""
-                        )
-                    }
-                }
-                Text(
-                    text = "Description",
-                    color = Color.Black,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    modifier = Modifier.height(32.dp),
-                    text = popular[selectedAnime].description,
-                    maxLines = 4,
-                    overflow = TextOverflow.Ellipsis,
-                    color = Color.Black,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                /*AnimatedVisibility(
-                    visible = expandedInfo,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 8.dp),
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                    ) {
-
-                }*/
-            }
-        }
-    }
 }

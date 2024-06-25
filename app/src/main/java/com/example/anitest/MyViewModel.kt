@@ -54,14 +54,11 @@ class MyViewModel : ViewModel() {
     private val _currentEP = MutableStateFlow<Int>(0)
     val currentEP: StateFlow<Int> get() = _currentEP
 
-    private val _episodes = MutableStateFlow<List<Episode>?>(emptyList())
-    val episodes: StateFlow<List<Episode>?> get() = _episodes
+    private val _episodes = MutableStateFlow<List<Episode?>?>(emptyList())
+    val episodes: StateFlow<List<Episode?>?> get() = _episodes
 
     private val _isSearchScreenOpen = MutableLiveData(false)
     val isSearchScreenOpen: LiveData<Boolean> get() = _isSearchScreenOpen
-
-    private val _isEpisodesButtonOpen = MutableLiveData(false)
-    val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
 
     private val _isAnimeScreenLoaded = MutableStateFlow(false)
     val isAnimeScreenLoaded: StateFlow<Boolean> get() = _isAnimeScreenLoaded
@@ -101,6 +98,67 @@ class MyViewModel : ViewModel() {
 
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
 
+    private val _isEpisodesButtonOpen = MutableLiveData(false)
+    val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
+
+    private val _currentEpisode = MutableStateFlow<Episode?>(null)
+    val currentEpisode: StateFlow<Episode?> get() = _currentEpisode
+
+    private val _isEpisodeLoaded = MutableStateFlow(false)
+    val isEpisodeLoaded: StateFlow<Boolean> get() = _isEpisodeLoaded
+
+
+
+    fun initEpisodes(n: Int) {
+        var i = n
+        _episodes.value = emptyList()
+        while (i > 0) {
+            _episodes.value = _episodes.value!!.plus(null);
+            i--
+        }
+    }
+    fun addEpisodes(episode: Episode) {
+        println(episode.index.toString() + " - " + episode.ep)
+        if(_episodes.value != null) {
+            println("episode is not null")
+            var list = _episodes.value!!.toMutableList()
+            list.set(episode.index-1, episode)
+            println("list: " + list)
+            _episodes.value = list
+            println("_episodes: " + _episodes.value)
+        }
+    }
+
+    suspend fun setEpisode(episodeId: String) {
+        viewModelScope.launch {
+            _currentEpisode.value = getEpisode(episodeId)
+        }.join()
+    }
+    private suspend fun getEpisode(episodeId: String): Episode? {
+        val animeEpisode = MutableStateFlow<Episode?>(null)
+        withContext(Dispatchers.IO) {
+            runCatching {
+                animeEpisode.value = animeService.getEpisode(episodeId)
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        return animeEpisode.value
+    }
+    fun setIsLoadedAnimeScreen(flag : Boolean) {
+        _isAnimeScreenLoaded.value = flag
+        if(!flag){
+            setIsLoadedEpisode(flag)
+        }
+    }
+
+    fun setIsLoadedEpisode(flag : Boolean) {
+        _isEpisodeLoaded.value = flag
+    }
+
+    fun isLoadedEpisode(): Boolean {
+        return _isEpisodeLoaded.value
+    }
     fun openEpisodes() {
         _isEpisodesButtonOpen.value = true
     }
@@ -124,9 +182,6 @@ class MyViewModel : ViewModel() {
             return false
     }
 
-    fun setIsLoadedAnimeScreen( flag : Boolean ) {
-        _isAnimeScreenLoaded.value = flag
-    }
 
     fun isLoadedAnimeScreen(): Boolean {
         return _isAnimeScreenLoaded.value
@@ -265,7 +320,7 @@ class MyViewModel : ViewModel() {
         val popularAnime = MutableStateFlow<List<Anime>>(emptyList())
         withContext(Dispatchers.IO) {
             runCatching {
-                popularAnime.value = animeService.getPopularAnime(page) ?: emptyList()
+                popularAnime.value = animeService.getSimplePopularAnime(page) ?: emptyList()
             }.onFailure {
                 it.printStackTrace()
             }

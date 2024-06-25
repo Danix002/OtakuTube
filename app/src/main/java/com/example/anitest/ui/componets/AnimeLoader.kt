@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun AnimeLoaderButton(onClick : () -> Unit, loading : Boolean): Unit {
+fun AnimeLoaderButton(onClick : () -> Unit, loading : Boolean, text: Boolean): Unit {
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = Color(102, 90, 110), contentColor = Color.White),
         onClick = {
@@ -23,7 +23,7 @@ fun AnimeLoaderButton(onClick : () -> Unit, loading : Boolean): Unit {
         },
         modifier = Modifier.padding(start = 8.dp)
         ) {
-            if (!loading) Text(text = "Other")
+            if (!loading && text) Text(text = "Other")
             Icon(imageVector = if (!loading) Icons.Filled.KeyboardArrowRight else Icons.Default.Refresh, contentDescription = "")
     }
 }

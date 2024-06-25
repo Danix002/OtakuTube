@@ -171,7 +171,7 @@ fun AnimeBigCard(anime: Anime) {
 @Composable
 fun AnimePopularCardSkeleton() {
     Box(
-        modifier = Modifier.fillMaxWidth().height(470.dp),
+        modifier = Modifier.fillMaxWidth().height(512.dp),
         contentAlignment = Alignment.Center
     ){
         Column(
@@ -190,7 +190,7 @@ fun AnimePopularCardSkeleton() {
             Box(
                 modifier = Modifier
                     .width(300.dp)
-                    .height(110.dp)
+                    .height(32.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.Gray.copy(alpha = 0.5f))
             )

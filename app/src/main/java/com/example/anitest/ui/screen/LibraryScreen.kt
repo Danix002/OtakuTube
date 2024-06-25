@@ -48,8 +48,8 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
         }
     ) { contentPadding ->
         BackGroundImage(contentPadding, content = {
-            Column (modifier = Modifier.verticalScroll(rememberScrollState())){
-                Text(text = "Your's Lists", fontSize = 16.sp)
+            Column (modifier = Modifier.verticalScroll(rememberScrollState()).padding(2.dp)){
+                Text(text = "Your's Lists", fontSize = 24.sp, color = Color.White)
                 LazyRow() {
                     items(1){
                         Box(

@@ -28,7 +28,7 @@ import androidx.media3.ui.PlayerView
 import com.example.myapplication.MyViewModel
 
 @Composable
-fun VideoPlayer(urls: List<String>, index : Int, context: Context, onBack: () -> Unit) {
+fun VideoPlayer(urls: List<String?>, index : Int, context: Context, onBack: () -> Unit) {
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
     DisposableEffect(key1 = urls) {

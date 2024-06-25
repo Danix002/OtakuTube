@@ -27,11 +27,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,9 +48,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.anitest.model.Episode
 import com.example.myapplication.MyViewModel
+import kotlinx.coroutines.launch
 
 @Composable
-fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownload: ()-> Unit) {
+fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownload: ()-> Unit) {
 
     val principalColor = Color(112, 82, 137)
 
@@ -88,14 +91,6 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
                     .padding(vertical = 3.dp, horizontal = 12.dp)
             )
         }
-        Text(
-            text = quality,
-            color = Color.White,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .width(80.dp)
-                .padding(horizontal = 12.dp)
-        )
         IconButton(
             onClick = { onDownload() },
             modifier = Modifier
@@ -116,12 +111,18 @@ fun EpisodeButton(quality: String, index: Number, isDubbed: Boolean, onWatch: ()
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Episode>, isDubbed: Boolean){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<String>, isDubbed: Boolean){
     var showPlayer by remember { mutableStateOf(false) }
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity
-    val currentEP by viewModel.currentEP.collectAsState()
+    val currentEP by viewModel.currentEpisode.collectAsState()
     val uriHandler = LocalUriHandler.current
+    val episodesLinks by viewModel.episodes.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(episodesLinks) {
+        println("EPISODES:" + episodesLinks)
+    }
 
     if(isEpisodesButtonOpen == true) {
         Dialog(
@@ -158,17 +159,19 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                             }
                         }
                         EpisodeButton(
-                            quality = ep.ep[(ep.ep.size) - 1].name,
-                            index = ep.index + 1,
+                            index = index + 1,
                             isDubbed = isDubbed,
-                            {
-                                println(ep.ep[(ep.ep.size) - 1].link)
-                                viewModel.setCurrentEP(index)
-                                activity.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                            onWatch = {
+                                coroutineScope.launch {
+                                    viewModel.setEpisode(ep)
+                                    currentEP?.let { viewModel.addEpisodes(it) }
+                                    println(episodesLinks)
+                                    activity.requestedOrientation =
+                                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                                }
                             },
-                            {
-                                uriHandler.openUri(ep.ep[(ep.ep.size) - 1].link)
+                            onDownload = {
+                                //uriHandler.openUri(ep.ep[(ep.ep.size) - 1].link)
                             }
                         )
                     }
@@ -191,16 +194,39 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Epis
                         .fillMaxSize()
                         .background(Color.Black)
                 ) {
-                    VideoPlayer(
-                        onBack = {
-                            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            viewModel.openEpisodes()
-                        },
-                        context = context,
-                        index = currentEP,
-                        urls = episodes.map { episode -> episode.ep[(episode.ep.size) - 1].link }
-                    )
+                    episodesLinks?.let {
+                        VideoPlayer(
+                            onBack = {
+                                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                viewModel.openEpisodes()
+                            },
+                            context = context,
+                            index = currentEP?.index ?: 0,
+                            urls = it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
+                        )
+                    }
                 }
             }
     }
+}
+
+@Composable
+fun EpisodesLoader(context: Context, viewModel: MyViewModel, episodesId: List<String>, isDubbed: Boolean) {
+    val episodes by viewModel.episodes.collectAsState()
+    val isLoaded by viewModel.isEpisodeLoaded.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if(!isLoaded) {
+            viewModel.setIsLoadedEpisode(flag = true)
+            viewModel.forgetEpisodes()
+            viewModel.initEpisodes(episodesId.size)
+        }
+    }
+        EpisodesDialog(
+            context,
+            viewModel,
+            episodesId,
+            isDubbed
+        )
+
 }
