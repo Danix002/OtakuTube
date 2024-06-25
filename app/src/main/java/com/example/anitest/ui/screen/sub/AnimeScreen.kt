@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -62,7 +63,6 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             episodesId = viewModel.setAnimeInfo(id)
         }
     }
-
 
     Scaffold(
         containerColor = Color(102, 90, 110),

@@ -60,6 +60,9 @@ class MyViewModel : ViewModel() {
     private val _isSearchScreenOpen = MutableLiveData(false)
     val isSearchScreenOpen: LiveData<Boolean> get() = _isSearchScreenOpen
 
+    private val _isEpisodesButtonOpen = MutableLiveData(false)
+    val isEpisodesButtonOpen: LiveData<Boolean> get() = _isEpisodesButtonOpen
+
     private val _isAnimeScreenLoaded = MutableStateFlow(false)
     val isAnimeScreenLoaded: StateFlow<Boolean> get() = _isAnimeScreenLoaded
 
@@ -182,6 +185,9 @@ class MyViewModel : ViewModel() {
             return false
     }
 
+    fun setIsLoadedAnimeScreen( flag : Boolean ) {
+        _isAnimeScreenLoaded.value = flag
+    }
 
     fun isLoadedAnimeScreen(): Boolean {
         return _isAnimeScreenLoaded.value

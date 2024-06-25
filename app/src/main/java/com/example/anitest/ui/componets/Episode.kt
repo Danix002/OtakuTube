@@ -27,13 +27,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +46,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.anitest.model.Episode
 import com.example.myapplication.MyViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownload: ()-> Unit) {
@@ -208,25 +205,4 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
                 }
             }
     }
-}
-
-@Composable
-fun EpisodesLoader(context: Context, viewModel: MyViewModel, episodesId: List<String>, isDubbed: Boolean) {
-    val episodes by viewModel.episodes.collectAsState()
-    val isLoaded by viewModel.isEpisodeLoaded.collectAsState()
-
-    LaunchedEffect(Unit) {
-        if(!isLoaded) {
-            viewModel.setIsLoadedEpisode(flag = true)
-            viewModel.forgetEpisodes()
-            viewModel.initEpisodes(episodesId.size)
-        }
-    }
-        EpisodesDialog(
-            context,
-            viewModel,
-            episodesId,
-            isDubbed
-        )
-
 }

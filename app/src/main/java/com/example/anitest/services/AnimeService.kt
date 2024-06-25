@@ -81,6 +81,12 @@ class AnimeService {
         return gson.fromJson(searchJson.readText(), type)
     }
 
+    suspend fun getEpisode(episodeId: String): Episode? {
+        val episodeJson = Util.GET(httpClient, "$URLNPM/getEpisode/$episodeId") ?: return null
+        val type = object : TypeToken<Episode>() {}.type
+        return gson.fromJson(episodeJson.readText(), type)
+    }
+
     suspend fun getEpisodes(episodes : List<String>): List<Episode> {
         var requestEpisodesString = episodes[0]
         val episodesJson: HttpResponse?
