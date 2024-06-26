@@ -127,7 +127,8 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
         ){
             Box(modifier = Modifier
                 .background(Color(242, 218, 255))
-                .fillMaxSize()) {
+                .fillMaxSize()
+            ) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     itemsIndexed(episodes) { index, ep ->
                         if(index == 0){
@@ -227,7 +228,7 @@ fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
                         },
                         context = context,
                         index = currentEpisode?.index?.minus(1) ?: 0,
-                        urls = it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
+                        viewModel = viewModel
                     )
                 }
             }
