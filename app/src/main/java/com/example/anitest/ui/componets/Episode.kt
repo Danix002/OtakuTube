@@ -112,17 +112,11 @@ fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownlo
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<String>, isDubbed: Boolean){
-    var showPlayer by remember { mutableStateOf(false) }
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity
-    val currentEP by viewModel.currentEpisode.collectAsState()
-    val uriHandler = LocalUriHandler.current
-    val episodesLinks by viewModel.episodes.collectAsState()
+    val currentEpisode by viewModel.currentEpisode.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(episodesLinks) {
-        println("EPISODES:" + episodesLinks)
-    }
+    //val uriHandler = LocalUriHandler.current
 
     if(isEpisodesButtonOpen == true) {
         Dialog(
@@ -164,8 +158,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
                             onWatch = {
                                 coroutineScope.launch {
                                     viewModel.setEpisode(ep)
-                                    currentEP?.let { viewModel.addEpisodes(it) }
-                                    println(episodesLinks)
+                                    currentEpisode?.let { viewModel.addEpisodes(it) }
                                     activity.requestedOrientation =
                                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                                 }
@@ -180,7 +173,39 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
         }
     }
 
-    if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+    OpenVideoPlayer(context = context, viewModel = viewModel)
+}
+
+@Composable
+fun EpisodesLoader(context: Context, viewModel: MyViewModel, episodes: List<String>, isDubbed: Boolean){
+    val isLoaded by viewModel.isEpisodeLoaded.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if(!isLoaded){
+            viewModel.setIsLoadedEpisode(flag = true)
+            viewModel.forgetEpisodes()
+            viewModel.initEpisodes(episodes.size)
+        }
+    }
+
+    EpisodesDialog(context = context , viewModel = viewModel, episodes = episodes, isDubbed = isDubbed)
+}
+
+@Composable
+fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
+    var showPlayer by remember { mutableStateOf(false) }
+    val activity = context as Activity
+    val episodesLinks by viewModel.episodes.collectAsState()
+    val currentEpisode by viewModel.currentEpisode.collectAsState()
+    var flagEpisode by remember { mutableStateOf(false) }
+
+    LaunchedEffect(episodesLinks) {
+        if(episodesLinks?.contains(currentEpisode)!!){
+            flagEpisode = true
+        }
+    }
+
+    if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && flagEpisode){
         Dialog(
             properties = DialogProperties(
                 usePlatformDefaultWidth = false
@@ -189,23 +214,23 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
                 showPlayer = false
                 activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }){
-                Box (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black)
-                ) {
-                    episodesLinks?.let {
-                        VideoPlayer(
-                            onBack = {
-                                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                viewModel.openEpisodes()
-                            },
-                            context = context,
-                            index = currentEP?.index ?: 0,
-                            urls = it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
-                        )
-                    }
+            Box (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                episodesLinks?.let {
+                    VideoPlayer(
+                        onBack = {
+                            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            viewModel.openEpisodes()
+                        },
+                        context = context,
+                        index = currentEpisode?.index?.minus(1) ?: 0,
+                        urls = it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
+                    )
                 }
             }
+        }
     }
 }

@@ -51,8 +51,8 @@ class MyViewModel : ViewModel() {
     private val _animeSearch = MutableStateFlow<List<Anime>>(emptyList())
     val animeSearch: StateFlow<List<Anime>> get() = _animeSearch
 
-    private val _currentEP = MutableStateFlow<Int>(0)
-    val currentEP: StateFlow<Int> get() = _currentEP
+    private val _currentEpisodeIndex = MutableStateFlow(0)
+    val currentEpisodeIndex: StateFlow<Int> get() = _currentEpisodeIndex
 
     private val _episodes = MutableStateFlow<List<Episode?>?>(emptyList())
     val episodes: StateFlow<List<Episode?>?> get() = _episodes
@@ -100,31 +100,27 @@ class MyViewModel : ViewModel() {
     )
 
     var selectedNavItem: MutableState<String> = mutableStateOf(Screen.Home.route)
+
     private val _currentEpisode = MutableStateFlow<Episode?>(null)
     val currentEpisode: StateFlow<Episode?> get() = _currentEpisode
 
     private val _isEpisodeLoaded = MutableStateFlow(false)
     val isEpisodeLoaded: StateFlow<Boolean> get() = _isEpisodeLoaded
 
-
-
     fun initEpisodes(n: Int) {
         var i = n
         _episodes.value = emptyList()
         while (i > 0) {
-            _episodes.value = _episodes.value!!.plus(null);
+            _episodes.value = _episodes.value!!.plus(null)
             i--
         }
     }
+
     fun addEpisodes(episode: Episode) {
-        println(episode.index.toString() + " - " + episode.ep)
         if(_episodes.value != null) {
-            println("episode is not null")
             var list = _episodes.value!!.toMutableList()
             list.set(episode.index-1, episode)
-            println("list: " + list)
             _episodes.value = list
-            println("_episodes: " + _episodes.value)
         }
     }
 
@@ -133,6 +129,7 @@ class MyViewModel : ViewModel() {
             _currentEpisode.value = getEpisode(episodeId)
         }.join()
     }
+
     private suspend fun getEpisode(episodeId: String): Episode? {
         val animeEpisode = MutableStateFlow<Episode?>(null)
         withContext(Dispatchers.IO) {
@@ -192,8 +189,8 @@ class MyViewModel : ViewModel() {
         return _animeInfo.value?.episode_id ?: emptyList()
     }
 
-    fun setCurrentEP(link: Int) {
-        _currentEP.value = link
+    fun setCurrentEpisodeIndex(index: Int) {
+        _currentEpisodeIndex.value = index
     }
 
     fun setEpisodes(episodes: List<String>) {
