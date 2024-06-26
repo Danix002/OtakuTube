@@ -66,6 +66,10 @@ class MyViewModel : ViewModel() {
     private val _isAnimeScreenLoaded = MutableStateFlow(false)
     val isAnimeScreenLoaded: StateFlow<Boolean> get() = _isAnimeScreenLoaded
 
+    private val _episodesIds = MutableStateFlow<List<String>?>(null)
+    val episodesIds: StateFlow<List<String>?> get() = _episodesIds
+
+
     var navigationItems = mutableStateOf(
         listOf(
             NavigationItem(
@@ -117,7 +121,7 @@ class MyViewModel : ViewModel() {
     }
 
     fun addEpisodes(episode: Episode) {
-        if(_episodes.value != null) {
+        if(_episodes.value != null && episode.index >= 0) {
             var list = _episodes.value!!.toMutableList()
             list.set(episode.index-1, episode)
             _episodes.value = list
@@ -126,7 +130,12 @@ class MyViewModel : ViewModel() {
 
     suspend fun setEpisode(episodeId: String) {
         viewModelScope.launch {
-            _currentEpisode.value = getEpisode(episodeId)
+            var tmp = getEpisode(episodeId)
+            if (tmp != null) {
+                if ((tmp.index-1) >= 0) {
+                    _currentEpisode.value = tmp
+                }
+            }
         }.join()
     }
 
@@ -140,6 +149,10 @@ class MyViewModel : ViewModel() {
             }
         }
         return animeEpisode.value
+    }
+
+    suspend fun getPublicEpisode(episodeId: String): Episode? {
+        return getEpisode(episodeId)
     }
     fun setIsLoadedAnimeScreen(flag : Boolean) {
         _isAnimeScreenLoaded.value = flag
@@ -182,11 +195,12 @@ class MyViewModel : ViewModel() {
         return _isAnimeScreenLoaded.value
     }
 
-    suspend fun setAnimeInfo(id: String): List<String> {
+    suspend fun setAnimeInfo(id: String){
         viewModelScope.launch {
             _animeInfo.value = getAnimeInfo(id)
         }.join()
-        return _animeInfo.value?.episode_id ?: emptyList()
+        _episodesIds.value = _animeInfo.value?.episode_id ?: emptyList()
+
     }
 
     fun setCurrentEpisodeIndex(index: Int) {
@@ -205,6 +219,7 @@ class MyViewModel : ViewModel() {
 
     fun forgetAnimeInfo(){
         _animeInfo.value = null
+        _episodesIds.value = null
     }
 
     fun forgetAnimeSearch(){

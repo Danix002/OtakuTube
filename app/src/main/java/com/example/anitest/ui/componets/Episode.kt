@@ -111,10 +111,11 @@ fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownlo
 
 @SuppressLint("SourceLockedOrientationActivity", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<String>, isDubbed: Boolean){
+fun EpisodesDialog(context: Context, viewModel: MyViewModel, isDubbed: Boolean){
     val isEpisodesButtonOpen by viewModel.isEpisodesButtonOpen.observeAsState()
     val activity = context as Activity
     val currentEpisode by viewModel.currentEpisode.collectAsState()
+    val episodes by viewModel.episodesIds.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     //val uriHandler = LocalUriHandler.current
 
@@ -130,7 +131,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
                 .fillMaxSize()
             ) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    itemsIndexed(episodes) { index, ep ->
+                    itemsIndexed(episodes ?: emptyList()) { index, ep ->
                         if(index == 0){
                             Box(modifier = Modifier.fillMaxWidth()) {
                                 Row {
@@ -178,18 +179,18 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, episodes: List<Stri
 }
 
 @Composable
-fun EpisodesLoader(context: Context, viewModel: MyViewModel, episodes: List<String>, isDubbed: Boolean){
+fun EpisodesLoader(context: Context, viewModel: MyViewModel, isDubbed: Boolean){
     val isLoaded by viewModel.isEpisodeLoaded.collectAsState()
-
+    val episodes by viewModel.episodesIds.collectAsState()
     LaunchedEffect(Unit) {
         if(!isLoaded){
             viewModel.setIsLoadedEpisode(flag = true)
             viewModel.forgetEpisodes()
-            viewModel.initEpisodes(episodes.size)
+            episodes?.let { viewModel.initEpisodes(it.size) }
         }
     }
 
-    EpisodesDialog(context = context , viewModel = viewModel, episodes = episodes, isDubbed = isDubbed)
+    EpisodesDialog(context = context , viewModel = viewModel, isDubbed = isDubbed)
 }
 
 @Composable
@@ -229,6 +230,7 @@ fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
                         context = context,
                         index = currentEpisode?.index?.minus(1) ?: 0,
                         viewModel = viewModel
+
                     )
                 }
             }

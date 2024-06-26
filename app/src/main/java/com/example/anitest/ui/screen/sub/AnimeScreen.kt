@@ -49,7 +49,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     val animeInfoTrailer by viewModel.animeInfoTrailer.collectAsState()
     val animeInfo by viewModel.animeInfo.collectAsState()
     val isLoaded by viewModel.isAnimeScreenLoaded.collectAsState()
-    var episodesId by remember { mutableStateOf (emptyList<String>()) }
+    val episodesId by viewModel.episodesIds.collectAsState()
 
     LaunchedEffect(Unit) {
         if (!isLoaded) {
@@ -60,7 +60,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
 
             viewModel.setAnimeInfoTrailer(name)
 
-            episodesId = viewModel.setAnimeInfo(id)
+            viewModel.setAnimeInfo(id)
         }
     }
 
@@ -109,7 +109,6 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                         EpisodesLoader(
                             context,
                             viewModel,
-                            episodesId,
                             id.contains("dub")
                         )
                     }
