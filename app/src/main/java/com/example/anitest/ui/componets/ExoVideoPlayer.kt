@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -20,22 +21,28 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlaybackException
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import androidx.media3.ui.PlayerView
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class) @Composable
@@ -49,26 +56,16 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
         }
     ) }
     val coroutineScope = rememberCoroutineScope()
-
-    /**
-    LaunchedEffect(episodesLinks) {
-        episodesLinks?.let {
-            urls = it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
-        }
-    }
-     **/
+    var loading by remember { mutableStateOf(false) }
+    var playerError by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         exoPlayer.clearMediaItems()
         val mediaItems = urls.map { url ->
             MediaItem.Builder().setMediaId(url).setUri(Uri.parse(url)).build()
         }
-
-
-
         mediaItems.forEach {
             exoPlayer.addMediaItem(it) }
-        exoPlayer.seekTo(index, 0)
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
         onDispose {
@@ -76,89 +73,112 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
         }
     }
 
-    exoPlayer.addListener(object : Player.Listener {
-        override fun onPositionDiscontinuity(reason: Int) {
-            if (reason == Player.DISCONTINUITY_REASON_SEEK) {
-                val currentIndex = exoPlayer.currentMediaItemIndex
-                println("Sei all'episodio " + (currentIndex + 1))
-
-
-                if ((ids?.size ?: 1) == 1) {
-                    return
+    fun loadEpisodes(currentIndex: Int){
+        if ((ids?.size ?: 1) == 1) {
+            return
+        }
+        loading = true
+        if (currentIndex == 0) {
+            if (exoPlayer.getMediaItemAt( 1).mediaId == "") {
+                coroutineScope.launch {
+                    var nextEpisode = viewModel.getPublicEpisode(ids?.get(1) ?: "")
+                    var mediaNext =
+                        nextEpisode?.ep?.get(nextEpisode.ep.size-1)?.let {
+                            MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
+                                nextEpisode.ep[nextEpisode.ep.size-1].link)).build()
+                        }
+                    if (mediaNext != null) {
+                        exoPlayer.replaceMediaItem(1, mediaNext)
+                    }
+                }
+            }
+        } else if (currentIndex == exoPlayer.mediaItemCount - 1) {
+            if (exoPlayer.getMediaItemAt( currentIndex -1).mediaId == "") {
+                coroutineScope.launch {
+                    var previousEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex -1) ?: "")
+                    var mediaNext =
+                        previousEpisode?.ep?.get(previousEpisode.ep.size-1)?.let {
+                            MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
+                                previousEpisode.ep[previousEpisode.ep.size-1].link)).build()
+                        }
+                    if (mediaNext != null) {
+                        exoPlayer.replaceMediaItem(currentIndex - 1, mediaNext)
+                    }
                 }
 
-                if (currentIndex == 0) {
-                    if (exoPlayer.getMediaItemAt( 1).mediaId == "") {
-                        coroutineScope.launch {
-                            println(ids)
-                            var nextEpisode = viewModel.getPublicEpisode(ids?.get(1) ?: "" )
-                            var mediaNext =
-                                nextEpisode?.ep?.get(nextEpisode.ep.size-1)?.let {
-                                    MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
-                                        nextEpisode.ep[nextEpisode.ep.size-1].link)).build()
-                                }
-                            if (mediaNext != null) {
-                                exoPlayer.replaceMediaItem( 1, mediaNext )
-                                println("NEXTEP::Caricato")
-                            }
+            }
+        } else{
+            if (exoPlayer.getMediaItemAt(currentIndex - 1).mediaId == "") {
+                coroutineScope.launch {
+                    var previousEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex -1) ?: "")
+                    var mediaNext =
+                        previousEpisode?.ep?.get(previousEpisode.ep.size-1)?.let {
+                            MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
+                                previousEpisode.ep[previousEpisode.ep.size-1].link)).build()
                         }
-
+                    if (mediaNext != null) {
+                        exoPlayer.replaceMediaItem(currentIndex - 1, mediaNext)
                     }
-                } else if (currentIndex == exoPlayer.mediaItemCount - 1) {
-                    if (exoPlayer.getMediaItemAt( currentIndex -1).mediaId == "") {
-                        coroutineScope.launch {
-                            println(ids)
-                            var previousEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex -1) ?: "" )
-                            var mediaNext =
-                                previousEpisode?.ep?.get(previousEpisode.ep.size-1)?.let {
-                                    MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
-                                        previousEpisode.ep[previousEpisode.ep.size-1].link)).build()
-                                }
-                            if (mediaNext != null) {
-                                exoPlayer.replaceMediaItem( currentIndex - 1, mediaNext )
-                                println("PREVEP::Caricato")
-                            }
+                }
+            }
+            if (exoPlayer.getMediaItemAt( currentIndex +1).mediaId == "") {
+                coroutineScope.launch {
+                    var nextEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex + 1) ?: "")
+                    var mediaNext =
+                        nextEpisode?.ep?.get(nextEpisode.ep.size-1)?.let {
+                            MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
+                                nextEpisode.ep[nextEpisode.ep.size-1].link)).build()
                         }
-
-                    }
-                } else{
-                    if (exoPlayer.getMediaItemAt( currentIndex -1).mediaId == "") {
-                        coroutineScope.launch {
-
-                            var previousEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex -1) ?: "" )
-                            var mediaNext =
-                                previousEpisode?.ep?.get(previousEpisode.ep.size-1)?.let {
-                                    MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
-                                        previousEpisode.ep[previousEpisode.ep.size-1].link)).build()
-                                }
-                            if (mediaNext != null) {
-                                exoPlayer.replaceMediaItem( currentIndex - 1, mediaNext )
-                                println("PREVEP::Caricato")
-                            }
-                        }
-
-                    }
-                    if (exoPlayer.getMediaItemAt( currentIndex +1).mediaId == "") {
-                        coroutineScope.launch {
-
-                            var nextEpisode = viewModel.getPublicEpisode(ids?.get(currentIndex + 1) ?: "" )
-                            var mediaNext =
-                                nextEpisode?.ep?.get(nextEpisode.ep.size-1)?.let {
-                                    MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
-                                        nextEpisode.ep[nextEpisode.ep.size-1].link)).build()
-                                }
-                            if (mediaNext != null) {
-                                exoPlayer.replaceMediaItem( currentIndex + 1, mediaNext )
-                                println("NEXTEP::Caricato")
-                            }
-
-                        }
-
+                    if (mediaNext != null) {
+                        exoPlayer.replaceMediaItem(currentIndex + 1, mediaNext)
                     }
                 }
             }
         }
+        loading = false
+    }
 
+    LaunchedEffect(exoPlayer) {
+        val listener = object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                if (state == Player.STATE_READY && exoPlayer.playWhenReady) {
+                    val currentIndex = exoPlayer.currentMediaItemIndex
+                    loadEpisodes(currentIndex)
+                }
+            }
+        }
+        exoPlayer.addListener(listener)
+    }
+
+    exoPlayer.addListener(object : Player.Listener {
+        override fun onPlayerError(error: PlaybackException) {
+            super.onPlayerError(error)
+            playerError = true
+            val currentIndex = exoPlayer.currentMediaItemIndex
+            val currentEpisode = exoPlayer.getMediaItemAt(currentIndex - 1).mediaId == ""
+            if(currentEpisode && loading){
+                /*coroutineScope.launch {
+                    while(loading)
+                        delay(20000)
+                }*/
+            }else if(currentEpisode && !loading){
+                loading = true
+                coroutineScope.launch {
+                    var episode = viewModel.getPublicEpisode(ids?.get(currentIndex) ?: "")
+                    var media =
+                        episode?.ep?.get(episode.ep.size-1)?.let {
+                            MediaItem.Builder().setMediaId(it.link).setUri(Uri.parse(
+                                episode.ep[episode.ep.size-1].link)).build()
+                        }
+                    if (media != null) {
+                        exoPlayer.replaceMediaItem(currentIndex, media)
+                    }
+                    exoPlayer.play()
+                    loading = false
+                }
+            }
+            playerError = false
+        }
     })
 
     AndroidView(
@@ -175,6 +195,15 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
             .fillMaxSize()
             .background(Color.Black)
     )
+
+    /**if (loading) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(48.dp)
+                .height(48.dp)
+                .align(Alignment.Center)
+        )
+    }*/
 
     IconButton(
         colors = IconButtonDefaults.filledIconButtonColors(containerColor = Color.Transparent),

@@ -192,7 +192,6 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     var loading by remember { mutableStateOf(false) }
     var isLoaded by remember { mutableStateOf(false) }
     var selectedAnime by remember { mutableIntStateOf(0) }
-    var expandedInfo by remember { mutableStateOf(false) }
 
     LaunchedEffect (Unit) {
         if(!isLoaded) {
