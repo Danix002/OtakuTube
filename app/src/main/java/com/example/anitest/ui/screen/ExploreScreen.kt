@@ -32,11 +32,15 @@ import kotlinx.coroutines.flow.filter
 @Composable
 fun HomeScreen(viewModel: MyViewModel, navController: NavHostController) {
     val genresList by viewModel.genres.collectAsState()
+    val isLoaded by viewModel.isExploreScreenLoaded.collectAsState()
     var itemsToShow by remember { mutableIntStateOf(4) }
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
-        viewModel.setGenres()
+        if(!isLoaded) {
+            viewModel.setGenres()
+            viewModel.setIsLoadedExploreScreen(flag = true)
+        }
     }
 
     Scaffold (

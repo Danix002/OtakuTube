@@ -73,31 +73,38 @@ import kotlinx.coroutines.withContext
 fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostController) {
     val animeHashMap by viewModel.animeForGenres.collectAsState()
     var animeList by remember { mutableStateOf(emptyList<Anime>()) }
-
-    var isLoaded by remember { mutableStateOf(false) }
+    val isLoaded by viewModel.isCategoryRowLoaded.collectAsState()
+    var loadingCard by remember { mutableStateOf(false) }
     var page by remember { mutableIntStateOf(1) }
     var nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = category) {
-        if (!isLoaded) {
+    LaunchedEffect(Unit) {
+        if (!(isLoaded.get(category.id)!!)) {
+            loadingCard = false
             viewModel.addAnimeByGenre(0, category.id)
             animeList = animeHashMap.get(category.id)!!
-            CoroutineScope(Dispatchers.Default).launch {
-                while (animeList.isEmpty()) {
-                    isLoaded = false
-                    delay(30000)
-                    viewModel.addAnimeByGenre(0, category.id)
-                    animeList = animeHashMap.get(category.id)!!
+            if(animeList.isEmpty()) {
+                CoroutineScope(Dispatchers.Default).launch {
+                    while (animeList.isEmpty()) {
+                        loadingCard = false
+                        viewModel.setIsLoadedCategory(category.id, flag = false)
+                        delay(30000)
+                        viewModel.addAnimeByGenre(0, category.id)
+                        animeList = animeHashMap.get(category.id)!!
+                    }
+                    loadingCard = true
+                    viewModel.setIsLoadedCategory(category.id, flag = true)
                 }
-                isLoaded = true
             }
+            loadingCard = true
+            viewModel.setIsLoadedCategory(category.id, flag = true)
+        }else{
+            loadingCard = false
+            delay(3000)
+            loadingCard = true
         }
-        isLoaded = true
-
-
     }
-
 
     LaunchedEffect (page) {
         if (page > 0) {
@@ -131,14 +138,14 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            if(!isLoaded) {
+            if((!isLoaded.get(category.id)!!) || (!loadingCard)) {
                 items(3){
                     AnimeCardSkeleton()
                 }
             }else {
                 itemsIndexed(animeList) { index, anime ->
                     AnimeCard(anime, navController, viewModel, false)
-                    if ( (index == (animeList.size-1)) ) {
+                    if ((index == (animeList.size-1))) {
                         if (!nothingElse) AnimeLoaderButton(onClick = { page++ }, loading, true)
                         else Text(
                             text = "No other anime :(",
@@ -190,13 +197,13 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     var pageAnime by remember { mutableIntStateOf(1) }
     val nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
-    var isLoaded by remember { mutableStateOf(false) }
+    val isLoaded by viewModel.isZappingScreenLoaded.collectAsState()
     var selectedAnime by remember { mutableIntStateOf(0) }
 
     LaunchedEffect (Unit) {
         if(!isLoaded) {
             viewModel.addPopularAnime(0)
-            isLoaded = true
+            viewModel.setIsLoadedZappingScreen(flag = true)
         }
     }
 
@@ -267,7 +274,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
                 pagerState.animateScrollToPage(pagerState.currentPage + 1)
             }
         }) {
-            Icon( tint = Color.White, imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
+            Icon(tint = Color.White, imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
         }
     }
 

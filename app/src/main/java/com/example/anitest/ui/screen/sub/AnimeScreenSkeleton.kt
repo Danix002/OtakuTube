@@ -41,7 +41,16 @@ fun AnimeScreenSkeleton() {
             .clip(RoundedCornerShape(12.dp))
             .background(Color.Gray.copy(alpha = 0.5f))
             .fillMaxWidth()
-            .height(128.dp)
+            .height(32.dp)
+
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.Gray.copy(alpha = 0.5f))
+            .fillMaxWidth()
+            .height(224.dp)
 
     )
     Spacer(modifier = Modifier.height(4.dp))

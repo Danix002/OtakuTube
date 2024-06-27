@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.Application
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,17 +23,35 @@ import com.example.anitest.model.AnimeTrailer
 import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
 import com.example.anitest.navigation.Screen
+import com.example.anitest.room.AppDatabase
+import com.example.anitest.room.PlaylistEntity
+import com.example.anitest.room.PlaylistRepository
 import com.example.anitest.services.AnimeService
 import com.example.anitest.utils.NavigationItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class MyViewModel : ViewModel() {
+class MyViewModel(application: Application) : AndroidViewModel(application) {
     private val animeService = AnimeService()
+    private val repository : PlaylistRepository
+
+    val allPlaylist: Flow<List<PlaylistEntity>>
+    init {
+        val dao = AppDatabase.getDatabase(application).dao()
+        repository = PlaylistRepository(dao)
+        allPlaylist = repository.allPlaylist
+    }
+
+    fun insert(playlist: PlaylistEntity) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repository.insert(playlist)
+        }
+    }
 
     private val _animeInfoTrailer = MutableStateFlow<List<AnimeTrailer>?>(null)
     val animeInfoTrailer: StateFlow<List<AnimeTrailer>?> get() = _animeInfoTrailer
@@ -65,6 +85,15 @@ class MyViewModel : ViewModel() {
 
     private val _isAnimeScreenLoaded = MutableStateFlow(false)
     val isAnimeScreenLoaded: StateFlow<Boolean> get() = _isAnimeScreenLoaded
+
+    private val _isZappingScreenLoaded = MutableStateFlow(false)
+    val isZappingScreenLoaded: StateFlow<Boolean> get() = _isZappingScreenLoaded
+
+    private val _isExploreScreenLoaded = MutableStateFlow(false)
+    val isExploreScreenLoaded: StateFlow<Boolean> get() = _isExploreScreenLoaded
+
+    private val _isCategoryRowLoaded = MutableStateFlow(HashMap<String, Boolean>(hashMapOf()))
+    val isCategoryRowLoaded: StateFlow<HashMap<String, Boolean>> get() = _isCategoryRowLoaded
 
     private val _episodesIds = MutableStateFlow<List<String>?>(null)
     val episodesIds: StateFlow<List<String>?> get() = _episodesIds
@@ -154,6 +183,7 @@ class MyViewModel : ViewModel() {
     suspend fun getPublicEpisode(episodeId: String): Episode? {
         return getEpisode(episodeId)
     }
+
     fun setIsLoadedAnimeScreen(flag : Boolean) {
         _isAnimeScreenLoaded.value = flag
         if(!flag){
@@ -161,13 +191,30 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    fun setIsLoadedZappingScreen(flag : Boolean) {
+        _isZappingScreenLoaded.value = flag
+    }
+
+    fun setIsLoadedExploreScreen(flag : Boolean) {
+        _isExploreScreenLoaded.value = flag
+    }
+
     fun setIsLoadedEpisode(flag : Boolean) {
         _isEpisodeLoaded.value = flag
+    }
+
+    fun setIsLoadedCategory(category: String, flag : Boolean) {
+        if(_isCategoryRowLoaded.value.containsKey(category)){
+            _isCategoryRowLoaded.value.set(category, flag)
+        }else{
+            isCategoryRowLoaded.value.put(category, flag)
+        }
     }
 
     fun isLoadedEpisode(): Boolean {
         return _isEpisodeLoaded.value
     }
+
     fun openEpisodes() {
         _isEpisodesButtonOpen.value = true
     }
@@ -265,6 +312,9 @@ class MyViewModel : ViewModel() {
     fun setGenres() {
         viewModelScope.launch {
             _genres.value = getGenres()
+            _genres.value.forEach {
+                setIsLoadedCategory(it.id, false)
+            }
         }
     }
 

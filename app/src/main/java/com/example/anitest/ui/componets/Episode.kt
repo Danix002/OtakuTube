@@ -197,16 +197,7 @@ fun EpisodesLoader(context: Context, viewModel: MyViewModel, isDubbed: Boolean){
 fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
     var showPlayer by remember { mutableStateOf(false) }
     val activity = context as Activity
-    val episodesLinks by viewModel.episodes.collectAsState()
     val currentEpisode by viewModel.currentEpisode.collectAsState()
-    var flagEpisode by remember { mutableStateOf(false) }
-
-    /**
-    LaunchedEffect(episodesLinks) {
-        if(episodesLinks?.contains(currentEpisode)!!){
-            flagEpisode = true
-        }
-    }**/
 
     if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ){
         Dialog(
@@ -229,9 +220,7 @@ fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
                             viewModel.openEpisodes()
                         },
                         context = context,
-                        index = currentEpisode?.index?.minus(1) ?: 0,
                         viewModel = viewModel
-
                     )
                 }
             }

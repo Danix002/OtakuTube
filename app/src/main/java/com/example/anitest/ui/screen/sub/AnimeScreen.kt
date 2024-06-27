@@ -134,7 +134,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                     )
                     Sagas(viewModel, navController, id)
                 } else {
-
+                    AnimeScreenSkeleton()
                 }
             }
         })
