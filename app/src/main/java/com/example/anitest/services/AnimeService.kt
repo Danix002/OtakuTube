@@ -55,6 +55,9 @@ class AnimeService {
     suspend fun getEpisode(episodeId: String): Episode? {
         val episodeJson = Util.GET(httpClient, "$URLNPM/getEpisode/$episodeId") ?: return null
         val type = object : TypeToken<Episode>() {}.type
+        println("#################################################")
+        println(episodeJson.readText())
+        println("#################################################")
         return gson.fromJson(episodeJson.readText(), type)
     }
 

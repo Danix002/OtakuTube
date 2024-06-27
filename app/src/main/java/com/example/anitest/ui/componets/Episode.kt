@@ -201,13 +201,14 @@ fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
     val currentEpisode by viewModel.currentEpisode.collectAsState()
     var flagEpisode by remember { mutableStateOf(false) }
 
+    /**
     LaunchedEffect(episodesLinks) {
         if(episodesLinks?.contains(currentEpisode)!!){
             flagEpisode = true
         }
-    }
+    }**/
 
-    if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && flagEpisode){
+    if(activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE ){
         Dialog(
             properties = DialogProperties(
                 usePlatformDefaultWidth = false
@@ -221,7 +222,7 @@ fun OpenVideoPlayer(context: Context, viewModel: MyViewModel){
                     .fillMaxSize()
                     .background(Color.Black)
             ) {
-                episodesLinks?.let {
+                currentEpisode?.let {
                     VideoPlayer(
                         onBack = {
                             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

@@ -133,6 +133,8 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             .padding(vertical = 4.dp, horizontal = 10.dp)
                     )
                     Sagas(viewModel, navController, id)
+                } else {
+
                 }
             }
         })

@@ -55,17 +55,30 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
             it.map { episode -> episode?.ep?.get(episode.ep.size-1)?.link ?: "" }
         }
     ) }
+    val startEpisode by viewModel.currentEpisode.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     var loading by remember { mutableStateOf(false) }
     var playerError by remember { mutableStateOf(false) }
-
+    var loadingNext by remember {
+        mutableStateOf(false)
+    }
+    var loadingPrev by remember {
+        mutableStateOf(false)
+    }
     DisposableEffect(Unit) {
         exoPlayer.clearMediaItems()
+        /**
         val mediaItems = urls.map { url ->
             MediaItem.Builder().setMediaId(url).setUri(Uri.parse(url)).build()
         }
         mediaItems.forEach {
             exoPlayer.addMediaItem(it) }
+        **/
+        val url = startEpisode!!.ep[startEpisode!!.ep.size - 1].link
+        val id = startEpisode!!.index
+        exoPlayer.addMediaItem(
+            MediaItem.Builder().setMediaId(id.toString()).setUri(Uri.parse(url)).build()
+        )
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
         onDispose {
@@ -77,8 +90,70 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
         if ((ids?.size ?: 1) == 1) {
             return
         }
-        loading = true
+
+        val indexOfCurrentEpisode = exoPlayer.currentMediaItem!!.mediaId.toInt() - 1
+
+        if ( !loadingPrev && !exoPlayer.hasPreviousMediaItem() && indexOfCurrentEpisode != 0  && !loadingNext && !exoPlayer.hasNextMediaItem() && indexOfCurrentEpisode != ids!!.size - 1) {
+            loadingNext = true
+            loadingPrev = true
+            coroutineScope.launch {
+                println("Caricando next")
+                val nextEpisode = viewModel.getPublicEpisode(ids!![indexOfCurrentEpisode+1])
+                println("next episode: " + nextEpisode)
+                val url = nextEpisode!!.ep[nextEpisode.ep.size - 1].link
+                val id = nextEpisode.index
+                exoPlayer.addMediaItem(
+                    MediaItem.Builder().setMediaId(id.toString()).setUri(Uri.parse(url)).build()
+                )
+                println("Next caricato:" + nextEpisode.index)
+                loadingNext = false
+                val prevEpisode = viewModel.getPublicEpisode(ids!![indexOfCurrentEpisode-1])
+                val urlPrev = prevEpisode!!.ep[prevEpisode.ep.size - 1].link
+                val idPrev = prevEpisode.index
+                exoPlayer.addMediaItem(0,
+                    MediaItem.Builder().setMediaId(idPrev.toString()).setUri(Uri.parse(urlPrev)).build()
+                )
+                println("Prev caricato:" + prevEpisode.index)
+                loadingPrev = false
+            }
+
+        } else if (!loadingNext && !exoPlayer.hasNextMediaItem() && indexOfCurrentEpisode != ids!!.size - 1)
+        {
+            // load next
+            loadingNext = true
+            coroutineScope.launch {
+                println("Caricando next")
+                val nextEpisode = viewModel.getPublicEpisode(ids!![indexOfCurrentEpisode+1])
+                println("next episode: " + nextEpisode)
+                val url = nextEpisode!!.ep[nextEpisode.ep.size - 1].link
+                val id = nextEpisode.index
+                exoPlayer.addMediaItem(
+                    MediaItem.Builder().setMediaId(id.toString()).setUri(Uri.parse(url)).build()
+                )
+                println("Next caricato:" + nextEpisode.index)
+                loadingNext = false
+            }
+
+        } else if (!loadingPrev && !exoPlayer.hasPreviousMediaItem() && indexOfCurrentEpisode != 0 ) {
+            // load previous
+            loadingPrev = true
+            println("Caricando prev")
+            coroutineScope.launch {
+                val prevEpisode = viewModel.getPublicEpisode(ids!![indexOfCurrentEpisode-1])
+                val url = prevEpisode!!.ep[prevEpisode.ep.size - 1].link
+                val id = prevEpisode.index
+                exoPlayer.addMediaItem(0,
+                    MediaItem.Builder().setMediaId(id.toString()).setUri(Uri.parse(url)).build()
+                )
+                println("Prev caricato:" + prevEpisode.index)
+                loadingPrev = false
+            }
+        }
+
+
+        /**loading = true
         if (currentIndex == 0) {
+
             if (exoPlayer.getMediaItemAt( 1).mediaId == "") {
                 coroutineScope.launch {
                     var nextEpisode = viewModel.getPublicEpisode(ids?.get(1) ?: "")
@@ -117,6 +192,7 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
                                 previousEpisode.ep[previousEpisode.ep.size-1].link)).build()
                         }
                     if (mediaNext != null) {
+
                         exoPlayer.replaceMediaItem(currentIndex - 1, mediaNext)
                     }
                 }
@@ -135,7 +211,7 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
                 }
             }
         }
-        loading = false
+        loading = false**/
     }
 
     LaunchedEffect(exoPlayer) {
@@ -150,6 +226,7 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
         exoPlayer.addListener(listener)
     }
 
+    /**
     exoPlayer.addListener(object : Player.Listener {
         override fun onPlayerError(error: PlaybackException) {
             super.onPlayerError(error)
@@ -161,6 +238,8 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
                     while(loading)
                         delay(20000)
                 }*/
+
+                println("######### SONO NEL IF ###################")
             }else if(currentEpisode && !loading){
                 loading = true
                 coroutineScope.launch {
@@ -180,7 +259,7 @@ fun VideoPlayer(viewModel: MyViewModel, index : Int, context: Context, onBack: (
             playerError = false
         }
     })
-
+    **/
     AndroidView(
         factory = {
             PlayerView(context).apply {
