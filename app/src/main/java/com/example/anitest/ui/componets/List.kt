@@ -75,8 +75,9 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
     var animeList by remember { mutableStateOf(emptyList<Anime>()) }
     val isLoaded by viewModel.isCategoryRowLoaded.collectAsState()
     var loadingCard by remember { mutableStateOf(false) }
+    var loadingCategory by remember { mutableStateOf(false) }
     var page by remember { mutableIntStateOf(1) }
-    var nothingElse by remember { mutableStateOf(false) }
+    val nothingElse by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -104,6 +105,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
             delay(3000)
             loadingCard = true
         }
+        loadingCategory = isLoaded.get(category.id)!!
     }
 
     LaunchedEffect (page) {
@@ -138,7 +140,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            if((!isLoaded.get(category.id)!!) || (!loadingCard)) {
+            if((!loadingCategory) || (!loadingCard)) {
                 items(3){
                     AnimeCardSkeleton()
                 }
@@ -208,7 +210,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     }
 
     LaunchedEffect (pageAnime) {
-        if(pageAnime > 0) {
+        if(pageAnime > 1) {
             loading = true
             viewModel.addPopularAnime(pageAnime)
             loading = false
