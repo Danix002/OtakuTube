@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.app.Application
+import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
@@ -18,6 +19,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.anitest.model.Anime
+import com.example.anitest.model.AnimeDetail
 import com.example.anitest.model.AnimeInfo
 import com.example.anitest.model.AnimeTrailer
 import com.example.anitest.model.Episode
@@ -26,6 +28,7 @@ import com.example.anitest.navigation.Screen
 import com.example.anitest.room.AppDatabase
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistRepository
+import com.example.anitest.room.PlaylistWithList
 import com.example.anitest.services.AnimeService
 import com.example.anitest.utils.NavigationItem
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +55,30 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             repository.insert(playlist)
         }
     }
+
+    fun insert(playlist: String, anime: AnimeDetail) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            try {
+                repository.insert(playlist, anime)
+            } catch (exception: SQLiteConstraintException) {
+                // key already exist
+            }
+
+        }
+    }
+
+    suspend fun getPlaylist(name: String): PlaylistWithList {
+        var playlist : PlaylistWithList= PlaylistWithList(PlaylistEntity("",""), emptyList())
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                playlist = repository.getPlaylist(name)
+            }
+        }.join()
+        return playlist;
+
+    }
+
+
 
     private val _animeInfoTrailer = MutableStateFlow<List<AnimeTrailer>?>(null)
     val animeInfoTrailer: StateFlow<List<AnimeTrailer>?> get() = _animeInfoTrailer

@@ -5,7 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [PlaylistEntity::class], version = 1)
+@Database(
+    entities = [PlaylistEntity::class, PlayListAnimeRelation::class],
+    version = 3
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun dao(): PlaylistDao
     companion object {
@@ -18,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "OtakuTubeDB"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

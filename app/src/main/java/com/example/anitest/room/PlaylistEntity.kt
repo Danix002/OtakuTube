@@ -1,13 +1,22 @@
 package com.example.anitest.room;
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.anitest.model.Anime
+import androidx.room.Relation
 
 @Entity(tableName = "Playlist")
 data class PlaylistEntity(
     @PrimaryKey
     val name: String,
-    val img: String
-    //val anime: List<Anime>
+    val img: String,
+)
+
+data class PlaylistWithList(
+    @Embedded val playlist: PlaylistEntity,
+    @Relation(
+        parentColumn = "name",
+        entityColumn = "playlistName"
+    )
+    val playlists: List<PlayListAnimeRelation>
 )
