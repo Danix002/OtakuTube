@@ -75,7 +75,6 @@ fun AnimeSearchLoader(animeSearch: List<Anime>, viewModel: MyViewModel, navContr
                 }
             }
         )
-
     }
 }
 

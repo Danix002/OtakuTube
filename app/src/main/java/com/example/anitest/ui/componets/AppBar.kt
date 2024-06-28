@@ -2,10 +2,13 @@ package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterEnd
 import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +55,12 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
     val animeSearch by viewModel.animeSearch.collectAsState()
 
     val focusManager = LocalFocusManager.current
+
+    var searchWidth = Modifier.fillMaxWidth()
+
+    if(navController.currentDestination?.route == "home_screen") {
+        searchWidth = Modifier.width(234.dp)
+    }
 
     LaunchedEffect(searchFlag) {
         if(searchFlag) {
@@ -90,51 +100,57 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                 }
             },
             title = {
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(30.dp))
                 ) {
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = {
-                            focusManager.clearFocus()
-                            searchFlag = true
-                            backNavFlag = false
-                            viewModel.setIsLoadedAnimeScreen(flag = false)
-                        }),
-                        singleLine = true,
-                        leadingIcon = {
-                            IconButton(onClick = { searchFlag = true; backNavFlag = false; viewModel.setIsLoadedAnimeScreen(flag = false) }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Search,
-                                    contentDescription = "",
-                                    tint = Color.White
+                    Box(modifier = searchWidth.padding(8.dp).clip(RoundedCornerShape(30.dp))) {
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(onSearch = {
+                                focusManager.clearFocus()
+                                searchFlag = true
+                                backNavFlag = false
+                                viewModel.setIsLoadedAnimeScreen(flag = false)
+                            }),
+                            singleLine = true,
+                            leadingIcon = {
+                                IconButton(onClick = { searchFlag = true; backNavFlag = false; viewModel.setIsLoadedAnimeScreen(flag = false) }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Search,
+                                        contentDescription = "",
+                                        tint = Color.White
+                                    )
+                                }
+                            },
+                            value = searchString,
+                            onValueChange = { value: String -> searchString = value },
+                            placeholder = {
+                                Text(
+                                    text = "Search anime...",
+                                    fontSize = 14.sp,
+                                    color = Color.White
                                 )
-                            }
-                        },
-                        value = searchString,
-                        onValueChange = { value: String -> searchString = value },
-                        placeholder = {
-                            Text(
-                                text = "Search anime...",
-                                fontSize = 14.sp,
-                                color = Color.White
+                            },
+                            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color(100, 70, 120).copy(alpha = 0.8f),
+                                cursorColor = Color.White,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
                             )
-                        },
-                        textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color(100, 70, 120).copy(alpha = 0.8f),
-                            cursorColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
                         )
-                    )
+                    }
+                    if(navController.currentDestination?.route == "home_screen"){
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = CenterEnd){
+                            Filter(viewModel)
+                        }
+                    }
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent.copy(alpha = 0f))
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent.copy(alpha = 0f)
+            )
         )
 
         if(searchFlag){

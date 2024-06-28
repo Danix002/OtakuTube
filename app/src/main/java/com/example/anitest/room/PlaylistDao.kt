@@ -17,7 +17,6 @@ interface PlaylistDao {
     @Insert
     suspend fun insert(animeAdd: PlayListAnimeRelation)
 
-
     @Transaction
     @Query("SELECT * FROM Playlist p WHERE p.name = :name")
     fun getPlaylistWithList(name:String): PlaylistWithList

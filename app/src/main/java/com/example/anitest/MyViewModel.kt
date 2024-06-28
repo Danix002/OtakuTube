@@ -78,8 +78,6 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-
-
     private val _animeInfoTrailer = MutableStateFlow<List<AnimeTrailer>?>(null)
     val animeInfoTrailer: StateFlow<List<AnimeTrailer>?> get() = _animeInfoTrailer
 
@@ -167,6 +165,9 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     private val _isEpisodeLoaded = MutableStateFlow(false)
     val isEpisodeLoaded: StateFlow<Boolean> get() = _isEpisodeLoaded
 
+    private val _filterRequest = MutableStateFlow<List<Genre>?>(null)
+    val filterRequest: StateFlow<List<Genre>?> get() = _filterRequest
+
     fun initEpisodes(n: Int) {
         var i = n
         _episodes.value = emptyList()
@@ -193,6 +194,24 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }.join()
+    }
+
+    fun addFilterRequest(genre: Genre) {
+        if(_filterRequest.value != null) {
+            if(!(_filterRequest.value!!.contains(genre))) {
+                _filterRequest.value = _filterRequest.value?.plus(genre)
+            }
+        }else{
+            _filterRequest.value = listOf(genre)
+        }
+    }
+
+    fun removeFilterRequest(genre: Genre) {
+        if(_filterRequest.value != null) {
+            if(_filterRequest.value!!.contains(genre)) {
+                _filterRequest.value = _filterRequest.value?.minus(genre)
+            }
+        }
     }
 
     private suspend fun getEpisode(episodeId: String): Episode? {
