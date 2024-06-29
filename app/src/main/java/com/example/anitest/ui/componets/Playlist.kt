@@ -124,7 +124,7 @@ fun PlaylistCreationPopup() {
             Text(text = "Create your list", fontWeight = FontWeight.Bold,fontSize = 20.sp, color = Color(112, 82, 137))
             Spacer(modifier = Modifier.height(16.dp))
             Row (verticalAlignment = Alignment.CenterVertically ){
-                Text(text = "Name",fontSize = 16.sp, color = Color(112, 82, 137))
+                Text(text = "Name:",fontSize = 16.sp, color = Color(112, 82, 137))
                 Spacer(modifier = Modifier.width(8.dp))
                 TextField(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -219,6 +219,9 @@ fun PlaylistCreationPopup() {
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     enabled = false,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
+                    ),
                     onClick = { /*TODO*/ }) {
                     Text(
                         text = "Confirm",

@@ -101,6 +101,7 @@ fun UserProfile(/*imageId: Int*/) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview
 fun UserProfileEditPopUp() {
     val imageIds = listOf(
         R.drawable.avatar1,
@@ -169,7 +170,8 @@ fun UserProfileEditPopUp() {
                                     painter = painterResource(id = imageId),
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.clip(CircleShape)
+                                    modifier = Modifier.fillMaxSize(),
+                                    alignment = Alignment.Center
                                 )
                             }
                         }
@@ -248,7 +250,11 @@ fun UserProfileEditPopUp() {
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
+                        ),
+                        onClick = { /*TODO*/ }) {
                         Text(
                             text = "Confirm",
                             fontSize = 14.sp,
