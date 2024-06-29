@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,35 +54,33 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.rememberAsyncImagePainter
+import com.example.anitest.R
 import com.example.anitest.model.Anime
 import com.example.anitest.room.PlaylistEntity
 
 @Composable
 fun PlaylistCard(playlist: PlaylistEntity): Unit {
-    val playlistTest : PlaylistEntity = PlaylistEntity("PreferitiPreferitiPreferitiPreferiti", "https://static.wikia.nocookie.net/dubbing9585/images/0/07/Ranking_of_Kings.jpg/revision/latest?cb=20230214064655");
+    val playlistFav : PlaylistEntity = PlaylistEntity("Favorite", R.drawable.standard_library.toString());
     Box (modifier = Modifier
         .width(164.dp)
         .padding(vertical = 12.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .rotate(-8f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.Gray)
                 .height(180.dp)
                 .width(128.dp)
         )
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .rotate(8f)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.DarkGray)
                 .height(180.dp)
                 .width(128.dp)
         )
-        Image(
-            painter = if(playlist.name == "Favorite") rememberAsyncImagePainter(playlistTest.img) else rememberAsyncImagePainter(playlist.img),
+        Image(painter = if(playlist.name == "Favorite") painterResource(Integer.parseInt(playlistFav.img)) else rememberAsyncImagePainter(playlist.img),
             contentDescription = "anime image",
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -89,17 +88,17 @@ fun PlaylistCard(playlist: PlaylistEntity): Unit {
                 .height(180.dp)
                 .width(128.dp)
         )
-        Box (  contentAlignment = Alignment.Center, modifier = Modifier
+        Box (contentAlignment = Alignment.Center, modifier = Modifier
             .padding(bottom = 8.dp)
-            .width(128.dp) ) {
-            Box (
-                Modifier
+            .width(128.dp)
+        ) {
+            Box (modifier = Modifier
                     .blur(16.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.Gray.copy(alpha = 0.5f))
                     .fillMaxWidth()
                     .height(20.dp))
-            Text( maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = 12.dp), text = playlist.name, color = Color.White)
+            Text(maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = 12.dp), text = playlist.name, color = Color.White)
         }
     }
 }
@@ -115,7 +114,7 @@ fun PlaylistCreationPopup() {
         mutableStateOf(emptyList<Anime>())
     }
 
-    Dialog( onDismissRequest = { /*TODO*/ }) {
+    Dialog(onDismissRequest = { /*TODO*/ }) {
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -124,7 +123,7 @@ fun PlaylistCreationPopup() {
         ) {
             Text(text = "Create your list", fontWeight = FontWeight.Bold,fontSize = 20.sp, color = Color(112, 82, 137))
             Spacer(modifier = Modifier.height(16.dp))
-            Row ( verticalAlignment = Alignment.CenterVertically ){
+            Row (verticalAlignment = Alignment.CenterVertically ){
                 Text(text = "Name",fontSize = 16.sp, color = Color(112, 82, 137))
                 Spacer(modifier = Modifier.width(8.dp))
                 TextField(
@@ -133,7 +132,6 @@ fun PlaylistCreationPopup() {
 
                     }),
                     singleLine = true,
-
                     value = nameValue,
                     onValueChange = { value: String -> nameValue = value },
                     placeholder = {
@@ -153,7 +151,7 @@ fun PlaylistCreationPopup() {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Column (
+            Column(
                 modifier = Modifier
                     .border(border = BorderStroke(1.dp, Color(100, 70, 120)))
                     .background(Color(238, 221, 246))
@@ -162,12 +160,12 @@ fun PlaylistCreationPopup() {
                 TextField(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
-                        // aaaaaaa
+                        // richiesta al server
                     }),
                     singleLine = true,
                     leadingIcon = {
                         IconButton(onClick = {
-                            //searchFlag = true;
+                            // richiesta al server
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Search,
@@ -229,7 +227,6 @@ fun PlaylistCreationPopup() {
                     )
                 }
             }
-
         }
     }
 }
