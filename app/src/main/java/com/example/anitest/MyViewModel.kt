@@ -48,6 +48,19 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         val dao = AppDatabase.getDatabase(application).dao()
         repository = PlaylistRepository(dao)
         allPlaylist = repository.allPlaylist
+        // if preferiti not exist
+            // insert
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.delete("Cacca Pupu")
+                val a = getPlaylist("Favourite");
+                if (a == null) {
+                    insert(PlaylistEntity(name = "Favourite", img = "https://i.pinimg.com/originals/55/d0/10/55d010ced18f779470c8ec0ad0550a31.jpg"))
+                }
+            }
+
+        }
+
     }
 
     fun insert(playlist: PlaylistEntity) = viewModelScope.launch {

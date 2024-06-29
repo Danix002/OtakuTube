@@ -72,7 +72,7 @@ fun Filter(viewModel: MyViewModel) {
             .clip(RoundedCornerShape(30.dp))
             .fillMaxHeight()
     ) {
-        Text(text = "Filter")
+        //Text(text = "Filter")
         Icon(imageVector = Icons.Filled.FilterList, contentDescription = "Filter Genre")
     }
 
@@ -85,6 +85,27 @@ fun Filter(viewModel: MyViewModel) {
         expanded = filterFlag && isLoaded,
         onDismissRequest = { filterFlag = false }
     ) {
+        if (!filterRequest.isNullOrEmpty()) {
+            Button(
+                onClick = {
+                    filterRequest?.forEach {
+                        viewModel.removeFilterRequest(it)
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(129, 81, 86)
+                )
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp, bottom = 2.dp),
+                    text = "Remove all filter",
+                    color = Color(255, 218, 220),
+                    fontSize = 16.sp
+                )
+            }
+        }
         genresList.forEach { genre ->
             val isSelected = filterRequest?.contains(genre) == true
             Row(

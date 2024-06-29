@@ -1,6 +1,7 @@
 package com.example.anitest.room;
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -20,4 +21,7 @@ interface PlaylistDao {
     @Transaction
     @Query("SELECT * FROM Playlist p WHERE p.name = :name")
     fun getPlaylistWithList(name:String): PlaylistWithList
+
+    @Delete
+    fun delete(playlistEntity: PlaylistEntity)
 }

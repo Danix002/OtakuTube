@@ -72,7 +72,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
         BackGroundImage(contentPadding, content = {
             Column (modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(2.dp))
+                .padding(4.dp))
             {
                 Text(text = "Yours Lists", fontSize = 24.sp, color = Color.White)
                 LazyRow ( verticalAlignment = Alignment.CenterVertically ){
