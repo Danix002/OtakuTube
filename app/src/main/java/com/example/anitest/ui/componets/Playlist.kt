@@ -170,10 +170,12 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                     Row (
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().clickable {
-                            viewModel.setIsLoadedAnimeScreen(false)
-                            navController.navigate("anime/${item.animeId}_${item.animeName}")
-                        }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                viewModel.setIsLoadedAnimeScreen(false)
+                                navController.navigate("anime/${item.animeId}_${item.animeName}")
+                            }
                     ) {
                         Image(
                             painter = rememberAsyncImagePainter(item.animeImg),
@@ -227,17 +229,16 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
     var nameValue by remember { mutableStateOf("") }
     var searchValue by remember { mutableStateOf("") }
     val animeSearched by viewModel.animeSearch.collectAsState()
-    var animeSelected by remember { mutableStateOf( mutableListOf<Anime>()) }
+    val popular by viewModel.popularAnime.collectAsState()
+    val animeSelected by remember { mutableStateOf( mutableListOf<Anime>()) }
     var animeSelectedSize by remember { mutableStateOf( animeSelected.size.toString()) }
-
     val focusManager = LocalFocusManager.current
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(searchValue) {
-        if (searchValue == "") {
-            viewModel.forgetAnimeSearch()
-            viewModel.setAnimeSearch("A")
-        }
+    LaunchedEffect(Unit) {
+          if(popular.isEmpty() && animeSearched.isEmpty() && searchValue == ""){
+              viewModel.addPopularAnime(0)
+          }
     }
 
     Dialog(onDismissRequest = { onDismiss() }) {
@@ -253,10 +254,6 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                 Text(text = "Name:",fontSize = 16.sp, color = Color(112, 82, 137))
                 Spacer(modifier = Modifier.width(8.dp))
                 TextField(
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = {
-
-                    }),
                     singleLine = true,
                     value = nameValue,
                     onValueChange = { value: String -> nameValue = value },
@@ -286,7 +283,6 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                 TextField(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
-                        // richiesta al server
                         coroutineScope.launch {
                             focusManager.clearFocus()
                             viewModel.forgetAnimeSearch()
@@ -296,7 +292,6 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                     singleLine = true,
                     leadingIcon = {
                         IconButton(onClick = {
-                            // richiesta al server
                             coroutineScope.launch {
                                 viewModel.forgetAnimeSearch()
                                 viewModel.setAnimeSearch(searchValue)
@@ -334,8 +329,32 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                         .wrapContentHeight()
                 ) {
                     if (animeSearched.isEmpty()) {
-                        items(5) {
-                            AnimeCardSkeleton()
+                        if(searchValue == "") {
+                            if (popular.isEmpty()) {
+                                items(5) {
+                                    AnimeCardSkeleton()
+                                }
+                            } else {
+                                itemsIndexed(popular) { index, item ->
+                                    AnimeCardPlaylist(
+                                        item,
+                                        {
+                                            if (animeSelected.contains(item)) {
+                                                animeSelected.remove(item)
+                                            } else {
+                                                animeSelected.add(item)
+                                            }
+                                            animeSelectedSize = animeSelected.size.toString()
+                                        },
+                                        list = animeSelected
+                                    )
+
+                                }
+                            }
+                        }else{
+                            items(5) {
+                                AnimeCardSkeleton()
+                            }
                         }
                     } else {
                         itemsIndexed(animeSearched) { index, item ->
@@ -351,7 +370,6 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                                 },
                                 list = animeSelected
                             )
-
                         }
                     }
 

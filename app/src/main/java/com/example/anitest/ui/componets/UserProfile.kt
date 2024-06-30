@@ -1,6 +1,5 @@
 package com.example.anitest.ui.componets
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,26 +8,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ModeEdit
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,15 +46,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitest.R
 import com.example.anitest.room.UserEntity
 import com.example.myapplication.MyViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun UserProfile(viewModel: MyViewModel) {
@@ -77,6 +67,21 @@ fun UserProfile(viewModel: MyViewModel) {
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         Column {
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = "Avatar",
+                    color = Color.White,
+                    fontSize = 32.sp,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.Gray.copy(alpha = 0.3f))
+                        .padding(vertical = 4.dp, horizontal = 10.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+            Spacer(modifier = Modifier.height(50.dp))
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(id = imageId),
@@ -131,18 +136,8 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel) {
         R.drawable.avatar15,
         R.drawable.avatar16,
         R.drawable.avatar17,
-        R.drawable.avatar18,
         R.drawable.avatar19,
-        R.drawable.avatar20,
-        R.drawable.avatar21,
-        R.drawable.avatar22,
-        R.drawable.avatar23,
-        R.drawable.avatar24,
-        R.drawable.avatar25,
-        R.drawable.avatar26,
-        R.drawable.avatar27,
-        R.drawable.avatar28,
-        R.drawable.avatar29
+        R.drawable.avatar20
     )
 
     var nameValue by remember { mutableStateOf("") }
@@ -160,7 +155,8 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel) {
         .width(400.dp)
         .height(500.dp)
         .clip(RoundedCornerShape(30.dp))
-        .background(Color(255, 218, 220)), contentAlignment = Alignment.Center
+        .background(Color(255, 218, 220)),
+        contentAlignment = Alignment.Center
     ){
         LazyColumn{
             item {
@@ -192,7 +188,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel) {
                     ) {
                         items(imageIds) { imageId ->
                             val isSelected = imageId == selectedImg
-                            val buttonColor = if (isSelected) Color.Black else Color.Transparent
+                            val buttonColor = if (isSelected) Color(100, 70, 120).copy(alpha = 0.9f) else Color.Transparent
 
                             Button(
                                 onClick = { selectedImg = imageId },
