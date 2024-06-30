@@ -60,9 +60,11 @@ import com.example.anitest.R
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun UserProfile(/*imageId: Int*/) {
+@Preview
+fun UserProfile() {
     var imageId by remember { mutableIntStateOf(R.drawable.avatar1) }
-    var edit by remember { mutableStateOf(false) }
+    var editPopup by remember { mutableStateOf(false) }
+    var editImg by remember { mutableIntStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         Column {
@@ -70,9 +72,9 @@ fun UserProfile(/*imageId: Int*/) {
                 Image(
                     painter = painterResource(id = imageId),
                     contentDescription = "Profile Image",
-                    contentScale = ContentScale.None,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(245.dp)
+                        .size(280.dp)
                         .clip(CircleShape)
                         .align(Alignment.Center)
                 )
@@ -84,7 +86,7 @@ fun UserProfile(/*imageId: Int*/) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = { edit = true }) {
+                IconButton(onClick = { editPopup = true }) {
                     Icon(
                         imageVector = Icons.Filled.ModeEdit,
                         contentDescription = "Edit",
@@ -93,16 +95,18 @@ fun UserProfile(/*imageId: Int*/) {
                 }
             }
         }
-        if(edit){
-            UserProfileEditPopUp()
+        if(editPopup){
+            editImg = UserProfileEditPopUp(onDismissClick = { editPopup = false })
+        }
+        if(editImg > 0){
+            imageId = editImg
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun UserProfileEditPopUp() {
+fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
     val imageIds = listOf(
         R.drawable.avatar1,
         R.drawable.avatar2,
@@ -117,7 +121,22 @@ fun UserProfileEditPopUp() {
         R.drawable.avatar11,
         R.drawable.avatar12,
         R.drawable.avatar13,
-        R.drawable.avatar14
+        R.drawable.avatar14,
+        R.drawable.avatar15,
+        R.drawable.avatar16,
+        R.drawable.avatar17,
+        R.drawable.avatar18,
+        R.drawable.avatar19,
+        R.drawable.avatar20,
+        R.drawable.avatar21,
+        R.drawable.avatar22,
+        R.drawable.avatar23,
+        R.drawable.avatar24,
+        R.drawable.avatar25,
+        R.drawable.avatar26,
+        R.drawable.avatar27,
+        R.drawable.avatar28,
+        R.drawable.avatar29
     )
 
     var nameValue by remember { mutableStateOf("") }
@@ -170,7 +189,7 @@ fun UserProfileEditPopUp() {
                                     painter = painterResource(id = imageId),
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize(),
+                                    modifier = Modifier.fillMaxSize().clip(CircleShape),
                                     alignment = Alignment.Center
                                 )
                             }
@@ -242,7 +261,7 @@ fun UserProfileEditPopUp() {
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(102, 90, 110)
                         ),
-                        onClick = { /*TODO*/ }) {
+                        onClick = { onDismissClick() }) {
                         Text(
                             text = "Cancel",
                             fontSize = 14.sp,
@@ -254,7 +273,7 @@ fun UserProfileEditPopUp() {
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
                         ),
-                        onClick = { /*TODO*/ }) {
+                        onClick = { onDismissClick() }) {
                         Text(
                             text = "Confirm",
                             fontSize = 14.sp,
@@ -265,4 +284,5 @@ fun UserProfileEditPopUp() {
             }
         }
     }
+    return selectedImg
 }
