@@ -24,4 +24,7 @@ interface PlaylistDao {
 
     @Delete
     fun delete(playlistEntity: PlaylistEntity)
+
+    @Delete
+    fun delete(animeRelation: PlayListAnimeRelation)
 }

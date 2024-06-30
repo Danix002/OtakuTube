@@ -1,6 +1,5 @@
 package com.example.anitest.room
 
-import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeDetail
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +16,10 @@ class PlaylistRepository(private val dao: PlaylistDao) {
 
     fun delete(playlist: String) {
         dao.delete(PlaylistEntity(playlist, ""))
+    }
+
+    fun deleteRelation(relation: PlayListAnimeRelation) {
+        dao.delete(relation)
     }
     suspend fun insert(playlist: String, anime : AnimeDetail) {
         dao.insert(

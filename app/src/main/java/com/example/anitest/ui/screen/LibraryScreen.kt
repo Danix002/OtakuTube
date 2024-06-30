@@ -1,6 +1,7 @@
 package com.example.anitest.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,7 @@ import com.example.anitest.ui.componets.BottomNavigation
 import com.example.anitest.ui.componets.CategoryRow
 import com.example.anitest.ui.componets.CategoryRowSkeleton
 import com.example.anitest.ui.componets.PlaylistCard
+import com.example.anitest.ui.componets.PlaylistCreationPopup
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -59,6 +61,9 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
 
     var playlist by remember {
         mutableStateOf(PlaylistWithList(PlaylistEntity("",""), emptyList()))
+    }
+    var openCreationPopup by remember {
+        mutableStateOf(false)
     }
     Scaffold (
         containerColor = Color(102, 90, 110),
@@ -74,6 +79,9 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                 .verticalScroll(rememberScrollState())
                 .padding(4.dp))
             {
+                if (openCreationPopup) {
+                    PlaylistCreationPopup(viewModel, onDismiss = { openCreationPopup = false })
+                }
                 Text(text = "Yours Lists", fontSize = 24.sp, color = Color.White)
                 LazyRow ( verticalAlignment = Alignment.CenterVertically ){
                     itemsIndexed(playlists) {index: Int, item: PlaylistEntity ->
@@ -81,17 +89,20 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
+                                    .clickable {
+                                        openCreationPopup = true
+                                    }
                                     .clip(RoundedCornerShape(16.dp))
                                     .background(Color(241, 218, 255))
                                     .padding(horizontal = 32.dp, vertical = 64.dp)
                             ) {
                                 IconButton(
-                                    onClick = { viewModel.insert(playlist = test) }) {
+                                    onClick = {}) {
                                     Icon(imageVector = Icons.Filled.AddBox, contentDescription = "", modifier = Modifier.size(128.dp),  tint = Color(112, 82, 137))
                                 }
                             }
                         }
-                        PlaylistCard(playlist = item)
+                        PlaylistCard(playlist = item, viewModel, navController)
                     }
                 }
             }

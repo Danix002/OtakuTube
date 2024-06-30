@@ -16,10 +16,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -171,7 +177,9 @@ fun AnimeBigCard(anime: Anime) {
 @Composable
 fun AnimePopularCardSkeleton() {
     Box(
-        modifier = Modifier.fillMaxWidth().height(512.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(512.dp),
         contentAlignment = Alignment.Center
     ){
         Column(
@@ -231,4 +239,62 @@ fun DialogWithImage(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         AnimeBigCard(anime)
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun AnimeCardPlaylist(anime: Anime,  onClick: () -> Unit, list:  List<Anime>) {
+
+    var isSelected by remember {
+        mutableStateOf(list.contains(anime))
+    }
+
+    Box (
+        modifier = Modifier.combinedClickable(
+            onClick = {
+                onClick()
+                isSelected = list.contains(anime)
+            },
+        )
+    ) {
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .width(128.dp)
+        ) {
+
+            Image(
+                painter = rememberAsyncImagePainter(anime.img_url),
+                contentDescription = "anime image",
+                modifier = Modifier
+                    .height(180.dp)
+                    .width(128.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.Gray)
+            )
+            Text(
+                text = anime.name,
+                color = Color.Black,
+                fontSize = 16.sp,
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            )
+        }
+        if (isSelected) {
+            Box(modifier = Modifier
+                .background(Color(100, 70, 120).copy(alpha = 0.5f))
+                .height(200.dp)
+                .width(128.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(imageVector = Icons.Filled.Check, contentDescription = "", tint = Color(100, 70, 120) )
+            }
+        }
+
+    }
+
 }

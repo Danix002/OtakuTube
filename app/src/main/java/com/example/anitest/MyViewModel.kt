@@ -26,6 +26,7 @@ import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
 import com.example.anitest.navigation.Screen
 import com.example.anitest.room.AppDatabase
+import com.example.anitest.room.PlayListAnimeRelation
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistRepository
 import com.example.anitest.room.PlaylistWithList
@@ -52,7 +53,6 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             // insert
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.delete("Cacca Pupu")
                 val a = getPlaylist("Favourite");
                 if (a == null) {
                     insert(PlaylistEntity(name = "Favourite", img = "https://i.pinimg.com/originals/55/d0/10/55d010ced18f779470c8ec0ad0550a31.jpg"))
@@ -66,6 +66,18 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     fun insert(playlist: PlaylistEntity) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repository.insert(playlist)
+        }
+    }
+
+    fun delete(playlist: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repository.delete(playlist)
+        }
+    }
+
+    fun delete(relation: PlayListAnimeRelation)  = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repository.deleteRelation(relation)
         }
     }
 
@@ -485,5 +497,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
 
         return animeTrailers.value
     }
+
+
 
 }
