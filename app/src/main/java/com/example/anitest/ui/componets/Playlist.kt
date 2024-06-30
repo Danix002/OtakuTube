@@ -362,7 +362,7 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Hai selezionato: $animeSelectedSize Anime")
+                    Text(text = "You have selected: $animeSelectedSize Anime")
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -388,11 +388,11 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
                         containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
                     ),
                     onClick = {
-                        viewModel.insert(
+                        viewModel.insertPlaylist(
                             PlaylistEntity(name = nameValue, img = animeSelected.first().img_url)
                         )
                         animeSelected.forEach { item ->
-                            viewModel.insert(playlist = nameValue, anime = AnimeDetail(item.name, item.img_url, item.anime_id))
+                            viewModel.insertPlaylist(playlist = nameValue, anime = AnimeDetail(item.name, item.img_url, item.anime_id))
                         }
                         onDismiss()
                     }) {

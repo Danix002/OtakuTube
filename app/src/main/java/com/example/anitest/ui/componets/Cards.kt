@@ -270,7 +270,7 @@ fun AnimeCardPlaylist(anime: Anime,  onClick: () -> Unit, list:  List<Anime>) {
                     .height(180.dp)
                     .width(128.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Gray)
+                    .background(Color(241, 218, 255))
             )
             Text(
                 text = anime.name,

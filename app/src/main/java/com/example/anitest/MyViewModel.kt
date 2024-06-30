@@ -16,8 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.anitest.R
 import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeDetail
 import com.example.anitest.model.AnimeInfo
@@ -30,77 +30,115 @@ import com.example.anitest.room.PlayListAnimeRelation
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistRepository
 import com.example.anitest.room.PlaylistWithList
+import com.example.anitest.room.UserEntity
+import com.example.anitest.room.UserRepository
 import com.example.anitest.services.AnimeService
 import com.example.anitest.utils.NavigationItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class MyViewModel(application: Application) : AndroidViewModel(application) {
     private val animeService = AnimeService()
-    private val repository : PlaylistRepository
-
+    private val repositoryPlaylist : PlaylistRepository
     val allPlaylist: Flow<List<PlaylistEntity>>
+    private val repositoryUser : UserRepository
+    var user: Flow<UserEntity>
+
     init {
-        val dao = AppDatabase.getDatabase(application).dao()
-        repository = PlaylistRepository(dao)
-        allPlaylist = repository.allPlaylist
-        // if preferiti not exist
-            // insert
+        val daoPlaylist = AppDatabase.getDatabase(application).daoPlaylist()
+        repositoryPlaylist = PlaylistRepository(daoPlaylist)
+        allPlaylist = repositoryPlaylist.allPlaylist
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val a = getPlaylist("Favourite");
                 if (a == null) {
-                    insert(PlaylistEntity(name = "Favourite", img = "https://i.pinimg.com/originals/55/d0/10/55d010ced18f779470c8ec0ad0550a31.jpg"))
+                    insertPlaylist(PlaylistEntity(name = "Favourite", img = ""))
                 }
             }
-
         }
 
+        val daoUser = AppDatabase.getDatabase(application).daoUser()
+        repositoryUser = UserRepository(daoUser)
+        user = repositoryUser.user
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val a = getUser();
+                if (a != null) {
+                    if (a.firstOrNull() == null) {
+                        insertUser(UserEntity(id = 1, name = "User", img = R.drawable.avatar1))
+                    }
+                }
+            }
+        }
     }
 
-    fun insert(playlist: PlaylistEntity) = viewModelScope.launch {
+    fun insertPlaylist(playlist: PlaylistEntity) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            repository.insert(playlist)
+            repositoryPlaylist.insert(playlist)
         }
     }
 
     fun delete(playlist: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            repository.delete(playlist)
+            repositoryPlaylist.delete(playlist)
         }
     }
 
     fun delete(relation: PlayListAnimeRelation)  = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            repository.deleteRelation(relation)
+            repositoryPlaylist.deleteRelation(relation)
         }
     }
 
-    fun insert(playlist: String, anime: AnimeDetail) = viewModelScope.launch {
+
+    fun insertUser(user: UserEntity) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repositoryUser.insert(user)
+        }
+    }
+
+    fun insertPlaylist(playlist: String, anime: AnimeDetail) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             try {
-                repository.insert(playlist, anime)
+                repositoryPlaylist.insert(playlist, anime)
             } catch (exception: SQLiteConstraintException) {
                 // key already exist
             }
-
         }
     }
 
     suspend fun getPlaylist(name: String): PlaylistWithList {
-        var playlist : PlaylistWithList= PlaylistWithList(PlaylistEntity("",""), emptyList())
+        var playlist : PlaylistWithList = PlaylistWithList(PlaylistEntity("",""), emptyList())
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                playlist = repository.getPlaylist(name)
+                playlist = repositoryPlaylist.getPlaylist(name)
             }
         }.join()
-        return playlist;
+        return playlist
 
+    }
+
+    suspend fun getUser(): Flow<UserEntity>? {
+        var user : Flow<UserEntity>? = null
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                user = repositoryUser.getUserById()
+            }
+        }.join()
+        return user
+    }
+
+    suspend fun updateUser(name: String, img: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repositoryUser.updateUserById(name, img)
+            }
+        }.join()
     }
 
     private val _animeInfoTrailer = MutableStateFlow<List<AnimeTrailer>?>(null)

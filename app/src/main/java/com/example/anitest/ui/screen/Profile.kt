@@ -45,7 +45,7 @@ fun ProfileScreen(viewModel: MyViewModel, navController: NavHostController) {
         }
     ) { contentPadding ->
         BackGroundImage(contentPadding, content = {
-            UserProfile()
+            UserProfile(viewModel)
         })
     }
 }

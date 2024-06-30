@@ -55,16 +55,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
     val playlists by viewModel.allPlaylist.collectAsState(initial = emptyList())
-    val test = PlaylistEntity("Cacca Pupu", "Pipi Pupu")
+    var openCreationPopup by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
-
-    var playlist by remember {
-        mutableStateOf(PlaylistWithList(PlaylistEntity("",""), emptyList()))
-    }
-    var openCreationPopup by remember {
-        mutableStateOf(false)
-    }
     Scaffold (
         containerColor = Color(102, 90, 110),
         bottomBar = {
@@ -96,8 +88,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                                     .background(Color(241, 218, 255))
                                     .padding(horizontal = 32.dp, vertical = 64.dp)
                             ) {
-                                IconButton(
-                                    onClick = {}) {
+                                IconButton(onClick = { }) {
                                     Icon(imageVector = Icons.Filled.AddBox, contentDescription = "", modifier = Modifier.size(128.dp),  tint = Color(112, 82, 137))
                                 }
                             }

@@ -39,6 +39,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,14 +59,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitest.R
+import com.example.anitest.room.UserEntity
+import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-@Preview
-fun UserProfile() {
-    var imageId by remember { mutableIntStateOf(R.drawable.avatar1) }
+fun UserProfile(viewModel: MyViewModel) {
+    val user by viewModel.user.collectAsState(initial = UserEntity(1, "User", R.drawable.avatar1))
+    var imageId by remember { mutableIntStateOf(user.img) }
+    var nameValue by remember { mutableStateOf(user.name) }
     var editPopup by remember { mutableStateOf(false) }
-    var editImg by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(user) {
+        imageId = user.img
+        nameValue = user.name
+    }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
         Column {
@@ -80,7 +89,7 @@ fun UserProfile() {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Test", fontSize = 20.sp, color = Color.White, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleMedium)
+            Text(text = nameValue.trim(), fontSize = 20.sp, color = Color.White, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -96,17 +105,14 @@ fun UserProfile() {
             }
         }
         if(editPopup){
-            editImg = UserProfileEditPopUp(onDismissClick = { editPopup = false })
-        }
-        if(editImg > 0){
-            imageId = editImg
+            UserProfileEditPopUp(onDismissClick = { editPopup = false }, viewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
+fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel) {
     val imageIds = listOf(
         R.drawable.avatar1,
         R.drawable.avatar2,
@@ -141,6 +147,14 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
 
     var nameValue by remember { mutableStateOf("") }
     var selectedImg by remember { mutableIntStateOf(0) }
+    var editFlag by remember { mutableStateOf(false) }
+
+    LaunchedEffect(editFlag) {
+        if(editFlag) {
+            viewModel.updateUser(nameValue, selectedImg)
+            onDismissClick()
+        }
+    }
 
     Box(modifier = Modifier
         .width(400.dp)
@@ -183,13 +197,17 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
                             Button(
                                 onClick = { selectedImg = imageId },
                                 colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
-                                modifier = Modifier.fillMaxWidth().height(100.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(100.dp)
                             ) {
                                 Image(
                                     painter = painterResource(id = imageId),
                                     contentDescription = "Profile Image",
                                     contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize().clip(CircleShape),
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .clip(CircleShape),
                                     alignment = Alignment.Center
                                 )
                             }
@@ -225,7 +243,9 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
                         .padding(8.dp)
                 ) {
                     TextField(
-                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(30.dp)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(30.dp)),
                         singleLine = true,
                         value = nameValue,
                         onValueChange = { value: String -> nameValue = value },
@@ -253,7 +273,9 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
 
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End
                 ) {
@@ -273,7 +295,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
                         ),
-                        onClick = { onDismissClick() }) {
+                        onClick = { editFlag = true }) {
                         Text(
                             text = "Confirm",
                             fontSize = 14.sp,
@@ -284,5 +306,4 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit): Int {
             }
         }
     }
-    return selectedImg
 }
