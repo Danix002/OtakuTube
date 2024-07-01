@@ -43,8 +43,8 @@ fun Filter(viewModel: MyViewModel) {
     val isLoaded by viewModel.isExploreScreenLoaded.collectAsState()
     val genresList by viewModel.genres.collectAsState()
     val filterRequest by viewModel.filterRequest.collectAsState()
-    var genreSelected by remember { mutableStateOf<List<Genre>>(listOf(Genre("", ""))) }
-    var genreSelectedRemove by remember { mutableStateOf<List<Genre>>(listOf(Genre("", ""))) }
+    var genreSelected by remember { mutableStateOf<List<Genre>>(emptyList()) }
+    var genreSelectedRemove by remember { mutableStateOf<List<Genre>>(emptyList()) }
 
     LaunchedEffect (genreSelected){
         genreSelected.forEach {
@@ -88,9 +88,9 @@ fun Filter(viewModel: MyViewModel) {
         if (!filterRequest.isNullOrEmpty()) {
             Button(
                 onClick = {
-                    filterRequest?.forEach {
-                        viewModel.removeFilterRequest(it)
-                    }
+                    viewModel.removeAllFilterRequest()
+                    genreSelected = emptyList()
+                    genreSelectedRemove = emptyList()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(129, 81, 86)

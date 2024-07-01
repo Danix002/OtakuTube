@@ -2,6 +2,7 @@ package com.example.anitest.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,9 +17,10 @@ import com.example.myapplication.MyViewModel
 fun SetupNavGraph(
     navController: NavHostController,
     viewModel: MyViewModel,
-    context: Context
+    context: Context,
+    startDestination: String
 ) {
-    NavHost(navController,  startDestination = Screen.Home.route) {
+    NavHost(navController,  startDestination ) {
         composable(
             route = Screen.Home.route
         ) {

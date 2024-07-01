@@ -1,5 +1,6 @@
 package com.example.anitest.ui.componets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -166,13 +167,27 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                 )
             }else{
                 Box(
+
                     contentAlignment = TopCenter,
                     modifier = Modifier
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(16.dp))
                         .fillMaxWidth()
                         .fillMaxHeight()
                 ) {
-                    Text(text = "Nessun anime trovato :(",
-                        textAlign = TextAlign.Center)
+                    if(searchString.trim().length < 2){
+                        Text(text = "You need to be more specific!",
+                            textAlign = TextAlign.Center,
+                            color = Color.White)
+                    }else{
+                        if(searchFlag) {
+                            Text(
+                                text = "No anime found :(",
+                                textAlign = TextAlign.Center,
+                                color = Color.White
+                            )
+                        }
+                    }
                 }
             }
         } else {

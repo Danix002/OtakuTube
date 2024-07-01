@@ -15,6 +15,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readText
+import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
 
 class AnimeService {
@@ -102,6 +103,12 @@ class AnimeService {
         val trailerJson = Util.GET(httpClient, "$URLPYTHON/anime/$name") ?: return emptyList()
         val type = object : TypeToken<List<AnimeTrailer>>() {}.type
         return gson.fromJson(trailerJson.readText(), type)
+    }
+
+    suspend fun testConnection(): Boolean {
+        val responseNPM = Util.GET(httpClient, URLNPM)
+        val responsePython = Util.GET(httpClient, URLPYTHON)
+        return (!(responseNPM == null || responseNPM.status == HttpStatusCode.BadGateway)) && (!(responsePython == null || responsePython.status == HttpStatusCode.BadGateway))
     }
 }
 

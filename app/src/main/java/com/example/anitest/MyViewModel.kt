@@ -186,6 +186,9 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     private val _episodesIds = MutableStateFlow<List<String>?>(null)
     val episodesIds: StateFlow<List<String>?> get() = _episodesIds
 
+    private val _connection = MutableStateFlow<Boolean>(true)
+    val connection: StateFlow<Boolean> get() = _connection
+
 
     var navigationItems = mutableStateOf(
         listOf(
@@ -246,6 +249,10 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             list.set(episode.index-1, episode)
             _episodes.value = list
         }
+    }
+
+    fun removeAllFilterRequest() {
+        _filterRequest.value = emptyList()
     }
 
     suspend fun setEpisode(episodeId: String) {
@@ -509,6 +516,12 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         return animeInfo.value
+    }
+
+    suspend fun testConnection(): Boolean {
+        val connectionTest : Boolean = animeService.testConnection()
+        _connection.value = connectionTest
+        return connectionTest;
     }
 
     private suspend fun getGenres(): List<Genre> {

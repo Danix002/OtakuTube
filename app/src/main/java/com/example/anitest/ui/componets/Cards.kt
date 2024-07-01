@@ -8,6 +8,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,11 +18,21 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,9 +49,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
+import com.example.anitest.model.AnimeDetail
 import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,7 +80,8 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
         if (openDialog.value) {
             DialogWithImage(
                 onDismissRequest = { openDialog.value = false },
-                anime = anime
+                anime = anime,
+                viewModel
             )
         }
         if (fill) {
@@ -146,7 +160,12 @@ fun AnimePopularCard(anime: Anime, navController: NavHostController, viewModel: 
 }
 
 @Composable
-fun AnimeBigCard(anime: Anime) {
+fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
+    var open by remember {
+        mutableStateOf(false)
+    }
+    val allPlaylist by viewModel.allPlaylist.collectAsState(initial = emptyList())
+
     Column (
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
@@ -162,15 +181,39 @@ fun AnimeBigCard(anime: Anime) {
                 .clip(RoundedCornerShape(8.dp))
                 .shadow(16.dp)
         )
-        Text(
-            text = anime.name,
-            color = Color.White,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(8.dp)
-        )
+        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+            Text(
+                text = anime.name,
+                color = Color.White,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .padding(8.dp)
+            )
+            IconButton(
+                onClick = { open = true },
+                colors = IconButtonDefaults.iconButtonColors( containerColor = Color.Transparent)
+            ){
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = Color.White )
+            }
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+            for (playlist in allPlaylist) {
+                DropdownMenuItem(
+                    modifier = Modifier.background(Color(238, 221, 246)),
+                    text = {
+                        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+                            Text(text = "Add to " +playlist.name, color = Color(102, 90, 110))
+                            Icon(imageVector = Icons.Filled.Add, contentDescription = "", tint = Color(102, 90, 110) )
+                        }
+                           },
+                    onClick = {
+                        viewModel.insertPlaylist(playlist = playlist.name, anime = AnimeDetail(name = anime.name, img_url = anime.img_url, anime_id = anime.anime_id))
+                        open = false
+                    })
+            }
+        }
+
     }
 }
 
@@ -234,10 +277,11 @@ fun AnimeCardSkeleton() {
 @Composable
 fun DialogWithImage(
     onDismissRequest: () -> Unit,
-    anime: Anime
+    anime: Anime,
+    viewModel: MyViewModel
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        AnimeBigCard(anime)
+        AnimeBigCard(anime, viewModel)
     }
 }
 

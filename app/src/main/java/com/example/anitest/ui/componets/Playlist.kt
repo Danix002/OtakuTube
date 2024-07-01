@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,6 +32,9 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -118,7 +122,7 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
             contentDescription = "anime image",
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(241, 218, 255))
+                .background(Color(208, 158, 245))
                 .height(180.dp)
                 .width(128.dp)
         )
@@ -152,6 +156,11 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
 
 @Composable
 fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRelation) -> Unit, playlistWithList: PlaylistWithList, viewModel: MyViewModel, navController: NavHostController ) {
+    var modifing by remember {
+        mutableStateOf(false)
+    }
+    val connection by viewModel.connection.collectAsState()
+
     Dialog(onDismissRequest = {
         onDismiss()
     }) {
@@ -161,11 +170,38 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                 .background(Color(241, 218, 255))
                 .padding(12.dp)
         ) {
-            Text(text = playlistWithList.playlist.name, fontWeight = FontWeight.Bold,fontSize = 20.sp, color = Color(112, 82, 137))
+            Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = playlistWithList.playlist.name, fontWeight = FontWeight.Bold,fontSize = 20.sp, color = Color(112, 82, 137))
+                if (connection) {
+                    IconToggleButton(
+                        checked = modifing,
+                        onCheckedChange = { modifing = it},
+                        colors = IconButtonDefaults.iconToggleButtonColors( containerColor = Color.Transparent)
+                    ){
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "",  tint = if (modifing) Color(112, 82, 137) else Color(102, 90, 110) )
+                    }
+                }
+
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
+            if (playlistWithList.playlists.isEmpty()) {
+                Row (
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+
+                        }
+                ) {
+                    Text(text = "No element go to Explore and add to playlist", modifier = Modifier.width(128.dp), color = Color.Black)
+                }
+            }
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
+
                 itemsIndexed(playlistWithList.playlists) { index, item ->
                     Row (
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -173,6 +209,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
+                                if (!connection) return@clickable
                                 viewModel.setIsLoadedAnimeScreen(false)
                                 navController.navigate("anime/${item.animeId}_${item.animeName}")
                             }
@@ -189,34 +226,40 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(text = item.animeId, modifier = Modifier.width(128.dp), color = Color.Black)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Button(
-                            modifier = Modifier.width(64.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(186, 26, 26)
-                            ),
-                            onClick = {
-                                onRemoveAnime(item)
-                            }) {
-                            Text(text = "X", color = Color.White)
+                        if (modifing) {
+                            Button(
+                                modifier = Modifier.width(64.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(186, 26, 26)
+                                ),
+                                onClick = {
+                                    onRemoveAnime(item)
+                                }) {
+                                Text(text = "X", color = Color.White)
+                            }
                         }
+
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                 }
             }
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(186, 26, 26)
-                ),
-                onClick = {
-                    viewModel.delete(playlist = playlistWithList.playlist.name)
-                    playlistWithList.playlists.forEach {
-                        viewModel.delete(relation = it)
-                    }
-                    onDismiss()
-                }) {
-                Text(text = "Delete Playlist", color = Color.White)
+            if (modifing) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(186, 26, 26)
+                    ),
+                    onClick = {
+                        viewModel.delete(playlist = playlistWithList.playlist.name)
+                        playlistWithList.playlists.forEach {
+                            viewModel.delete(relation = it)
+                        }
+                        onDismiss()
+                    }) {
+                    Text(text = "Delete Playlist", color = Color.White)
+                }
             }
+
         }
     }
 }
@@ -238,6 +281,7 @@ fun PlaylistCreationPopup(viewModel: MyViewModel, onDismiss: () -> Unit) {
     LaunchedEffect(Unit) {
           if(popular.isEmpty() && animeSearched.isEmpty() && searchValue == ""){
               viewModel.addPopularAnime(0)
+              viewModel.setIsLoadedZappingScreen(flag = true)
           }
     }
 

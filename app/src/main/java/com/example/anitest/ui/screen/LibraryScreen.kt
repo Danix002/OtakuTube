@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
 fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
     val playlists by viewModel.allPlaylist.collectAsState(initial = emptyList())
     var openCreationPopup by remember { mutableStateOf(false) }
-
+    val connection by viewModel.connection.collectAsState()
     Scaffold (
         containerColor = Color(102, 90, 110),
         bottomBar = {
@@ -77,7 +77,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                 Text(text = "Yours Lists", fontSize = 24.sp, color = Color.White)
                 LazyRow ( verticalAlignment = Alignment.CenterVertically ){
                     itemsIndexed(playlists) {index: Int, item: PlaylistEntity ->
-                        if (index == 0) {
+                        if (index == 0 && connection) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
