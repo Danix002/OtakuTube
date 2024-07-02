@@ -13,6 +13,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.features.HttpRedirect
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpStatusCode
@@ -110,23 +111,23 @@ class AnimeService {
         var responsePython: HttpResponse? = null
         val tryResult = try {
             withTimeout(10000) {
-                responseNPM = Util.GET(httpClient, URLNPM)
-                responsePython = Util.GET(httpClient, URLNPM)
+                responseNPM = httpClient.get<HttpResponse>(URLNPM)
+                responsePython = httpClient.get<HttpResponse>(URLPYTHON)
                 if ((responseNPM == null || responseNPM?.status == HttpStatusCode.BadGateway) || responsePython == null){
-                    false
+                    return@withTimeout false
                 }else{
-                    true
+                    return@withTimeout true
                 }
             }
         } catch (e: TimeoutCancellationException) {
             println("Request timed out: ${e.message}")
-            false
+            return false
         } catch (e: IOException) {
             println("IO Exception: ${e.message}")
-            false
+            return false
         } catch (e: Exception) {
             println("Unknown exception: ${e.message}")
-            false
+            return false
         }
         println("Try result: " + tryResult)
         return  tryResult
