@@ -6,12 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [PlaylistEntity::class, PlayListAnimeRelation::class, UserEntity::class],
-    version = 4
+    entities = [PlaylistEntity::class, PlayListAnimeRelation::class, UserEntity::class, AnimeEntity::class],
+    version = 5
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun daoPlaylist(): PlaylistDao
     abstract fun daoUser(): UserDao
+    abstract fun daoAnime(): AnimeDao
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

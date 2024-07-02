@@ -60,8 +60,30 @@ fun UserProfile(viewModel: MyViewModel) {
     var nameValue by remember { mutableStateOf(user.name) }
     var editPopup by remember { mutableStateOf(false) }
 
+    val imageIds = listOf(
+        R.drawable.avatar1,
+        R.drawable.avatar2,
+        R.drawable.avatar3,
+        R.drawable.avatar4,
+        R.drawable.avatar5,
+        R.drawable.avatar6,
+        R.drawable.avatar7,
+        R.drawable.avatar8,
+        R.drawable.avatar9,
+        R.drawable.avatar10,
+        R.drawable.avatar11,
+        R.drawable.avatar12,
+        R.drawable.avatar13,
+        R.drawable.avatar14,
+        R.drawable.avatar15,
+        R.drawable.avatar16,
+        R.drawable.avatar17,
+        R.drawable.avatar19,
+        R.drawable.avatar20
+    )
+
     LaunchedEffect(user) {
-        imageId = user.img
+        imageId = imageIds[imageIds.indexOf(user.img)]
         nameValue = user.name
     }
 
@@ -110,36 +132,14 @@ fun UserProfile(viewModel: MyViewModel) {
             }
         }
         if(editPopup){
-            UserProfileEditPopUp(onDismissClick = { editPopup = false }, viewModel)
+            UserProfileEditPopUp(onDismissClick = { editPopup = false }, viewModel, imageIds)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel) {
-    val imageIds = listOf(
-        R.drawable.avatar1,
-        R.drawable.avatar2,
-        R.drawable.avatar3,
-        R.drawable.avatar4,
-        R.drawable.avatar5,
-        R.drawable.avatar6,
-        R.drawable.avatar7,
-        R.drawable.avatar8,
-        R.drawable.avatar9,
-        R.drawable.avatar10,
-        R.drawable.avatar11,
-        R.drawable.avatar12,
-        R.drawable.avatar13,
-        R.drawable.avatar14,
-        R.drawable.avatar15,
-        R.drawable.avatar16,
-        R.drawable.avatar17,
-        R.drawable.avatar19,
-        R.drawable.avatar20
-    )
-
+fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imageIds: List<Int>) {
     var nameValue by remember { mutableStateOf("") }
     var selectedImg by remember { mutableIntStateOf(0) }
     var editFlag by remember { mutableStateOf(false) }

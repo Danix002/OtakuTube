@@ -22,6 +22,6 @@ interface UserDao {
     @Query("UPDATE User SET img = :img WHERE id = :id")
     suspend fun updateUserImgById(id: Int, img: Int)
 
-    @Delete
-    fun delete(userEntity: UserEntity)
+    @Query("DELETE FROM User WHERE id = :id")
+    fun delete(id: Int)
 }

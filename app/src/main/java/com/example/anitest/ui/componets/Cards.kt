@@ -91,7 +91,6 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-
             )
         } else {
             Image(
@@ -101,7 +100,6 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
                     .height(180.dp)
                     .width(128.dp)
                     .clip(RoundedCornerShape(8.dp))
-
             )
         }
 

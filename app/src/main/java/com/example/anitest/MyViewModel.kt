@@ -25,6 +25,8 @@ import com.example.anitest.model.AnimeTrailer
 import com.example.anitest.model.Episode
 import com.example.anitest.model.Genre
 import com.example.anitest.navigation.Screen
+import com.example.anitest.room.AnimeEntity
+import com.example.anitest.room.AnimeRepository
 import com.example.anitest.room.AppDatabase
 import com.example.anitest.room.PlayListAnimeRelation
 import com.example.anitest.room.PlaylistEntity
@@ -48,6 +50,8 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     val allPlaylist: Flow<List<PlaylistEntity>>
     private val repositoryUser : UserRepository
     var user: Flow<UserEntity>
+    private val repositoryAnime : AnimeRepository
+    var allAnime: Flow<List<AnimeEntity>>
 
     init {
         val daoPlaylist = AppDatabase.getDatabase(application).daoPlaylist()
@@ -67,7 +71,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         user = repositoryUser.user
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val a = getUser();
+                val a = getUser()
                 if (a != null) {
                     if (a.firstOrNull() == null) {
                         insertUser(UserEntity(id = 1, name = "User", img = R.drawable.avatar1))
@@ -75,6 +79,10 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+
+        val daoAnime = AppDatabase.getDatabase(application).daoAnime()
+        repositoryAnime = AnimeRepository(daoAnime)
+        allAnime = repositoryAnime.allAnime
     }
 
     fun insertPlaylist(playlist: PlaylistEntity) = viewModelScope.launch {
@@ -83,18 +91,53 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun delete(playlist: String) = viewModelScope.launch {
+    fun insertAnime(anime: AnimeEntity) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repositoryAnime.insert(anime)
+        }
+    }
+
+    fun deletePlaylist(playlist: String) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repositoryPlaylist.delete(playlist)
         }
     }
 
-    fun delete(relation: PlayListAnimeRelation)  = viewModelScope.launch {
+    fun deleteRelation(relation: PlayListAnimeRelation)  = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repositoryPlaylist.deleteRelation(relation)
         }
     }
 
+    fun deleteUser(id: Int)  = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repositoryUser.delete(id)
+        }
+    }
+
+    fun deleteAnime(anime: AnimeEntity)  = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repositoryAnime.delete(anime)
+        }
+    }
+
+    suspend fun deleteAll()  = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            repositoryAnime.deleteAll()
+        }
+    }.join()
+
+    suspend fun getMaxInsertOrderAnime(): Int?{
+        return withContext(Dispatchers.IO) {
+            repositoryAnime.getMaxInsertOrder()
+        }
+    }
+
+    suspend fun getOldestInsertedAnime(): AnimeEntity? {
+        return withContext(Dispatchers.IO) {
+            repositoryAnime.getOldestInsertedAnime()
+        }
+    }
 
     fun insertUser(user: UserEntity) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -133,10 +176,28 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         return user
     }
 
+    suspend fun getAnime(id: String): AnimeEntity? {
+        var anime : AnimeEntity? = null
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                anime = repositoryAnime.getAnimeById(id)
+            }
+        }.join()
+        return anime
+    }
+
     suspend fun updateUser(name: String, img: Int) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repositoryUser.updateUserById(name, img)
+            }
+        }.join()
+    }
+
+    suspend fun updateAnime(id: String, name: String, img: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repositoryAnime.updateAnimeById(id, name, img)
             }
         }.join()
     }

@@ -143,7 +143,7 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
         PlaylistDialog({ open = false },
             {
                 coroutineScope.launch {
-                    viewModel.delete(it)
+                    viewModel.deleteRelation(it)
                     playlistWithList = viewModel.getPlaylist(playlist.name)
                     open = false
                     open = true
@@ -250,9 +250,9 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                         containerColor = Color(186, 26, 26)
                     ),
                     onClick = {
-                        viewModel.delete(playlist = playlistWithList.playlist.name)
+                        viewModel.deletePlaylist(playlist = playlistWithList.playlist.name)
                         playlistWithList.playlists.forEach {
-                            viewModel.delete(relation = it)
+                            viewModel.deleteRelation(relation = it)
                         }
                         onDismiss()
                     }) {

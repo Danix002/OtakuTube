@@ -157,6 +157,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
         if(searchFlag){
             AnimeSearchLoaderSkeleton()
         }
+
         if (searchLoaded && !backNavFlag) {
             viewModel.openSearch()
             if (animeSearch.size > 0) {
@@ -167,7 +168,6 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                 )
             }else{
                 Box(
-
                     contentAlignment = TopCenter,
                     modifier = Modifier
                         .padding(8.dp)

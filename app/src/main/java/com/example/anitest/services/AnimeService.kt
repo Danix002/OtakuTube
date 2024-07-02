@@ -16,7 +16,10 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
+import java.io.IOException
 
 class AnimeService {
 
@@ -59,7 +62,6 @@ class AnimeService {
         return gson.fromJson(episodeJson.readText(), type)
     }
 
-
     suspend fun getSimplePopularAnime(page : Number): List<Anime> {
         val popularAnimeJson = Util.GET(httpClient, "$URLNPM/PopularNoDescription/$page") ?: return emptyList()
         val type = object : TypeToken<List<Anime>>() {}.type
@@ -84,8 +86,6 @@ class AnimeService {
         return gson.fromJson(searchJson.readText(), type)
     }
 
-
-
     suspend fun getEpisodes(episodes : List<String>): List<Episode> {
         var requestEpisodesString = episodes[0]
         val episodesJson: HttpResponse?
@@ -106,9 +106,27 @@ class AnimeService {
     }
 
     suspend fun testConnection(): Boolean {
-        val responseNPM = Util.GET(httpClient, URLNPM)
-        val responsePython = Util.GET(httpClient, URLPYTHON)
-        return (!(responseNPM == null || responseNPM.status == HttpStatusCode.BadGateway)) && (!(responsePython == null || responsePython.status == HttpStatusCode.BadGateway))
+        var responseNPM : HttpResponse? = null
+        var responsePython: HttpResponse? = null
+        val tryResult = try {
+            withTimeout(10000) {
+                responseNPM = Util.GET(httpClient, URLNPM)
+                responsePython = Util.GET(httpClient, URLNPM)
+                if ((responseNPM == null || responseNPM?.status == HttpStatusCode.BadGateway) || responsePython == null){
+                    false
+                }else{
+                    true
+                }
+            }
+        } catch (e: TimeoutCancellationException) {
+            false
+        } catch (e: IOException) {
+            false
+        } catch (e: Exception) {
+            false
+        }
+        println("Try result: " + tryResult)
+        return  tryResult
     }
 }
 

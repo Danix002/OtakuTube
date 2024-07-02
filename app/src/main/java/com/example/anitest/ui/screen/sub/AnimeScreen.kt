@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.anitest.room.AnimeEntity
 import com.example.anitest.ui.componets.AnimeThumbnail
 import com.example.anitest.ui.componets.AnimeTitles
 import com.example.anitest.ui.componets.AppBar
@@ -60,6 +61,18 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             viewModel.setAnimeInfoTrailer(name)
 
             viewModel.setAnimeInfo(id)
+
+            var indexDB = viewModel.getMaxInsertOrderAnime()
+            if(indexDB == null){
+                indexDB = 1
+            }else{
+                if(indexDB == 10){
+                    viewModel.deleteAll()
+                    indexDB = 0
+                }
+                indexDB += 1
+            }
+            viewModel.insertAnime(AnimeEntity(id, name, animeInfo!!.img_url, indexDB))
         }
     }
 

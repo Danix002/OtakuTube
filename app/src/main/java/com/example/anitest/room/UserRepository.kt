@@ -14,8 +14,8 @@ class UserRepository(private val dao: UserDao) {
         return dao.getUserById(1)
     }
 
-    fun delete(user: UserEntity) {
-        dao.delete(user)
+    fun delete(id: Int) {
+        dao.delete(id)
     }
 
     suspend fun updateUserById(name: String, img: Int) {

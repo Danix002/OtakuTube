@@ -9,7 +9,12 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,10 +28,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.anitest.navigation.Navigation
 import com.example.anitest.navigation.Screen
 import com.example.anitest.ui.theme.ANITESTTheme
@@ -88,8 +98,25 @@ class MainActivity : ComponentActivity() {
                 )
         ) {
             if (loading) {
-                Box(modifier = Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
-                    Image(painter = painterResource(id = R.drawable.app_icon), contentDescription = "" )
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(102, 90, 110)), contentAlignment = Alignment.Center) {
+                    Column {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Image(
+                                painter = painterResource(id = R.drawable.app_icon),
+                                contentDescription = "",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .align(Alignment.Center)
+                                    .clip(RoundedCornerShape(30.dp))
+                            )
+                        }
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Text(text = "OtakuTube", textAlign = TextAlign.Center, fontSize = 20.sp, style = MaterialTheme.typography.titleMedium, color = Color.White)
+                        }
+                    }
                 }
             } else {
                 Navigation(viewModel, LocalContext.current,
