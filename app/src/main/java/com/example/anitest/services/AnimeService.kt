@@ -119,10 +119,13 @@ class AnimeService {
                 }
             }
         } catch (e: TimeoutCancellationException) {
+            println("Request timed out: ${e.message}")
             false
         } catch (e: IOException) {
+            println("IO Exception: ${e.message}")
             false
         } catch (e: Exception) {
+            println("Unknown exception: ${e.message}")
             false
         }
         println("Try result: " + tryResult)

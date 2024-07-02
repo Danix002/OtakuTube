@@ -195,7 +195,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
 
                         }
                 ) {
-                    Text(text = "No element go to Explore and add to playlist", modifier = Modifier.width(128.dp), color = Color.Black)
+                    Text(text = "No element go to Explore and add to playlist", modifier = Modifier.fillMaxWidth(), color = Color.Black)
                 }
             }
             LazyColumn(

@@ -119,6 +119,35 @@ fun AnimeCard(anime: Anime, navController: NavHostController, viewModel: MyViewM
 }
 
 @Composable
+fun AnimeCardWithoutOnClick(anime: Anime) {
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(128.dp)
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(anime.img_url),
+            contentDescription = "anime image",
+            modifier = Modifier
+                .height(180.dp)
+                .width(128.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+        Text(
+            text = anime.name,
+            color = Color.White,
+            fontSize = 16.sp,
+            maxLines = 1,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(start = 8.dp)
+        )
+    }
+}
+
+@Composable
 fun AnimePopularCard(anime: Anime, navController: NavHostController, viewModel: MyViewModel) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -195,7 +224,7 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
                 Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = Color.White )
             }
         }
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, modifier = Modifier.width(256.dp).background(Color(238, 221, 246))) {
             for (playlist in allPlaylist) {
                 DropdownMenuItem(
                     modifier = Modifier.background(Color(238, 221, 246)),
@@ -208,7 +237,8 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
                     onClick = {
                         viewModel.insertPlaylist(playlist = playlist.name, anime = AnimeDetail(name = anime.name, img_url = anime.img_url, anime_id = anime.anime_id))
                         open = false
-                    })
+                    }
+                )
             }
         }
 

@@ -50,6 +50,7 @@ import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistWithList
 import com.example.anitest.ui.componets.AnimeCard
 import com.example.anitest.ui.componets.AnimeCardSkeleton
+import com.example.anitest.ui.componets.AnimeCardWithoutOnClick
 import com.example.anitest.ui.componets.AppBar
 import com.example.anitest.ui.componets.BackGroundImage
 import com.example.anitest.ui.componets.BottomNavigation
@@ -110,20 +111,36 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(text = "Recently viewed anime", fontSize = 24.sp, color = Color.White, modifier = Modifier.padding(bottom = 12.dp))
                 if(recentlyAnime.isNotEmpty()) {
-                    LazyRow(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    ) {
-                        itemsIndexed(recentlyAnime) { index: Int, item: AnimeEntity ->
-                            AnimeCard(
-                                anime = Anime(item.name, item.img, item.anime_id, ""),
-                                navController = navController,
-                                viewModel = viewModel,
-                                fill = false
-                            )
+                    if(connection){
+                        LazyRow(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        ) {
+                            itemsIndexed(recentlyAnime) { index: Int, item: AnimeEntity ->
+                                AnimeCard(
+                                    anime = Anime(item.name, item.img, item.anime_id, ""),
+                                    navController = navController,
+                                    viewModel = viewModel,
+                                    fill = false
+                                )
+                            }
+                        }
+                    }else{
+                        LazyRow(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        ) {
+                            itemsIndexed(recentlyAnime) { index: Int, item: AnimeEntity ->
+                                AnimeCardWithoutOnClick(
+                                    anime = Anime(item.name, item.img, item.anime_id, "")
+                                )
+                            }
                         }
                     }
                 }else{
