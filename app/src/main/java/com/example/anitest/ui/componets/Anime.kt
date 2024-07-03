@@ -96,7 +96,7 @@ fun AnimeSearchLoaderSkeleton(){
             content = {
                 itemsIndexed(list) { _, _ ->
                     Box (
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(4.dp).fillMaxSize(), contentAlignment = Alignment.Center
                     ) {
                         AnimeCardSkeleton()
                     }

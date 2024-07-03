@@ -11,10 +11,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -203,7 +205,7 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
     var selectedAnime by remember { mutableIntStateOf(0) }
 
     LaunchedEffect (Unit) {
-        if(!isLoaded) {
+        if(!isLoaded || popular.isEmpty()) {
             viewModel.addPopularAnime(0)
             viewModel.setIsLoadedZappingScreen(flag = true)
         }
@@ -259,24 +261,42 @@ fun PopularAnimeRow(viewModel: MyViewModel, navController: NavHostController) {
 
     }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        IconButton(onClick = {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage(pagerState.currentPage - 1)
+    if(popular != null && popular.isNotEmpty()) {
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxHeight()
+        ) {
+            val screenHeight = maxHeight
+            val flagHeight = screenHeight < 100.dp
+            if(!flagHeight){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                        }
+                    }) {
+                        Icon(
+                            tint = Color.White,
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Previous"
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        }
+                    }) {
+                        Icon(
+                            tint = Color.White,
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Next"
+                        )
+                    }
+                }
             }
-        }) {
-            Icon( tint = Color.White, imageVector = Icons.Default.ArrowBack, contentDescription = "Previous")
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        IconButton(onClick = {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-            }
-        }) {
-            Icon(tint = Color.White, imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
         }
     }
 

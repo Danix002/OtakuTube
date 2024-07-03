@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -208,20 +209,22 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
                 .clip(RoundedCornerShape(8.dp))
                 .shadow(16.dp)
         )
-        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+        Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
             Text(
                 text = anime.name,
                 color = Color.White,
                 fontSize = 20.sp,
                 modifier = Modifier
+                    .width(224.dp)
                     .wrapContentHeight()
                     .padding(8.dp)
             )
             IconButton(
                 onClick = { open = true },
-                colors = IconButtonDefaults.iconButtonColors( containerColor = Color.Transparent)
+                colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Transparent),
+                modifier = Modifier.wrapContentWidth()
             ){
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = Color.White )
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = Color.White)
             }
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }, modifier = Modifier.width(256.dp).background(Color(238, 221, 246))) {
