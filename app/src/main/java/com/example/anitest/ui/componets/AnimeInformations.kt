@@ -58,7 +58,6 @@ fun AnimeTitles(name: String, titles: List<String>) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(Color(112, 82, 137).copy(alpha = 0.5f))
-
     ) {
         Box(modifier = Modifier.width(190.dp)) {
             Text(
@@ -86,8 +85,7 @@ fun AnimeTitles(name: String, titles: List<String>) {
             )
         }
         Spacer(
-            Modifier
-                .weight(1f)
+            Modifier.weight(1f)
         )
         Box (modifier = Modifier.width(30.dp), contentAlignment = Alignment.CenterEnd){
             IconButton( onClick = { expandedTitles = expandedTitles.not() }) {

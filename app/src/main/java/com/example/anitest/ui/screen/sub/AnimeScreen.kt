@@ -72,7 +72,9 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                 }
                 indexDB += 1
             }
-            viewModel.insertAnime(AnimeEntity(id, name, animeInfo!!.img_url, indexDB))
+            if(animeInfo!!.img_url != null && animeInfo!!.img_url != "") {
+                viewModel.insertAnime(AnimeEntity(id, name, animeInfo!!.img_url, indexDB))
+            }
         }
     }
 
