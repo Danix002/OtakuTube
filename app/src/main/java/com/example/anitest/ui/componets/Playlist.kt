@@ -149,7 +149,8 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
                     open = true
                 }
             },
-            playlistWithList, viewModel, navController)
+            playlistWithList, viewModel, navController
+        )
     }
 
 }
@@ -243,7 +244,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                     Spacer(modifier = Modifier.height(4.dp))
                 }
             }
-            if (modifing) {
+            if (modifing && playlistWithList.playlist.name != "Favourite") {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
@@ -255,7 +256,8 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRe
                             viewModel.deleteRelation(relation = it)
                         }
                         onDismiss()
-                    }) {
+                    }
+                ) {
                     Text(text = "Delete Playlist", color = Color.White)
                 }
             }

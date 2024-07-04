@@ -59,7 +59,7 @@ fun AnimeTitles(name: String, titles: List<String>) {
             .clip(RoundedCornerShape(20.dp))
             .background(Color(112, 82, 137).copy(alpha = 0.5f))
     ) {
-        Box(modifier = Modifier.width(190.dp)) {
+        Box(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
                 color = Color.White,
@@ -75,7 +75,7 @@ fun AnimeTitles(name: String, titles: List<String>) {
             .background(Color.Red)
             .height(20.dp)
         )
-        Box(modifier = Modifier.width(190.dp)) {
+        Box(modifier = Modifier.weight(1f)) {
             Text(
                 text = titles[titles.size - 1],
                 color = Color.White,
@@ -85,7 +85,7 @@ fun AnimeTitles(name: String, titles: List<String>) {
             )
         }
         Spacer(
-            Modifier.weight(1f)
+            Modifier.weight(0.1f)
         )
         Box (modifier = Modifier.width(30.dp), contentAlignment = Alignment.CenterEnd){
             IconButton( onClick = { expandedTitles = expandedTitles.not() }) {

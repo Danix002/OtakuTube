@@ -1,6 +1,5 @@
 package com.example.anitest.ui.componets
 
-
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Badge
@@ -11,29 +10,39 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.anitest.navigation.Screen
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
     val connection by viewModel.connection.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    LaunchedEffect(currentBackStackEntry) {
+        currentBackStackEntry?.destination?.route?.let { route ->
+            viewModel.selectedNavItem.value = route
+        }
+        viewModel.setIsLoadedAnimeScreen(flag = false)
+    }
 
     NavigationBar (
         containerColor = Color.Transparent,
         contentColor = Color.Transparent
     ){
         if (!connection) {
-            NavigationBarItem(selected = false,
+            NavigationBarItem(
+                selected = false,
                 onClick = {
                     coroutineScope.launch {
                         if (viewModel.testConnection()) {
@@ -63,7 +72,9 @@ fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
                     onClick = {
                         if (viewModel.selectedNavItem.value != item.route) {
                             viewModel.selectedNavItem.value = item.route
-                            navController.navigate(item.route)
+                            navController.navigate(item.route){
+                                launchSingleTop = true
+                            }
                         }
                     },
                     label = {
