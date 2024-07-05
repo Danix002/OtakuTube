@@ -180,7 +180,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                             textAlign = TextAlign.Center,
                             color = Color.White)
                     }else{
-                        if(searchFlag) {
+                        if(searchLoaded) {
                             Text(
                                 text = "No anime found :(",
                                 textAlign = TextAlign.Center,

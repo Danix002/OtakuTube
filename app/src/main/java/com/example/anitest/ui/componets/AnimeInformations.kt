@@ -1,6 +1,7 @@
 package com.example.anitest.ui.componets
 
 import androidx.compose.foundation.background
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,12 +58,12 @@ fun AnimeTitles(name: String, titles: List<String>) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(Color(112, 82, 137).copy(alpha = 0.5f))
+            .background(LightOtakuColorScheme.primary.copy(alpha = 0.5f))
     ) {
         Box(modifier = Modifier.weight(1f)) {
             Text(
                 text = name,
-                color = Color.White,
+                color = LightOtakuColorScheme.onPrimary,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(start = 8.dp),
                 maxLines = 1,
@@ -72,13 +73,13 @@ fun AnimeTitles(name: String, titles: List<String>) {
         Spacer(modifier = Modifier
             .width(25.dp)
             .padding(start = 12.dp, end = 12.dp)
-            .background(Color.Red)
+            .background(LightOtakuColorScheme.primary)
             .height(20.dp)
         )
         Box(modifier = Modifier.weight(1f)) {
             Text(
                 text = titles[titles.size - 1],
-                color = Color.White,
+                color = LightOtakuColorScheme.onPrimary,
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -89,13 +90,13 @@ fun AnimeTitles(name: String, titles: List<String>) {
         )
         Box (modifier = Modifier.width(30.dp), contentAlignment = Alignment.CenterEnd){
             IconButton( onClick = { expandedTitles = expandedTitles.not() }) {
-                Icon(tint = Color.White, imageVector = Icons.Filled.MoreVert, contentDescription = "")
+                Icon(tint = LightOtakuColorScheme.onPrimary, imageVector = Icons.Filled.MoreVert, contentDescription = "")
             }
             DropdownMenu(
                 modifier = Modifier
                     .padding(top = 2.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Gray.copy(alpha = 0.5f))
+                    .background(LightOtakuColorScheme.tertiaryContainer)
                     .padding(horizontal = 16.dp),
                 expanded = expandedTitles,
                 onDismissRequest = { expandedTitles = false }) {
@@ -104,13 +105,13 @@ fun AnimeTitles(name: String, titles: List<String>) {
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 2.dp, bottom = 2.dp), text = it, color = Color.White
+                                .padding(top = 2.dp, bottom = 2.dp), text = it, color = LightOtakuColorScheme.onTertiaryContainer
                         )
                     }
                 }
                 Text(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 2.dp, bottom = 2.dp) , text = name, color = Color.White
+                    .padding(top = 2.dp, bottom = 2.dp) , text = name, color = LightOtakuColorScheme.onTertiaryContainer
                 )
             }
         }

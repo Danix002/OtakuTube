@@ -55,6 +55,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeDetail
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -197,7 +198,9 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
     Column (
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(112, 82, 137).copy(alpha = 1f))
+            .background(
+                LightOtakuColorScheme.primary
+            )
             .width(256.dp)
     ) {
         Image(
@@ -212,7 +215,7 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
         Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
             Text(
                 text = anime.name,
-                color = Color.White,
+                color = LightOtakuColorScheme.onPrimary,
                 fontSize = 20.sp,
                 modifier = Modifier
                     .width(224.dp)
@@ -224,17 +227,17 @@ fun AnimeBigCard(anime: Anime, viewModel: MyViewModel) {
                 colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Transparent),
                 modifier = Modifier.wrapContentWidth()
             ){
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = Color.White)
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "",  tint = LightOtakuColorScheme.onPrimary)
             }
         }
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }, modifier = Modifier.width(256.dp).background(Color(238, 221, 246))) {
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, modifier = Modifier.width(256.dp).background(LightOtakuColorScheme.primaryContainer)) {
             for (playlist in allPlaylist) {
                 DropdownMenuItem(
-                    modifier = Modifier.background(Color(238, 221, 246)),
+                    modifier = Modifier.background(LightOtakuColorScheme.primaryContainer),
                     text = {
                         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
-                            Text(text = "Add to " +playlist.name, color = Color(102, 90, 110))
-                            Icon(imageVector = Icons.Filled.Add, contentDescription = "", tint = Color(102, 90, 110) )
+                            Text(text = "Add to " +playlist.name, color = LightOtakuColorScheme.onPrimaryContainer)
+                            Icon(imageVector = Icons.Filled.Add, contentDescription = "", tint = LightOtakuColorScheme.onPrimaryContainer )
                         }
                            },
                     onClick = {
@@ -349,7 +352,7 @@ fun AnimeCardPlaylist(anime: Anime,  onClick: () -> Unit, list:  List<Anime>) {
             )
             Text(
                 text = anime.name,
-                color = Color.Black,
+                color = LightOtakuColorScheme.onSurface,
                 fontSize = 16.sp,
                 maxLines = 1,
                 textAlign = TextAlign.Center,
@@ -361,12 +364,13 @@ fun AnimeCardPlaylist(anime: Anime,  onClick: () -> Unit, list:  List<Anime>) {
         }
         if (isSelected) {
             Box(modifier = Modifier
-                .background(Color(100, 70, 120).copy(alpha = 0.5f))
+                .background(LightOtakuColorScheme.primary.copy(alpha = 0.5f))
                 .height(200.dp)
-                .width(128.dp),
+                .width(128.dp)
+                .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(imageVector = Icons.Filled.Check, contentDescription = "", tint = Color(100, 70, 120) )
+                Icon(imageVector = Icons.Filled.Check, contentDescription = "", tint = LightOtakuColorScheme.primary, modifier = Modifier.fillMaxSize() )
             }
         }
 
