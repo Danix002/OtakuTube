@@ -51,6 +51,7 @@ import com.example.myapplication.MyViewModel
 fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
     var searchString : String by remember { mutableStateOf("") }
     var searchFlag by remember { mutableStateOf(false) }
+    var message by remember { mutableStateOf(false) }
     var backNavFlag by remember { mutableStateOf(false) }
     var searchLoaded by remember { mutableStateOf(false) }
     val animeSearch by viewModel.animeSearch.collectAsState()
@@ -69,7 +70,12 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
             viewModel.setAnimeSearch(searchString)
             searchFlag = false
             searchLoaded = true
+            message = true
         }
+    }
+
+    LaunchedEffect(searchString) {
+        message = false
     }
 
     Column {
@@ -178,9 +184,10 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                     if(searchString.trim().length < 2){
                         Text(text = "You need to be more specific!",
                             textAlign = TextAlign.Center,
-                            color = Color.White)
+                            color = Color.White
+                        )
                     }else{
-                        if(searchLoaded) {
+                        if(message) {
                             Text(
                                 text = "No anime found :(",
                                 textAlign = TextAlign.Center,

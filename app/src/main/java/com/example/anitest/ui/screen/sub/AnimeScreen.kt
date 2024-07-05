@@ -126,7 +126,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                             id.contains("dub")
                         )
                     }
-                    val delimiters = "[,;:.-]+|\\s{3,}".toRegex()
+                    val delimiters = "[,;]+|\\s{3,}".toRegex()
                     var titles: List<String> = listOf("")
                     if(animeInfo!!.othername != null && animeInfo!!.othername.isNotEmpty()) {
                         titles = animeInfo!!.othername[0]
