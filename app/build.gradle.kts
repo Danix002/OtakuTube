@@ -16,7 +16,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -82,10 +82,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:4.2.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     testImplementation("org.mockito:mockito-inline:4.2.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:4.2.0")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
 
 
@@ -96,7 +94,7 @@ dependencies {
 
 
     androidTestImplementation("androidx.test:core:1.6.1")
-    androidTestImplementation("androidx.test:runner:1.6.1")
+    androidTestImplementation("androidx.test:runner:1.6.1@arr")
     androidTestImplementation("androidx.test:rules:1.6.1")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
@@ -105,6 +103,3 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}

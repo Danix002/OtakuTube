@@ -5,15 +5,15 @@ import androidx.room.Room
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
+
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.anitest.model.AnimeDetail
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.BeforeEach
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
 
@@ -27,21 +27,20 @@ class PlaylistRepositoryTest {
     private val playlistEntity = PlaylistEntity("TestPlaylist", "TestImg")
     private val animeDetail = AnimeDetail("1", "TestAnime", "TestImgUrl")
 
-    @BeforeEach
-    fun initDb() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .fallbackToDestructiveMigration().allowMainThreadQueries().build()
+    @Before
+    fun initDb() = runBlocking<Unit>  {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
         playlistDao = database.daoPlaylist()
     }
 
-    @AfterEach
+    @After
     fun closeDb() {
         database.close()
     }
 
     @Test
-    fun `when insert playlist then dao insert is called and database is updated`() = runBlocking {
+    fun insertTest() = runBlocking<Unit> {
         // when
         playlistDao.insert(playlistEntity)
 
@@ -55,7 +54,7 @@ class PlaylistRepositoryTest {
     }
 
     @Test
-    fun `when delete playlist then dao delete is called and database is updated`() = runBlocking {
+    fun deleteTest() = runBlocking<Unit> {
         // given
         playlistDao.insert(playlistEntity)
 
@@ -71,7 +70,7 @@ class PlaylistRepositoryTest {
     }
 
     @Test
-    fun `when insert playlist with anime then dao insert relation is called and database is updated`() = runBlocking {
+    fun insertAnimeToPlaylistTest() = runBlocking<Unit> {
         // when
         playlistRepository.insert("TestPlaylist", animeDetail)
 

@@ -4,10 +4,11 @@ import com.example.anitest.model.Anime
 import com.example.anitest.services.AnimeService
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+
 
 import org.junit.Assert.*
-import org.junit.jupiter.api.Assertions
+import org.junit.Test
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,7 +21,7 @@ class ServiceUnitTest {
         val service = AnimeService()
         val connection = service.testConnection()
         println("Conn: $connection")
-        Assertions.assertTrue(connection)
+        assertTrue(connection)
     }
 
     @Test
@@ -28,6 +29,6 @@ class ServiceUnitTest {
         val service = AnimeService()
         val animes = service.getPopularAnime(0)
         println("Conn: $animes")
-        Assertions.assertNotEquals(animes, emptyList<Anime>())
+        assertNotEquals(animes, emptyList<Anime>())
     }
 }
