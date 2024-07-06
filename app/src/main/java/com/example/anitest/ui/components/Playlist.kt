@@ -66,6 +66,7 @@ import com.example.anitest.model.AnimeDetail
 import com.example.anitest.room.PlaylistAnimeRelationEntity
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistWithList
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.launch
 
@@ -99,14 +100,14 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
         Box(modifier = Modifier
             .rotate(-8f)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.Gray)
+            .background(LightOtakuColorScheme.secondaryContainer)
             .height(180.dp)
             .width(128.dp)
         )
         Box(modifier = Modifier
             .rotate(8f)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.DarkGray)
+            .background(LightOtakuColorScheme.primaryContainer)
             .height(180.dp)
             .width(128.dp)
         )
@@ -160,18 +161,18 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRe
         Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(241, 218, 255))
+                .background(LightOtakuColorScheme.primaryContainer)
                 .padding(12.dp)
         ) {
             Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text(text = playlistWithList.playlist.name, fontWeight = FontWeight.Bold,fontSize = 20.sp, color = Color(112, 82, 137))
+                Text(text = playlistWithList.playlist.name, fontWeight = FontWeight.Bold,fontSize = 20.sp, color = LightOtakuColorScheme.onPrimaryContainer)
                 if (connection) {
                     IconToggleButton(
                         checked = modifing,
                         onCheckedChange = { modifing = it},
                         colors = IconButtonDefaults.iconToggleButtonColors( containerColor = Color.Transparent)
                     ){
-                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "",  tint = if (modifing) Color(112, 82, 137) else Color(102, 90, 110) )
+                        Icon(imageVector = Icons.Filled.Edit, contentDescription = "",  tint = if (modifing) LightOtakuColorScheme.primary else LightOtakuColorScheme.secondary )
                     }
                 }
 
@@ -188,7 +189,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRe
 
                         }
                 ) {
-                    Text(text = "No element go to Explore and add to playlist", modifier = Modifier.fillMaxWidth(), color = Color.Black)
+                    Text(text = "No element go to Explore and add to playlist", modifier = Modifier.fillMaxWidth(), color = LightOtakuColorScheme.onPrimaryContainer)
                 }
             }
             LazyColumn(
@@ -212,18 +213,18 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRe
                             contentDescription = "",
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
-                                .background(Color.Gray)
+                                .background(LightOtakuColorScheme.primary)
                                 .width(48.dp)
                                 .height(64.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = item.animeId, modifier = Modifier.width(128.dp), color = Color.Black)
+                        Text(text = item.animeId, modifier = Modifier.width(128.dp), color = LightOtakuColorScheme.onPrimaryContainer)
                         Spacer(modifier = Modifier.width(8.dp))
                         if (modifing) {
                             Button(
                                 modifier = Modifier.width(64.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(186, 26, 26)
+                                    containerColor = LightOtakuColorScheme.error
                                 ),
                                 onClick = {
                                     onRemoveAnime(item)
@@ -240,7 +241,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRe
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(186, 26, 26)
+                        containerColor = LightOtakuColorScheme.error
                     ),
                     onClick = {
                         viewModel.deletePlaylist(playlist = playlistWithList.playlist.name)

@@ -48,13 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownload: ()-> Unit, isLoading: Boolean) {
 
-    val principalColor = Color(112, 82, 137)
+    val principalColor = LightOtakuColorScheme.primary
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -68,10 +69,10 @@ fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownlo
             .shadow(16.dp)
             .clickable { onWatch() }
     ) {
-        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch episode", tint = Color.White)
+        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Watch episode", tint = LightOtakuColorScheme.onPrimary)
         Text(
             text = "Ep. $index",
-            color = Color.White,
+            color = LightOtakuColorScheme.onPrimary,
             fontSize = 14.sp,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
@@ -79,16 +80,15 @@ fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownlo
         Spacer(
             Modifier
                 .weight(1f)
-                .background(Color.Green)
         )
         if(isDubbed){
             Text(
                 text = "Dub",
-                color = Color.White,
+                color = LightOtakuColorScheme.onTertiary,
                 fontSize = 14.sp,
                 modifier = Modifier
                     .clip(RoundedCornerShape(9.dp))
-                    .background(Color(129, 81, 86))
+                    .background(LightOtakuColorScheme.tertiary)
                     .padding(vertical = 3.dp, horizontal = 12.dp)
             )
         }
@@ -103,7 +103,7 @@ fun EpisodeButton(index: Number, isDubbed: Boolean, onWatch: ()-> Unit, onDownlo
                 modifier = Modifier
                     .fillMaxHeight()
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Color.White)
+                    .background(LightOtakuColorScheme.onPrimary)
                     .padding(3.dp)
             )
         }
@@ -134,7 +134,7 @@ fun EpisodesDialog(context: Context, viewModel: MyViewModel, isDubbed: Boolean){
             onDismissRequest = { viewModel.closeEpisodes() }
         ){
             Box(modifier = Modifier
-                .background(Color(242, 218, 255))
+                .background(LightOtakuColorScheme.primaryContainer)
                 .fillMaxSize()
             ) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {

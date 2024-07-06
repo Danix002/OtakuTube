@@ -8,12 +8,13 @@ import com.example.anitest.ui.components.AppBar
 import com.example.anitest.ui.components.BackGroundImage
 import com.example.anitest.ui.components.BottomNavigation
 import com.example.anitest.ui.components.UserProfile
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @Composable
 fun ProfileScreen(viewModel: MyViewModel, navController: NavHostController) {
     Scaffold (
-        containerColor = Color(102, 90, 110),
+        containerColor = LightOtakuColorScheme.secondary,
         bottomBar = {
             BottomNavigation(viewModel , navController)
         },

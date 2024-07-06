@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -51,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitest.R
 import com.example.anitest.room.UserEntity
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @Composable
@@ -92,12 +94,12 @@ fun UserProfile(viewModel: MyViewModel) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text(
                     text = "Avatar",
-                    color = Color.White,
+                    color = LightOtakuColorScheme.onSecondary,
                     fontSize = 32.sp,
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.Gray.copy(alpha = 0.3f))
+                        .background(LightOtakuColorScheme.secondary.copy(alpha = 0.3f))
                         .padding(vertical = 4.dp, horizontal = 10.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium
@@ -122,7 +124,10 @@ fun UserProfile(viewModel: MyViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = { editPopup = true }) {
+                IconButton(
+                    colors = IconButtonDefaults.iconButtonColors(containerColor = LightOtakuColorScheme.primary),
+                    onClick = { editPopup = true }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.ModeEdit,
                         contentDescription = "Edit",
@@ -155,7 +160,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
         .width(400.dp)
         .height(500.dp)
         .clip(RoundedCornerShape(30.dp))
-        .background(Color(255, 218, 220)),
+        .background(LightOtakuColorScheme.tertiaryContainer),
         contentAlignment = Alignment.Center
     ){
         LazyColumn{
@@ -163,7 +168,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
                 Text(
                     text = "Choose your avatar",
                     fontSize = 24.sp,
-                    color = Color(102, 90, 110),
+                    color = LightOtakuColorScheme.onTertiaryContainer,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -188,7 +193,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
                     ) {
                         items(imageIds) { imageId ->
                             val isSelected = imageId == selectedImg
-                            val buttonColor = if (isSelected) Color(100, 70, 120).copy(alpha = 0.9f) else Color.Transparent
+                            val buttonColor = if (isSelected) LightOtakuColorScheme.primary else Color.Transparent
 
                             Button(
                                 onClick = { selectedImg = imageId },
@@ -220,7 +225,7 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
                 Text(
                     text = "Modify your name",
                     fontSize = 24.sp,
-                    color = Color(102, 90, 110),
+                    color = LightOtakuColorScheme.onTertiaryContainer,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -249,12 +254,12 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
                             Text(
                                 text = "Modify your name...",
                                 fontSize = 14.sp,
-                                color = Color.White
+                                color = LightOtakuColorScheme.onSecondary
                             )
                         },
-                        textStyle = TextStyle(color = Color.White, fontSize = 20.sp),
+                        textStyle = TextStyle(color = LightOtakuColorScheme.onSecondary, fontSize = 20.sp),
                         colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color(102, 90, 110).copy(alpha = 0.8f),
+                            containerColor = LightOtakuColorScheme.secondary,
                             cursorColor = Color.White,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
@@ -277,25 +282,25 @@ fun UserProfileEditPopUp(onDismissClick: ()-> Unit, viewModel: MyViewModel, imag
                 ) {
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(102, 90, 110)
+                            containerColor = LightOtakuColorScheme.secondary
                         ),
                         onClick = { onDismissClick() }) {
                         Text(
                             text = "Cancel",
                             fontSize = 14.sp,
-                            color = Color.White
+                            color = LightOtakuColorScheme.onSecondary
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(100, 70, 120).copy(alpha = 0.9f)
+                            containerColor = LightOtakuColorScheme.primary
                         ),
                         onClick = { editFlag = true }) {
                         Text(
                             text = "Confirm",
                             fontSize = 14.sp,
-                            color = Color.White
+                            color = LightOtakuColorScheme.onPrimary
                         )
                     }
                 }

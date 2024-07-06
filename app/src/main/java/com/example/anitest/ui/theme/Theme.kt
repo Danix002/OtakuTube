@@ -39,7 +39,6 @@ private val LightColorScheme = lightColorScheme(
     */
 
 )
-
 public val LightOtakuColorScheme = lightColorScheme(
     //Primary
     primary = Color(112, 82,137),

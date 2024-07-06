@@ -36,6 +36,7 @@ import com.example.anitest.ui.components.BottomNavigation
 import com.example.anitest.ui.components.BoxAnimeInformations
 import com.example.anitest.ui.components.EpisodesLoader
 import com.example.anitest.ui.components.Sagas
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 import java.util.regex.Pattern
 
@@ -54,7 +55,6 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             viewModel.forgetAnimeInfoTrailer()
 
             viewModel.setAnimeInfoTrailer(name)
-
             viewModel.setAnimeInfo(id)
 
             var indexDB = viewModel.getMaxInsertOrderAnime()
@@ -74,7 +74,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
     }
 
     Scaffold(
-        containerColor = Color(102, 90, 110),
+        containerColor = LightOtakuColorScheme.secondary,
         bottomBar = {
             BottomNavigation(viewModel, navController)
         },
@@ -86,12 +86,12 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 if (animeInfo != null && animeInfoTrailer != null) {
                     AnimeThumbnail(
-                        img = if (animeInfoTrailer!!.isNotEmpty()) {
+                        img = if (animeInfoTrailer!!.isNotEmpty() && (animeInfoTrailer!![0].name.startsWith(name) || animeInfoTrailer!![0].jtitle.startsWith(name))) {
                             animeInfoTrailer!![0].image
                         } else {
                             animeInfo!!.img_url
                         },
-                        trailer = if (animeInfoTrailer!!.isNotEmpty() && animeInfoTrailer!![0].trailer != null) {
+                        trailer = if (animeInfoTrailer!!.isNotEmpty() && animeInfoTrailer!![0].trailer != null && (animeInfoTrailer!![0].name.startsWith(name) || animeInfoTrailer!![0].jtitle.startsWith(name))) {
                             extractId(animeInfoTrailer!![0].trailer)
                         } else {
                             ""
@@ -101,8 +101,8 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                     if (animeInfo!!.status != "Upcoming" && animeInfo!!.episode_id.isNotEmpty()) {
                         Button(
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(112, 82, 137),
-                                contentColor = Color.White
+                                containerColor = LightOtakuColorScheme.primary,
+                                contentColor = LightOtakuColorScheme.onPrimary
                             ),
                             onClick = { viewModel.openEpisodes() },
                             modifier = Modifier
@@ -134,12 +134,12 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                     BoxAnimeInformations(animeInfo!!.about, animeInfo!!.type, animeInfo!!.release, animeInfo!!.genres, animeInfo!!.status)
                     Text(
                         text = "Recommended",
-                        color = Color.White,
+                        color = LightOtakuColorScheme.onPrimary,
                         fontSize = 18.sp,
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color.Gray.copy(alpha = 0.3f))
+                            .background(LightOtakuColorScheme.primary.copy(alpha = 0.3f))
                             .padding(vertical = 4.dp, horizontal = 10.dp)
                     )
                     Sagas(viewModel, navController, id)

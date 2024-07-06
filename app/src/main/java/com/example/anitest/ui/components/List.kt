@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.anitest.model.Anime
 import com.example.anitest.model.Genre
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -108,12 +109,12 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
     ) {
         Text(
             text = category.titolo,
-            color = Color.White,
+            color = LightOtakuColorScheme.onSecondary,
             fontSize = 22.sp,
             modifier = Modifier
                 .padding(start = 8.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.Gray.copy(alpha = 0.3f))
+                .background(LightOtakuColorScheme.secondary.copy(alpha = 0.3f))
                 .padding(vertical = 4.dp, horizontal = 10.dp)
         )
         LazyRow(
@@ -135,7 +136,7 @@ fun CategoryRow(viewModel: MyViewModel, category: Genre, navController: NavHostC
                         else Text(
                             text = "No other anime :(",
                             modifier = Modifier.padding(start = 16.dp),
-                            color = Color.White.copy(alpha = 0.5f)
+                            color = LightOtakuColorScheme.onPrimary
                         )
                     }
                 }

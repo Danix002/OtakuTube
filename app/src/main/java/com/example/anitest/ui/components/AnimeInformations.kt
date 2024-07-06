@@ -130,7 +130,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
         .fillMaxWidth()
         .padding(4.dp)
         .clip(RoundedCornerShape(6.dp))
-        .background(Color(242, 218, 255))
+        .background(LightOtakuColorScheme.primaryContainer)
     ) {
         Column (modifier = Modifier.padding(4.dp)) {
             Text(
@@ -139,7 +139,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                     addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     append(type)
                 },
-                color = Color.Black,
+                color = LightOtakuColorScheme.onPrimaryContainer,
                 fontSize = 14.sp
             )
             Spacer(
@@ -151,7 +151,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                     addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     append(release)
                 },
-                color = Color.Black,
+                color = LightOtakuColorScheme.onPrimaryContainer,
                 fontSize = 14.sp
             )
             Spacer(
@@ -163,18 +163,18 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                         append("Genres: ")
                         addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     },
-                    color = Color.Black,
+                    color = LightOtakuColorScheme.onPrimaryContainer,
                     fontSize = 14.sp
                 )
                 genres.forEach {
                     Box(modifier = Modifier
                         .padding(2.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(129, 81, 86)),
+                        .background(LightOtakuColorScheme.tertiary),
                     ) {
                         Text(
                             text = "$it ",
-                            color = Color.White,
+                            color = LightOtakuColorScheme.onTertiary,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(1.dp),
                             textAlign = TextAlign.Center
@@ -194,7 +194,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                     addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     append(status)
                 },
-                color = Color.Black,
+                color = LightOtakuColorScheme.onPrimaryContainer,
                 fontSize = 14.sp
             )
             Spacer(
@@ -206,7 +206,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                     addStyle(style = SpanStyle(fontWeight = FontWeight.Bold), start = 0, end = 5)
                     append(about)
                 },
-                color = Color.Black,
+                color = LightOtakuColorScheme.onPrimaryContainer,
                 fontSize = 14.sp,
                 maxLines = if (expandedInfo) Int.MAX_VALUE else 3,
                 overflow = TextOverflow.Ellipsis
@@ -218,7 +218,7 @@ fun BoxAnimeInformations(about: String, type: String, release: String, genres: L
                     modifier = Modifier.align(Alignment.Center),
                     onClick = { expandedInfo = expandedInfo.not() }) {
                     Icon(
-                        tint = Color.Black,
+                        tint = LightOtakuColorScheme.onPrimaryContainer,
                         imageVector = if (expandedInfo) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
                         contentDescription = ""
                     )

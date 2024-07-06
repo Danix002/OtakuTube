@@ -1,5 +1,6 @@
 package com.example.anitest.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Badge
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.anitest.navigation.Screen
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 import kotlinx.coroutines.launch
 
@@ -56,11 +58,11 @@ fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.Refresh,
                             contentDescription = "refresh connection",
-                            tint = Color.White
+                            tint = LightOtakuColorScheme.onSecondary
                         )}
                        },
                     label = {
-                        Text(text = "Retry Connection", color = Color.White)
+                        Text(text = "Retry Connection", color = LightOtakuColorScheme.onSecondary)
                     }
             )
         }
@@ -77,7 +79,7 @@ fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
                         }
                     },
                     label = {
-                        Text(text = item.title, color = Color.White)
+                        Text(text = item.title, color = LightOtakuColorScheme.onSecondary)
                     },
                     icon = {
                         BadgedBox(
@@ -97,8 +99,8 @@ fun BottomNavigation(viewModel: MyViewModel, navController: NavHostController) {
                                 } else item.unselectedIcon,
                                 contentDescription = item.title,
                                 tint = if (viewModel.selectedNavItem.value != item.route) {
-                                    Color.White
-                                } else Color(102, 90, 110)
+                                    LightOtakuColorScheme.onSecondary
+                                } else LightOtakuColorScheme.secondary
                             )
                         }
                     }

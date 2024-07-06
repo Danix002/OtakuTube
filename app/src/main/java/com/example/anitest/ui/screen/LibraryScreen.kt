@@ -46,6 +46,7 @@ import com.example.anitest.ui.components.BackGroundImage
 import com.example.anitest.ui.components.BottomNavigation
 import com.example.anitest.ui.components.PlaylistCard
 import com.example.anitest.ui.components.PlaylistCreationPopup
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @Composable
@@ -55,7 +56,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
     var openCreationPopup by remember { mutableStateOf(false) }
     val connection by viewModel.connection.collectAsState()
     Scaffold (
-        containerColor = Color(102, 90, 110),
+        containerColor = LightOtakuColorScheme.secondary,
         bottomBar = {
             BottomNavigation(viewModel , navController)
         },
@@ -72,7 +73,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                 if (openCreationPopup) {
                     PlaylistCreationPopup(viewModel, onDismiss = { openCreationPopup = false })
                 }
-                Text(text = "Yours Lists", fontSize = 24.sp, color = Color.White)
+                Text(text = "Yours Lists", fontSize = 24.sp, color = LightOtakuColorScheme.onPrimary)
                 LazyRow (verticalAlignment = Alignment.CenterVertically){
                     itemsIndexed(playlists) {index: Int, item: PlaylistEntity ->
                         if (index == 0 && connection) {
@@ -83,11 +84,11 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                                         openCreationPopup = true
                                     }
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color(241, 218, 255))
+                                    .background(LightOtakuColorScheme.primaryContainer)
                                     .padding(horizontal = 32.dp, vertical = 64.dp)
                             ) {
                                 IconButton(onClick = { openCreationPopup = true }) {
-                                    Icon(imageVector = Icons.Filled.AddBox, contentDescription = "", modifier = Modifier.size(128.dp),  tint = Color(112, 82, 137))
+                                    Icon(imageVector = Icons.Filled.AddBox, contentDescription = "", modifier = Modifier.size(128.dp),  tint = LightOtakuColorScheme.primary)
                                 }
                             }
                         }
@@ -95,7 +96,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "Recently viewed anime", fontSize = 24.sp, color = Color.White, modifier = Modifier.padding(bottom = 12.dp))
+                Text(text = "Recently viewed anime", fontSize = 24.sp, color = LightOtakuColorScheme.onPrimary, modifier = Modifier.padding(bottom = 12.dp))
                 if(recentlyAnime.isNotEmpty()) {
                     if(connection){
                         LazyRow(
@@ -131,7 +132,7 @@ fun LibScreen(viewModel: MyViewModel, navController: NavHostController) {
                     }
                 }else{
                     Text(text = "You haven't viewed any anime recently :(",
-                        fontSize = 16.sp, color = Color.White,
+                        fontSize = 16.sp, color = LightOtakuColorScheme.onPrimary,
                         modifier = Modifier
                             .padding(12.dp)
                             .fillMaxWidth(),

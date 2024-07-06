@@ -12,19 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 
 
 @Composable
 fun AnimeLoaderButton(onClick : () -> Unit, loading : Boolean, text: Boolean): Unit {
     Button(
-        colors = ButtonDefaults.buttonColors(containerColor = Color(102, 90, 110), contentColor = Color.White),
+        colors = ButtonDefaults.buttonColors(containerColor = LightOtakuColorScheme.secondary, contentColor = LightOtakuColorScheme.onSecondary),
         onClick = {
             onClick()
         },
         modifier = Modifier.padding(start = 8.dp)
         ) {
             if (!loading && text) Text(text = "Other")
-            Icon(imageVector = if (!loading) Icons.Filled.KeyboardArrowRight else Icons.Default.Refresh, contentDescription = "")
+            Icon(tint = LightOtakuColorScheme.onSecondary, imageVector = if (!loading) Icons.Filled.KeyboardArrowRight else Icons.Default.Refresh, contentDescription = "")
     }
 }
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.anitest.model.Genre
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @Composable
@@ -59,8 +60,8 @@ fun Filter(viewModel: MyViewModel) {
 
     Button(onClick = { filterFlag = true },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(129, 81, 86),
-            contentColor = Color.White
+            containerColor = LightOtakuColorScheme.tertiary,
+            contentColor = LightOtakuColorScheme.onTertiary
         ),
         modifier = Modifier
             .padding(8.dp)
@@ -75,7 +76,7 @@ fun Filter(viewModel: MyViewModel) {
         modifier = Modifier
             .height(300.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(255, 218, 220))
+            .background(LightOtakuColorScheme.tertiaryContainer)
             .padding(horizontal = 16.dp),
         expanded = filterFlag && isLoaded,
         onDismissRequest = { filterFlag = false }
@@ -88,7 +89,7 @@ fun Filter(viewModel: MyViewModel) {
                     genreSelectedRemove = emptyList()
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(129, 81, 86)
+                    containerColor = LightOtakuColorScheme.error
                 )
             ) {
                 Text(
@@ -96,7 +97,7 @@ fun Filter(viewModel: MyViewModel) {
                         .fillMaxWidth()
                         .padding(top = 2.dp, bottom = 2.dp),
                     text = "Remove all filter",
-                    color = Color(255, 218, 220),
+                    color = LightOtakuColorScheme.onError,
                     fontSize = 16.sp
                 )
             }
@@ -121,8 +122,8 @@ fun Filter(viewModel: MyViewModel) {
                         }
                     },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color(102, 90, 110),
-                        uncheckedColor = Color(129, 81, 86)
+                        checkedColor = LightOtakuColorScheme.secondary,
+                        uncheckedColor = LightOtakuColorScheme.tertiary
                     ),
                 )
                 Text(
@@ -130,7 +131,7 @@ fun Filter(viewModel: MyViewModel) {
                         .fillMaxWidth()
                         .padding(top = 2.dp, bottom = 2.dp),
                     text = genre.titolo,
-                    color = Color(129, 81, 86),
+                    color = LightOtakuColorScheme.onTertiaryContainer,
                     fontSize = 16.sp
                 )
             }

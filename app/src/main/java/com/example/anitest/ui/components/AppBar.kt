@@ -1,5 +1,6 @@
 package com.example.anitest.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.anitest.ui.theme.LightOtakuColorScheme
 import com.example.myapplication.MyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +101,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "back button",
-                            tint = Color.White
+                            tint = LightOtakuColorScheme.onSecondary
                         )
                     }
                 }
@@ -125,7 +127,7 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                                     Icon(
                                         imageVector = Icons.Filled.Search,
                                         contentDescription = "",
-                                        tint = Color.White
+                                        tint = LightOtakuColorScheme.onPrimary
                                     )
                                 }
                             },
@@ -135,13 +137,13 @@ fun AppBar(viewModel: MyViewModel, navController: NavHostController) {
                                 Text(
                                     text = "Search anime...",
                                     fontSize = 14.sp,
-                                    color = Color.White
+                                    color = LightOtakuColorScheme.onPrimary
                                 )
                             },
-                            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                            textStyle = TextStyle(color = LightOtakuColorScheme.onPrimary, fontSize = 16.sp),
                             colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color(100, 70, 120).copy(alpha = 0.8f),
-                                cursorColor = Color.White,
+                                containerColor = LightOtakuColorScheme.primary,
+                                cursorColor = LightOtakuColorScheme.onPrimary,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent
                             )
