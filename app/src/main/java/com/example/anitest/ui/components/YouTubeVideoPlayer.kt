@@ -1,6 +1,5 @@
-package com.example.anitest.ui.componets
+package com.example.anitest.ui.components
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

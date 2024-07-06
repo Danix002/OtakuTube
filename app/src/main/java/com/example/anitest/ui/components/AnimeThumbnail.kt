@@ -1,4 +1,4 @@
-package com.example.anitest.ui.componets
+package com.example.anitest.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,10 +41,9 @@ fun AnimeThumbnail(img: String, trailer: String, viewModel: MyViewModel) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-
-        .fillMaxWidth()
-        .height(238.dp)
-        .background(Color.Black)
+            .fillMaxWidth()
+            .height(238.dp)
+            .background(Color.Black)
     ) {
         if (!showPlayer) {
             Image(

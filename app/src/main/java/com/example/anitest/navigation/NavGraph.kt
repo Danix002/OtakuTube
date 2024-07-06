@@ -20,7 +20,7 @@ fun SetupNavGraph(
     context: Context,
     startDestination: String
 ) {
-    NavHost(navController,  startDestination ) {
+    NavHost(navController,  startDestination) {
         composable(
             route = Screen.Home.route
         ) {

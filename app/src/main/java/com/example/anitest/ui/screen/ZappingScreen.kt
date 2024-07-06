@@ -9,9 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,10 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.anitest.ui.componets.AppBar
-import com.example.anitest.ui.componets.BackGroundImage
-import com.example.anitest.ui.componets.BottomNavigation
-import com.example.anitest.ui.componets.PopularAnimeRow
+import com.example.anitest.ui.components.AppBar
+import com.example.anitest.ui.components.BackGroundImage
+import com.example.anitest.ui.components.BottomNavigation
+import com.example.anitest.ui.components.PopularAnimeRow
 import com.example.myapplication.MyViewModel
 
 @Composable

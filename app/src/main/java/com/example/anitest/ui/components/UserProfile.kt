@@ -1,4 +1,4 @@
-package com.example.anitest.ui.componets
+package com.example.anitest.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

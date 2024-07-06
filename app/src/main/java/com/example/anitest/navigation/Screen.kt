@@ -5,6 +5,4 @@ sealed class Screen(val route: String) {
     object Zapping: Screen("zapping_screen")
     object Library: Screen("lib_screen")
     object Profile: Screen("profile_screen")
-
-
 }

@@ -20,10 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -32,15 +28,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.anitest.room.AnimeEntity
-import com.example.anitest.ui.componets.AnimeThumbnail
-import com.example.anitest.ui.componets.AnimeTitles
-import com.example.anitest.ui.componets.AppBar
-import com.example.anitest.ui.componets.BackGroundImage
-import com.example.anitest.ui.componets.BottomNavigation
-import com.example.anitest.ui.componets.BoxAnimeInformations
-import com.example.anitest.ui.componets.EpisodesDialog
-import com.example.anitest.ui.componets.EpisodesLoader
-import com.example.anitest.ui.componets.Sagas
+import com.example.anitest.ui.components.AnimeThumbnail
+import com.example.anitest.ui.components.AnimeTitles
+import com.example.anitest.ui.components.AppBar
+import com.example.anitest.ui.components.BackGroundImage
+import com.example.anitest.ui.components.BottomNavigation
+import com.example.anitest.ui.components.BoxAnimeInformations
+import com.example.anitest.ui.components.EpisodesLoader
+import com.example.anitest.ui.components.Sagas
 import com.example.myapplication.MyViewModel
 import java.util.regex.Pattern
 
@@ -103,7 +98,7 @@ fun AnimeScreen(viewModel: MyViewModel, navController: NavHostController, name: 
                         },
                         viewModel = viewModel,
                     )
-                    if (animeInfo!!.status != "Upcoming") {
+                    if (animeInfo!!.status != "Upcoming" && animeInfo!!.episode_id.isNotEmpty()) {
                         Button(
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(112, 82, 137),

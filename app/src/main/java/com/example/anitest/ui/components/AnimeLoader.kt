@@ -1,4 +1,4 @@
-package com.example.anitest.ui.componets
+package com.example.anitest.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

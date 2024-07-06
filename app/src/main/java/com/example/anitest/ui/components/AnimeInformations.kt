@@ -1,4 +1,4 @@
-package com.example.anitest.ui.componets
+package com.example.anitest.ui.components
 
 import androidx.compose.foundation.background
 import com.example.anitest.ui.theme.LightOtakuColorScheme
@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.anitest.model.Anime
 import com.example.myapplication.MyViewModel
 
 @Composable
@@ -53,6 +52,8 @@ fun AnimeTitles(name: String, titles: List<String>) {
     var expandedTitles by remember {
         mutableStateOf(false)
     }
+    
+    Spacer(modifier = Modifier.height(2.dp))
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier

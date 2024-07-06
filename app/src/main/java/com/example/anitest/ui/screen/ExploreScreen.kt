@@ -2,10 +2,6 @@ package com.example.anitest.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -16,24 +12,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.anitest.model.Genre
-import com.example.anitest.ui.componets.AppBar
-import com.example.anitest.ui.componets.BackGroundImage
-import com.example.anitest.ui.componets.BottomNavigation
-import com.example.anitest.ui.componets.CategoryRow
-import com.example.anitest.ui.componets.CategoryRowSkeleton
+import com.example.anitest.ui.components.AppBar
+import com.example.anitest.ui.components.BackGroundImage
+import com.example.anitest.ui.components.BottomNavigation
+import com.example.anitest.ui.components.CategoryRow
+import com.example.anitest.ui.components.CategoryRowSkeleton
 import com.example.myapplication.MyViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
