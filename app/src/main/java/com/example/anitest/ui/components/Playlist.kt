@@ -63,7 +63,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.anitest.R
 import com.example.anitest.model.Anime
 import com.example.anitest.model.AnimeDetail
-import com.example.anitest.room.PlayListAnimeRelation
+import com.example.anitest.room.PlaylistAnimeRelationEntity
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistWithList
 import com.example.myapplication.MyViewModel
@@ -148,7 +148,7 @@ fun PlaylistCard(playlist: PlaylistEntity, viewModel: MyViewModel, navController
 }
 
 @Composable
-fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlayListAnimeRelation) -> Unit, playlistWithList: PlaylistWithList, viewModel: MyViewModel, navController: NavHostController ) {
+fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRelationEntity) -> Unit, playlistWithList: PlaylistWithList, viewModel: MyViewModel, navController: NavHostController ) {
     var modifing by remember {
         mutableStateOf(false)
     }

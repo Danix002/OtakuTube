@@ -18,12 +18,12 @@ class PlaylistRepository(private val dao: PlaylistDao) {
         dao.delete(PlaylistEntity(playlist, ""))
     }
 
-    fun deleteRelation(relation: PlayListAnimeRelation) {
+    fun deleteRelation(relation: PlaylistAnimeRelationEntity) {
         dao.delete(relation)
     }
     suspend fun insert(playlist: String, anime : AnimeDetail) {
         dao.insert(
-            PlayListAnimeRelation(
+            PlaylistAnimeRelationEntity(
                 playlist,
                 anime.anime_id,
                 anime.name,

@@ -28,7 +28,7 @@ import com.example.anitest.navigation.Screen
 import com.example.anitest.room.AnimeEntity
 import com.example.anitest.room.AnimeRepository
 import com.example.anitest.room.AppDatabase
-import com.example.anitest.room.PlayListAnimeRelation
+import com.example.anitest.room.PlaylistAnimeRelationEntity
 import com.example.anitest.room.PlaylistEntity
 import com.example.anitest.room.PlaylistRepository
 import com.example.anitest.room.PlaylistWithList
@@ -103,7 +103,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteRelation(relation: PlayListAnimeRelation)  = viewModelScope.launch {
+    fun deleteRelation(relation: PlaylistAnimeRelationEntity)  = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repositoryPlaylist.deleteRelation(relation)
         }

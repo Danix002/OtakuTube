@@ -18,5 +18,5 @@ data class PlaylistWithList(
         parentColumn = "name",
         entityColumn = "playlistName"
     )
-    val playlists: List<PlayListAnimeRelation>
+    val playlists: List<PlaylistAnimeRelationEntity>
 )

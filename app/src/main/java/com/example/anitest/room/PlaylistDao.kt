@@ -16,7 +16,7 @@ interface PlaylistDao {
     suspend fun insert(newPlaylist: PlaylistEntity)
 
     @Insert
-    suspend fun insert(animeAdd: PlayListAnimeRelation)
+    suspend fun insert(animeAdd: PlaylistAnimeRelationEntity)
 
     @Transaction
     @Query("SELECT * FROM Playlist p WHERE p.name = :name")
@@ -26,5 +26,5 @@ interface PlaylistDao {
     fun delete(playlistEntity: PlaylistEntity)
 
     @Delete
-    fun delete(animeRelation: PlayListAnimeRelation)
+    fun delete(animeRelation: PlaylistAnimeRelationEntity)
 }
