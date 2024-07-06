@@ -1,12 +1,9 @@
 package com.example.anitest.room
 
+
 import android.content.Context
 import androidx.room.Room
-
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
-
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.anitest.model.AnimeDetail
 import kotlinx.coroutines.runBlocking
@@ -28,9 +25,9 @@ class PlaylistRepositoryTest {
     private val animeDetail = AnimeDetail("1", "TestAnime", "TestImgUrl")
 
     @Before
-    fun initDb() = runBlocking<Unit>  {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
+    fun initDb() = runBlocking {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        database = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).allowMainThreadQueries().build()
         playlistDao = database.daoPlaylist()
     }
 
@@ -40,11 +37,8 @@ class PlaylistRepositoryTest {
     }
 
     @Test
-    fun insertTest() = runBlocking<Unit> {
-        // when
+    fun insertTest() = runBlocking {
         playlistDao.insert(playlistEntity)
-
-        // then
         val allPlaylists = playlistDao.getPlaylists()
         allPlaylists.collect { playlists ->
             assertEquals(1, playlists.size)
@@ -54,14 +48,9 @@ class PlaylistRepositoryTest {
     }
 
     @Test
-    fun deleteTest() = runBlocking<Unit> {
-        // given
+    fun deleteTest() = runBlocking {
         playlistDao.insert(playlistEntity)
-
-        // when
         playlistDao.delete(PlaylistEntity("TestPlaylist", ""))
-
-        // then
         val allPlaylists = playlistDao.getPlaylists()
         allPlaylists.collect { playlists ->
             assertEquals(0, playlists.size)
@@ -70,11 +59,8 @@ class PlaylistRepositoryTest {
     }
 
     @Test
-    fun insertAnimeToPlaylistTest() = runBlocking<Unit> {
-        // when
+    fun insertAnimeToPlaylistTest() = runBlocking {
         playlistRepository.insert("TestPlaylist", animeDetail)
-
-        // then
         val playlistWithAnime = playlistDao.getPlaylistWithList("TestPlaylist")
         assertEquals(1, playlistWithAnime.playlists.size)
         assertEquals(animeDetail.anime_id, playlistWithAnime.playlists[0].animeId)

@@ -75,31 +75,23 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-jvm:2.8.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
     implementation("androidx.test.ext:junit-ktx:1.2.1")
-
-
-
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 
     testImplementation("org.mockito:mockito-core:4.2.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     testImplementation("org.mockito:mockito-inline:4.2.0")
-
     testImplementation("junit:junit:4.13.2")
 
-
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-
-
     androidTestImplementation("androidx.test:core:1.6.1")
-    androidTestImplementation("androidx.test:runner:1.6.1@arr")
+    androidTestImplementation("androidx.test:runner:1.6.1")
     androidTestImplementation("androidx.test:rules:1.6.1")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
 }
 
