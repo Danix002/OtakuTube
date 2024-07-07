@@ -1,21 +1,20 @@
 package com.example.anitest.room
 
-
 import android.content.Context
 import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.example.anitest.model.AnimeDetail
+import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.*
 
 @RunWith(AndroidJUnit4::class)
-class PlaylistRepositoryTest {
+class AppDatabaseTest : TestCase() {
 
     private lateinit var database: AppDatabase
     private lateinit var playlistDao: PlaylistDao
@@ -25,15 +24,10 @@ class PlaylistRepositoryTest {
     private val animeDetail = AnimeDetail("1", "TestAnime", "TestImgUrl")
 
     @Before
-    fun initDb() = runBlocking {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        database = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).allowMainThreadQueries().build()
+    public override fun setUp() {
+        val appContext = ApplicationProvider.getApplicationContext<Context>()
+        database = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
         playlistDao = database.daoPlaylist()
-    }
-
-    @After
-    fun closeDb() {
-        database.close()
     }
 
     @Test
@@ -41,8 +35,8 @@ class PlaylistRepositoryTest {
         playlistDao.insert(playlistEntity)
         val allPlaylists = playlistDao.getPlaylists()
         allPlaylists.collect { playlists ->
-            assertEquals(1, playlists.size)
-            assertEquals(playlistEntity, playlists[0])
+            Assert.assertEquals(1, playlists.size)
+            Assert.assertEquals(playlistEntity, playlists[0])
             println("Database contains: $playlists")
         }
     }
@@ -53,7 +47,7 @@ class PlaylistRepositoryTest {
         playlistDao.delete(PlaylistEntity("TestPlaylist", ""))
         val allPlaylists = playlistDao.getPlaylists()
         allPlaylists.collect { playlists ->
-            assertEquals(0, playlists.size)
+            Assert.assertEquals(0, playlists.size)
             println("Database contains: $playlists")
         }
     }
@@ -62,8 +56,13 @@ class PlaylistRepositoryTest {
     fun insertAnimeToPlaylistTest() = runBlocking {
         playlistRepository.insert("TestPlaylist", animeDetail)
         val playlistWithAnime = playlistDao.getPlaylistWithList("TestPlaylist")
-        assertEquals(1, playlistWithAnime.playlists.size)
-        assertEquals(animeDetail.anime_id, playlistWithAnime.playlists[0].animeId)
+        Assert.assertEquals(1, playlistWithAnime.playlists.size)
+        Assert.assertEquals(animeDetail.anime_id, playlistWithAnime.playlists[0].animeId)
         println("Database contains: $playlistWithAnime")
+    }
+
+    @After
+    fun closeDb() {
+        database.close()
     }
 }
