@@ -38,22 +38,7 @@ class NavigationTest {
 
     private val viewModel = mockk<MyViewModel>(relaxed = true)
     private val mockedAnimeSearch: StateFlow<List<Anime>> = MutableStateFlow(
-        listOf(
-            Anime(
-                "One Piece",
-                "https://gogocdn.net/cover/one-piece-1708412053.png",
-                "one-piece",
-                ""),
-            Anime(
-                "Sasayaku You ni Koi wo Utau",
-                "https://gogocdn.net/cover/sasayaku-you-ni-koi-wo-utau-1711738463.png",
-                "sasayaku-you-ni-koi-wo-utau", ""),
-            Anime(
-                "Detective Conan",
-                "https://gogocdn.net/cover/detective-conan.png",
-                "detective-conan",
-                "")
-        )
+        emptyList()
     )
     private val mockedConnection: StateFlow<Boolean> = MutableStateFlow(
         true
@@ -93,14 +78,29 @@ class NavigationTest {
 
     private val mockedSelectedNavItem: MutableState<String> = mutableStateOf(Screen.Zapping.route)
     private val mockedPopularAnime: StateFlow<List<Anime>> = MutableStateFlow(
-        emptyList()
+        listOf(
+            Anime(
+                "One Piece",
+                "https://gogocdn.net/cover/one-piece-1708412053.png",
+                "one-piece",
+                ""),
+            Anime(
+                "Sasayaku You ni Koi wo Utau",
+                "https://gogocdn.net/cover/sasayaku-you-ni-koi-wo-utau-1711738463.png",
+                "sasayaku-you-ni-koi-wo-utau", ""),
+            Anime(
+                "Detective Conan",
+                "https://gogocdn.net/cover/detective-conan.png",
+                "detective-conan",
+                "")
+        )
     )
     private val mockedIsZappingScreenLoaded : StateFlow<Boolean> = MutableStateFlow(
         true
     )
 
     @Test
-    fun testZappingScreen_DisplaysPopularText() {
+    fun testZappingScreen_DisplayPopularText() {
         every { viewModel.animeSearch } returns mockedAnimeSearch
         every { viewModel.connection } returns mockedConnection
         every { viewModel.navigationItems } returns mockedNavigationItem
@@ -116,5 +116,4 @@ class NavigationTest {
             .onNodeWithText("Popular")
             .assertIsDisplayed()
     }
-
 }
