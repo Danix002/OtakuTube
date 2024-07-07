@@ -6,28 +6,20 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.anitest.model.AnimeDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert.*
-
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
 
 class AnimeRepositoryTest {
-
     private lateinit var database: AppDatabase
     private lateinit var playlistDao: PlaylistDao
     private lateinit var playlistRepository: PlaylistRepository
@@ -54,7 +46,6 @@ class AnimeRepositoryTest {
         testScope.launch {
             playlistDao.insert(playlistEntity)
         }
-
         // advanceUntilIdle()
         val allPlaylists = playlistDao.getPlaylists()
         allPlaylists.collect { playlists ->

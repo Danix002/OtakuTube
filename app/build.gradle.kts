@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isKaptVerbose
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -50,6 +48,13 @@ android {
             excludes += "META-INF/LICENSE-notice.md"
         }
     }
+    testOptions {
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging = true
+            }
+        }
+    }
 
 }
 
@@ -83,21 +88,33 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
 
+    implementation("androidx.test.ext:junit-ktx:1.2.1")
+    implementation("androidx.compose.ui:ui-test-junit4-android:1.6.8")
+
     // Testing Dependencies
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
-
-    // AndroidX Test - JVM testing
     testImplementation("androidx.test.ext:junit:1.2.1")
-    testImplementation("androidx.test:core:1.6.1")
-
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito:mockito-inline:5.5.0")
+    testImplementation ("io.mockk:mockk:1.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
     // AndroidX Test - Instrumented testing
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test:core:1.6.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    androidTestImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
+    androidTestImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+    androidTestImplementation("androidx.test:runner:1.5.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    androidTestImplementation("androidx.navigation:navigation-compose:2.7.7")
+    androidTestImplementation("org.mockito:mockito-android:5.5.0")
+    androidTestImplementation("io.mockk:mockk-android:1.12.3")
+
+    // Jetpack Compose
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
 }
 
