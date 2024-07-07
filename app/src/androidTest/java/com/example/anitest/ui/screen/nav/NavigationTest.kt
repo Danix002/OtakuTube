@@ -1,4 +1,4 @@
-package com.example.anitest.ui.screen.sub
+package com.example.anitest.ui.screen.nav
 
 import androidx.activity.compose.setContent
 import androidx.compose.material.icons.Icons
