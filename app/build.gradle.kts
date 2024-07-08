@@ -96,8 +96,7 @@ dependencies {
     testImplementation("androidx.test:core:1.5.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.5.0")
-    testImplementation("org.mockito:mockito-inline:5.5.0")
-    testImplementation ("io.mockk:mockk:1.13.2")
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // AndroidX Test - Instrumented testing
