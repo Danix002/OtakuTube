@@ -1,87 +1,75 @@
-package com.example.anitest.room
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.anitest.model.AnimeDetail
+import com.example.anitest.room.AppDatabase
+import com.example.anitest.room.PlaylistAnimeRelationEntity
+import com.example.anitest.room.PlaylistDao
+import com.example.anitest.room.PlaylistEntity
+import com.example.anitest.room.PlaylistRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import kotlin.time.Duration.Companion.seconds
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class AnimeRepositoryTest {
+
     private lateinit var database: AppDatabase
     private lateinit var playlistDao: PlaylistDao
     private lateinit var playlistRepository: PlaylistRepository
 
-    private val playlistEntity = PlaylistEntity("TestPlaylist", "TestImg")
-    private val animeDetail = AnimeDetail("1", "TestAnime", "TestImgUrl")
+    private val playlistEntity = PlaylistEntity("TestPlaylist", "https://gogocdn.net/cover/one-piece-1708412053.png")
+    private val animeDetail = AnimeDetail("One Piece", "https://gogocdn.net/cover/one-piece-1708412053.png", "one-piece")
 
-    private val dispatcher = TestCoroutineDispatcher()
-    private val testScope = TestCoroutineScope(dispatcher)
+    private val dispatcher = StandardTestDispatcher()
+    private val testScope = TestScope(dispatcher)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        println("setup")
         Dispatchers.setMain(dispatcher)
         val appContext = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
         playlistDao = database.daoPlaylist()
-        println("end setup")
+        playlistRepository = PlaylistRepository(playlistDao)
     }
 
     @Test
-    fun insertTest() = runTest ( timeout = 1000.seconds){
-        testScope.launch {
-            playlistDao.insert(playlistEntity)
-        }
-        // advanceUntilIdle()
-        val allPlaylists = playlistDao.getPlaylists()
-        allPlaylists.collect { playlists ->
-
-            println("Database contains: $playlists")
-            assertEquals(playlistEntity, playlists[0])
-            return@collect
-        }
-        assertTrue(true)
-    }
-
-    @Test
-    fun deleteTest() = runTest {
+    fun insertTest() = testScope.runTest {
         playlistDao.insert(playlistEntity)
-        playlistDao.delete(PlaylistEntity("TestPlaylist", ""))
-        val allPlaylists = playlistDao.getPlaylists()
-        allPlaylists.collect { playlists ->
-            assertEquals(0, playlists.size)
-            println("Database contains: $playlists")
-        }
+        playlistDao.insert(PlaylistAnimeRelationEntity(playlistEntity.name, animeDetail.name, animeDetail.img_url, animeDetail.anime_id))
+
+        val playlists = playlistDao.getPlaylists().first()
+        val anime = playlistDao.getPlaylistWithList(playlistEntity.name).playlists[0].animeName
+        assertEquals(playlistEntity, playlists[0])
+        assertEquals(animeDetail.name, anime)
     }
 
     @Test
-    fun insertAnimeToPlaylistTest() = runTest {
-        playlistRepository.insert("TestPlaylist", animeDetail)
-        val playlistWithAnime = playlistDao.getPlaylistWithList("TestPlaylist")
-        assertEquals(1, playlistWithAnime.playlists.size)
-        assertEquals(animeDetail.anime_id, playlistWithAnime.playlists[0].animeId)
-        println("Database contains: $playlistWithAnime")
+    fun deleteTest() = testScope.runTest {
+        playlistDao.insert(playlistEntity)
+        playlistDao.delete(PlaylistEntity("TestPlaylist", "https://gogocdn.net/cover/one-piece-1708412053.png"))
+
+        val playlists = playlistDao.getPlaylists().first()
+        assertEquals(0, playlists.size)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun closeDb() {
         Dispatchers.resetMain()
-        dispatcher.cleanupTestCoroutines()
         database.close()
     }
 }
