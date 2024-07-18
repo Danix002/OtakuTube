@@ -205,7 +205,7 @@ fun PlaylistDialog(onDismiss: () -> Unit, onRemoveAnime: (anime: PlaylistAnimeRe
                             .clickable {
                                 if (!connection) return@clickable
                                 viewModel.setIsLoadedAnimeScreen(false)
-                                navController.navigate("anime/${item.animeName}_${item.animeId}")
+                                navController.navigate("anime/${item.animeId}_${item.animeName}")
                             }
                     ) {
                         Image(
